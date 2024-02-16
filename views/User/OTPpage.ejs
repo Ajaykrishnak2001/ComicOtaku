@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit-no">
+    <title>Offside Outfits</title>
+
+<!--... (other meta tags)......
+
+<!-- CSS Files -->
+
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+    <header class="header">
+    <!-- (header content).....> -->
+    </header
+
+< main class="main">
+<nav aria-label="breadcrumb" class="breadcrumb-nav border- eb-0"> 
+    <!...(breadcrumb code)......
+</nav>
+
+<div class="login-page bg-image pt-8 pb-8 pt-nd-12 pb-nd-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+    <div class="container">
+        <div class="form-box">
+            <div class="form-tab">
+                <ul class="nav nav-pills nav-fill" role="tablist"> 
+                    <li class="nav-item">
+                        <a class="nav-link" name="otp" id="otp-entry-tab" data-toggle="tab" href="#otp-entry" role="tab" aria-controls="otp-entry" aria-selected="false">Enter OTP</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="otp-entry" role="tabpanel" aria-labelledby="otp-entry-tab">
+                        <form action="/verify-otp" method="post" id="otpForm">
+                            <div class="form-group"> 
+                                <label for="otp">Enter OTP *</label>
+                                <input type="text" class="form-control" id="otp" name="otp" required>
+                            </div><!-- End form-group -->
+                            <% if(typeof message !== 'undefined') { %>
+                                <p style="color: red;"><%= message %></p>
+                            <% } %>
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-outline-primary-2" id="submitOTP">
+                                    <span>Submit OTP</span>
+                                    <i class="icon-long-arrow-right"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="resendOTP">
+                                    <span>Resend OTP</span>
+                                </button>
+                                <div id="otp-timer"></div><!-- Timer display -->
+                                <div id="otp-expired-message" style="display: none; color: red;">OTP expired. Please resend OTP.</div>
+                            </div><!-- End form-footer -->
+                        </form>
+                    </div><!-- End tab-pane -->
+                </div><!-- End tab-content -->
+            </div><!-- End form-tab -->
+        </div><!-- End form-box -->
+    </div><!-- End container -->
+</div><!-- End login-page bg-image -->
+</main><!-- End main -->
+</div><!-- End page-wrapper -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let countdownTime = 20; // Initial countdown time in seconds
+        let timerInterval; // Variable to store the timer interval
+        const timerDisplay = document.getElementById('otp-timer');
+        const expiredMessage = document.getElementById('otp-expired-message');
+
+        // Function to update the timer display
+        function updateTimer() {
+            if (countdownTime >= 0) {
+                timerDisplay.innerText = `Time left: ${countdownTime} sec`;
+                countdownTime--;
+            } else {
+                clearInterval(timerInterval);
+                timerDisplay.style.display = 'none';
+                expiredMessage.innerText = 'OTP expired. Please resend OTP.';
+                expiredMessage.style.display = 'block';
+            }
+        }
+
+        // Start the timer interval
+        timerInterval = setInterval(updateTimer, 1000);
+
+        document.getElementById('resendOTP').addEventListener('click', function() {
+            // Send request to resend OTP
+            fetch('/resend-otp', {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Resend OTP request successful');
+                    // Optionally update UI or show a message
+                    // Reset countdown time to 60 seconds
+                    countdownTime = 60;
+                    // Restart timer interval
+                    clearInterval(timerInterval);
+                    timerInterval = setInterval(updateTimer, 1000);
+                    // Hide the expired message
+                    expiredMessage.style.display = 'none';
+                    // Update the resend message
+                    expiredMessage.innerText = 'OTP resent successfully.';
+                } else {
+                    console.error('Failed to resend OTP');
+                    // Optionally show an error message
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred while resending OTP:', error);
+                // Optionally show an error message
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<!-- JS Files -->
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script> 
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script> 
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+<script>
+
+// Variables to control OTP resend
+let canResend = true;
+let resendTimeout;
+
+// Function to handle OTP resend
+
+function resendOTP() {
+    if (canResend) {
+
+// Perform OTP resend Logic here (e.g., send a new OTP)
+
+// Disable the Resend button
+document.getElementById('resendOTP').disabled = true;
+
+// Set a timeout to enable the Resend button after one minute
+resendTimeout = setTimeout(() => {
+    canResend = true;
+    document.getElementById('resendOTP').disabled = false; 
+}, 60000); // 60000 milliseconds 1 minute
+
+    // Update canResend status cantesend false;
+    canResend = false;
+    }
+}
+
+    // Attach a submit event Listener to the form
+    document.getElementById('otpform').addEventListener('submit', function (event) {
+    // Clear the timeout if the form is submitted 
+        clearTimeout(resendTimeout);
+    }); 
+</script>
+</body>
+</html>
