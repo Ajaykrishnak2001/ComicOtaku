@@ -33,11 +33,21 @@ const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (email === "admin@gmail.com" && password === "12345678") {
-      res.redirect("/admin/products");
-    } else if (email === "admin@gmail.com") {
-      res.render("login", { errorMessage: "Invalid password" });
+    // Find admin user by email
+    const adminData = await User.findOne({ email: email });
+
+    if (adminData && adminData.is_admin === 1) {
+      // Compare passwords
+      const passwordMatch = await bcrypt.compare(password, adminData.password);
+      if (passwordMatch) {
+        // Redirect to admin page if password matches
+        res.redirect("/admin/products");
+      } else {
+        // Render login page with error message if password is incorrect
+        res.render("login", { errorMessage: "Invalid password" });
+      }
     } else {
+      // Render login page with error message if admin email is incorrect or not an admin
       res.render("login", { errorMessage: "Invalid Credentials" });
     }
   } catch (error) {

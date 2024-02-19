@@ -27,7 +27,7 @@ image: {
 
 is_admin: {
     type: Number,
-    required: true,
+    required: 1,
 },
     
 is_verified: {
