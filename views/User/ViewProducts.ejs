@@ -327,32 +327,31 @@
                                 <div class="product-details-img product-single__photos bottom">
                                     <div class="zoompro-wrap product-zoom-right pl-20">
                                         <div class="zoompro-span">
-                                            <img class=" blur-up lazyloaded zoompro" data-src="<%= product.images[0] %>" src="/productAssets/<%=product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">            
+                                            <img class=" blur-up lazyloaded zoompro" data-zoom-image=""="<%= product.images[0] %>" src="/productAssets/<%=product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">            
                                         </div>
                                         <div class="product-labels"><span class="lbl on-sale">Sale</span><span class="lbl pr-label1">new</span></div>
-                                        <div class="product-buttons">
+                                        <!-- <div class="product-buttons">
                                            
                                             <a href="#" class="btn prlightbox" title="Zoom"><i class="icon anm anm-expand-l-arrows" aria-hidden="true"></i></a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="product-thumb product-thumb-1">
                                         <div id="gallery" class="product-dec-slider-1 product-tab-left">
-                                            <a data-image="assets/images/product-detail-page/cape-dress-1.jpg" data-zoom-image="assets/images/product-detail-page/cape-dress-1.jpg" class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true" tabindex="-1">
+                                            <a data-image="/productAssets/<%=product.images[1] %>" data-zoom-image="/productAssets/<%=product.images[1] %>" class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true" tabindex="-1">
                                                 <img class=" blur-up lazyloaded" data-src="<%= product.images[1] %>" src="/productAssets/<%=product.images[1] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
                                             </a>
-                                            <a data-image="assets/images/product-detail-page/cape-dress-2.jpg" data-zoom-image="assets/images/product-detail-page/cape-dress-2.jpg" class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true" tabindex="-1">
+                                            <a data-image="/productAssets/<%=product.images[2] %>" data-zoom-image="/productAssets/<%=product.images[2] %>" class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true" tabindex="-1">
                                                 <img class=" blur-up lazyloaded" data-src="<%= product.images[2] %>" src="/productAssets/<%=product.images[2] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
                                             </a>
-                                            <a data-image="assets/images/product-detail-page/cape-dress-3.jpg" data-zoom-image="assets/images/product-detail-page/cape-dress-3.jpg" class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true" tabindex="-1">
+                                            <a data-image="/productAssets/<%=product.images[3] %>" data-zoom-image="/productAssets/<%=product.images[3] %>" class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true" tabindex="-1">
                                                 <img class=" blur-up lazyloaded" data-src="<%= product.images[3] %>" src="/productAssets/<%=product.images[3] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
                                             </a>
-                                            <a data-image="assets/images/product-detail-page/cape-dress-4.jpg" data-zoom-image="assets/images/product-detail-page/cape-dress-4.jpg" class="slick-slide slick-cloned" data-slick-index="-1" aria-hidden="true" tabindex="-1">
-                                                <img class=" blur-up lazyloaded" data-src="<%= product.images[4] %>" src="/productAssets/<%=product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
+                                            <a data-image="/productAssets/<%=product.images[0] %>" data-zoom-image="/productAssets/<%=product.images[0] %>" class="slick-slide slick-cloned" data-slick-index="-1" aria-hidden="true" tabindex="-1">
+                                                <img class=" blur-up lazyloaded" data-src="<%= product.images[0] %>" src="/productAssets/<%=product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
                                             </a>
                                             
                                         </div>
                                     </div>
-                                    
                                     <!-- <div class="lightboximages">
                                         <a href="assets/images/product-detail-page/camelia-reversible-big1.jpg" data-size="1462x2048"></a>
                                         <a href="assets/images/product-detail-page/camelia-reversible-big2.jpg" data-size="1462x2048"></a>
@@ -397,6 +396,11 @@
                                     <div class="product-nav clearfix">					
                                        
                                     </div>
+                                    <div class="product-single__meta">
+                                        <p class="product-single__title"><%= product.brand %></p>
+                                        <div class="product-nav clearfix">					
+                                           
+                                        </div>
                                     <div class="prInfoRow">
                                         <div class="product-stock"> <span class="instock ">In Stock</span> <span class="outstock hide">Unavailable</span> </div>
                                         <div class="product-sku"> <span class="variant-sku"></span></div>

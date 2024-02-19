@@ -403,12 +403,16 @@ const deleteCategory = async (req, res) => {
     console.log(deletedCategory);
 
     // Send a response indicating success
-    res.status(200).json({ message: "Category deleted successfully" });
+    // res.redirect("/admin/category");
+    
+    // Redirect to the category list page
+    res.redirect("/admin/category");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 

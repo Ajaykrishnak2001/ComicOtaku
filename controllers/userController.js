@@ -194,7 +194,7 @@ const getOtp=async(req,res)=>{
             const userData=await user.save()
             
             if(userData){
-                res.render('login',{message:"Login Successfully"});
+                res.render('login',{message:"Registered Successfully"});
             }
             }else{
             res.render('otp',{message:"OTP is incorrect!"});            

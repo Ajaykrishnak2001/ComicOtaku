@@ -498,10 +498,14 @@
                                                 <div class="product-name">
                                                     <a href="/products/<%= product._id %>"><%= product.pname %></a> <!-- Updated anchor tag -->
                                                 </div>
+                                                <div class="product-brand">
+                                                    <a href="/products/<%= product._id %>"><%= product.brand %></a> <!-- Updated anchor tag -->
+                                                </div>
                                                 <!-- End product name -->
                                                 <!-- Product price -->
                                                 <div class="product-price">
-                                                    <span class="price"><%= product.price %></span>
+                                                    <span class="price"><p> &#8377;<%= product.price %></p>
+                                                        </span>
                                                 </div>
                                                 <!-- End product price -->
                                                 <!-- Additional details or variants can go here -->
