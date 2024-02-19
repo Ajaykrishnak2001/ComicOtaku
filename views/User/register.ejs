@@ -17,6 +17,28 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+
+<style>
+    .password-input {
+        position: relative;
+    }
+
+    .password-input input {
+        padding-right: 30px; /* Space for the eye icon */
+    }
+
+    .password-input .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .error-message {
+            color: red;
+        }
+</style>
 </head>
 <body class="page-template belle">
 <div class="pageWrapper">
@@ -539,7 +561,6 @@
       		</div>
 		</div>
         <!--End Page Title-->
-        
         <div class="container">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
@@ -570,8 +591,25 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="CustomerPassword">Password</label>
-                                        <input type="password" name="password" placeholder="" id="CustomerPassword" class="" required onblur="validatePasswordOnBlur()">
+                                        <div class="password-input">
+                                            <input type="password" name="password" placeholder="" id="CustomerPassword" class="" required>
+                                            <span class="toggle-password" onclick="togglePasswordVisibility('CustomerPassword')">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
                                         <div id="passwordError" class="error-message"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="CustomerConfirmPassword">Confirm Password</label>
+                                        <div class="password-input">
+                                            <input type="password" name="confirmPassword" placeholder="" id="CustomerConfirmPassword" class="" required>
+                                            <span class="toggle-password" onclick="togglePasswordVisibility('CustomerConfirmPassword')">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <div id="confirmPasswordError" class="error-message"></div>
                                     </div>
                                 </div>
                             </div>
@@ -585,11 +623,14 @@
                 </div>
             </div>
         </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script>
             function validateForm() {
                 var name = document.getElementById("FirstName").value.trim(); // Trim leading and trailing spaces
                 var email = document.getElementById("CustomerEmail").value;
                 var password = document.getElementById("CustomerPassword").value;
+                var confirmPassword = document.getElementById("CustomerConfirmPassword").value;
                 var phone = document.getElementById("CustomerPhone").value;
         
                 // Validate name
@@ -614,6 +655,14 @@
                     return false;
                 } else {
                     document.getElementById("passwordError").innerHTML = "";
+                }
+        
+                // Validate confirm password
+                if (password !== confirmPassword) {
+                    document.getElementById("confirmPasswordError").innerHTML = "Passwords do not match";
+                    return false;
+                } else {
+                    document.getElementById("confirmPasswordError").innerHTML = "";
                 }
         
                 // Validate phone number
@@ -675,34 +724,21 @@
                 }
             }
         
-            function validatePasswordOnBlur() {
-                var password = document.getElementById("CustomerPassword").value;
-                if (password.length < 8) {
-                    document.getElementById("passwordError").innerHTML = "Password must be at least 8 characters long";
+            function togglePasswordVisibility(id) {
+                let passwordInput = document.getElementById(id);
+                let icon = passwordInput.nextElementSibling.querySelector('i');
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
                 } else {
-                    document.getElementById("passwordError").innerHTML = "";
+                    passwordInput.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
                 }
             }
         </script>
-        <script>
-            // Function to show a toastr success message
-            function showSuccessMessage(message) {
-                toastr.success(message);
-            }
-        
-            // Function to validate and submit the form
-            function validateForm() {
-                // Your form validation logic here
-                // If the form is valid, show a success message
-                showSuccessMessage('Registration successful!');
-                return true; // Return true to submit the form
-            }
-        
-            // Your existing form submission logic
-            document.getElementById('CustomerLoginForm').onsubmit = function () {
-                return validateForm();
-            };
-        </script>
+
         
         
         
