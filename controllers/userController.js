@@ -303,6 +303,14 @@ res.render("ViewProducts", { product });
 }
 };
 
+const UserProfile = async (req,res)=>{
+    try{
+        res.render('profile')
+    }catch(error){
+        console.log(error.message)
+    }
+}
+
 
 module.exports = {
     loadlogin,
@@ -317,5 +325,6 @@ module.exports = {
     getOtp,
     resendOTP,
     loadregistration,
-    loadAllProducts
+    loadAllProducts,
+    UserProfile
 };

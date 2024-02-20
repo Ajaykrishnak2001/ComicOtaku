@@ -201,62 +201,65 @@
                 <header class="card-header">
                     <div class="row gx-3">
                        
-                        <div class="col-lg-2 col-6 col-md-3">
+                        <!-- <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
                                 <!-- <option>All category</option>
                                 <option>Electronics</option>
                                 <option>Clothings</option>
                                 <option>Something else</option> -->
-                            </select>
+                            <!-- </select>
                         </div>
                         <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
                                 <!-- <option>Latest added</option>
                                 <option>Cheap first</option>
                                 <option>Most viewed</option> -->
-                            </select>
-                        </div>
+                            <!-- </select>
+                        </div>   -->
                     </div>
                 </header> 
  
             
 
-              <div class="card-body">
-                <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
-            
-                    <% for (let i=0; i < allProducts.length; i++) { %>
-                       
-                        <div class="col">
-                            <div class="card card-product-grid">
-                                <a href="#" class="img-wrap m-3">
-                                <img src="/productAssets/<%= allProducts[i].images[0] %>" alt="Product Image" style="height: 250px;width: 195px;" >
-
-                                </a>
-                                <div class="info-wrap">
-                                    <a href="#" class="title text-truncate">
-                                        <%= allProducts[i].pname %>
-                                    </a>
-                                    <div class="price mb-2">
-                                        <%= allProducts[i].price %>
-                                    </div>
-                                    <a href="/admin/products/edit-product?id=<%=allProducts[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                                        <i class="material-icons md-edit"></i> Edit
-                                    </a>
-                                    <% if (allProducts[i]._id ) { %>
-                                        <a href="/admin/delete-product/<%= allProducts[i]._id %>" class="btn btn-sm font-sm btn-danger rounded">
-                                            <i class="material-icons md-delete_forever"></i> Delete
-                                        </a>
-                                        <% } %>
-                                        
-                                </div>
-
-                            </div>
-                        </div>
-                        <% } %>
-                        
-            
-                </div> <!-- row.// -->
-            </div> <!-- card-body end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i=0; i < allProducts.length; i++) { %>
+                                    <tr>
+                                        <td>
+                                            <img src="/productAssets/<%= allProducts[i].images[0] %>" alt="Product Image" style="height: 50px; width: 50px;">
+                                        </td>
+                                        <td><%= allProducts[i].pname %></td>
+                                        <td><%= allProducts[i].price %></td>
+                                        <td>
+                                            <a href="/admin/products/edit-product?id=<%=allProducts[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                                <i class="material-icons md-edit"></i> Edit
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <% if (allProducts[i]._id ) { %>
+                                                <a href="/admin/delete-product/<%= allProducts[i]._id %>" class="btn btn-sm font-sm btn-danger rounded">
+                                                    <i class="material-icons md-delete_forever"></i> Delete
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 <!-- card-body end// -->
             </div> <!-- card end// -->
 
 

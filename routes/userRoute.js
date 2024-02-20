@@ -28,6 +28,9 @@ userRoute.post('/verify-otp',userController.getOtp);
 userRoute.post('/home',userController.verifyLogin);
 
 
+userRoute.get('/profile',userController.UserProfile)
+
+
  userRoute.get('/login',userController.userLogout);
 
 
