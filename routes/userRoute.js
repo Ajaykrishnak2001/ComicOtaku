@@ -38,6 +38,8 @@ userRoute.get('/profile',userprofileController.loadprofile)
 
  userRoute.get("/addAddress",userprofileController.load_addAddress);
  userRoute.post("/addAddress",userprofileController.addAddress)
+ userRoute.get("/addressEdit",userprofileController.load_editAddress)
+ userRoute.post("/addressEdit",userprofileController.editAddress)
 
 
 

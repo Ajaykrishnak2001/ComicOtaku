@@ -34,7 +34,7 @@ const addressSchema = new Schema({
     required: true,
   },
   landmark: {
-    type: String,
+    type: [String],
   },
   alternatePhone: {
     type: Number,

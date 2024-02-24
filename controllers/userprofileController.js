@@ -95,10 +95,66 @@ const load_addAddress = async (req, res) => {
     }
   };
 
+  const load_editAddress = async (req, res) => {
+    try {
+      const { addressId } = req.query;
+      const userAddress = await address.findById({ _id: addressId });
+      console.log(userAddress);
+      if (userAddress) {
+        res.render("AdressEdit", { userAddress: userAddress });
+      } else {
+        res.status(500), json("error happen");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+   const editAddress = async (req, res) => {
+    try {
+      console.log("pppppppppppppppppppppppppppppppppppppppp");
+      console.log(req.body);
+      const {
+        name,
+        pinCode,
+        locality,
+        addressArea,
+        district,
+        state,
+        landmark,
+        mobile,
+        addressId,
+      } = req.body;
+      const updateAddress = await address.findByIdAndUpdate(
+        { _id: addressId },
+        {
+          $set: {
+            name: name,
+            pinCode: pinCode,
+            locality: locality,
+            address: addressArea,
+            district: district,
+            state: state,
+            landmark: landmark,
+            alternatePhone: mobile,
+          },
+        },
+        { new: true }
+      );
+      if (updateAddress) {
+        res.redirect("/profile");
+      } else {
+        res.render("addressEdit", { message: "error happened" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
   module.exports = {
     load_addAddress,
     addAddress,
-    loadprofile
-
-   
-  };
+    loadprofile,
+    editAddress,
+    load_editAddress
+};
