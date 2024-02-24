@@ -16,7 +16,6 @@ userRoute.set("views", "./views/User");
 const userController = require("../controllers/userController");
 const userprofileController = require("../controllers/userprofileController");
 
-
 userRoute.get('/home',userController.loadHome)
 
 // Login routes
@@ -40,6 +39,7 @@ userRoute.get('/profile',userprofileController.loadprofile)
  userRoute.post("/addAddress",userprofileController.addAddress)
  userRoute.get("/addressEdit",userprofileController.load_editAddress)
  userRoute.post("/addressEdit",userprofileController.editAddress)
+ userRoute.delete("/addresses/delete/:id",userprofileController.deleteAddress);
 
 
 

@@ -1,4 +1,4 @@
-
+const express = require('express');
 const address = require("../models/addressModel");
 const user = require("../models/userModel");
 
@@ -151,10 +151,27 @@ const load_addAddress = async (req, res) => {
   };
   
 
+  const deleteAddress = async (req, res) => {
+    const addressId = req.params.id;
+    try {
+      const result = await address.deleteOne({ _id: addressId });
+      if (result.deletedCount === 1) {
+        res.sendStatus(204); // No content, successful deletion
+      } else {
+        res.sendStatus(404); // Address not found
+      }
+    } catch (error) {
+      console.error('Error deleting address:', error);
+      res.sendStatus(500); // Internal server error
+    }
+  };
+  
+  
   module.exports = {
     load_addAddress,
     addAddress,
     loadprofile,
     editAddress,
-    load_editAddress
+    load_editAddress,
+    deleteAddress 
 };
