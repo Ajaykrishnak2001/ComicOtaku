@@ -208,7 +208,6 @@ const getOtp=async(req,res)=>{
 
 
 const verifyLogin = async (req, res) => {
-    console.log(req.session.Data);
     try {
         const email = req.body.email;
         const password = req.body.password;
@@ -221,6 +220,11 @@ const verifyLogin = async (req, res) => {
                 if (userData.is_verified === 0) {
                     res.render('login');
                 } else if (userData.is_verified === 1 && userData.is_active === "1") {
+                    // Save user session here
+                    req.session.userId = userData._id;
+                    req.session.user = true;
+                    req.session.save();
+
                     res.render('home');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
                     res.render('login', { message: "User is blocked" }); // Display alert message
@@ -235,6 +239,7 @@ const verifyLogin = async (req, res) => {
         console.log(error.message);
     }
 }
+
 
 
 
@@ -303,13 +308,7 @@ res.render("ViewProducts", { product });
 }
 };
 
-const UserProfile = async (req,res)=>{
-    try{
-        res.render('profile')
-    }catch(error){
-        console.log(error.message)
-    }
-}
+
 
 
 module.exports = {
@@ -326,5 +325,5 @@ module.exports = {
     resendOTP,
     loadregistration,
     loadAllProducts,
-    UserProfile
+    
 };

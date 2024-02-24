@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<!-- belle/login.html   11 Nov 2019 12:22:27 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Account &ndash; </title>
+<meta name="description" content="description">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Favicon -->
+<link rel="shortcut icon" href="assets/images/favicon.png" />
+<!-- Plugins CSS -->
+<link rel="stylesheet" href="assets/css/plugins.css">
+<!-- Bootstap CSS -->
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<!-- Main Style CSS -->
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+
+
+   <!-- Favicon -->
+   <link rel="shortcut icon" type="image/x-icon" href="Asets/imgs/theme/favicon.svg">
+   <!-- Template CSS -->
+   <link rel="stylesheet" href="Asets/css/main.css?v=3.4">
+</head>
+
+
+
+
+
+
+<section class="pt-150 pb-150" >
+    <div class="container-lg"> <!-- Change to container-lg for wider container -->
+        <div class="row">
+            <div class="col-lg-8 m-auto"> <!-- Adjust col-lg-8 for wider content -->
+                <div class="row">
+                    <div class="col-lg-6 mx-auto" style="width: 100%;"> <!-- Adjust col-lg-6 for wider content -->
+                        <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5" >
+                            <div class="padding_eight_all bg-white">
+                             
+                                <div class="heading_s1">
+                                    <h3 class="mb-30 text-center">ADD New Address</h3>
+                                </div>
+                                <form method="post" action="/addAddress" id="addressForm">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>Name <span class="required">*</span></label>
+                                            <input  class="form-control square" name="name" type="text"  placeholder="Enter Name" id="name" onblur="validateName()">
+                                            <p id="nameError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Pin code<span class="required">*</span></label>
+                                            <input  type="number" class="form-control square" name="pinCode" placeholder="Enter pinCode" id="pinCode" onblur="validatePinCode() " >
+                                            <p id="pinCodeError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>locality <span class="required">*</span></label>
+                                            <input class="form-control square" name="locality" type="text"  placeholder="Enter locality" id="locality"  onblur="validateLocality()">
+                                            <p id="localityError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Address(area and Street) <span class="required">*</span></label>
+                                            <input class="form-control square" name="addressArea" type="text" placeholder="Enter address (area /street)" id="address"  onblur="validateAddress()">
+                                            <p id="addressAreaError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="district">City/District <span class="required">*</span></label>
+                                            <select id="district" class="form-control square" name="district" onchange="validateDistrict()">
+                                                <option value="">Select District</option>
+                                                <option value="Alappuzha">Alappuzha</option>
+                                                <option value="Ernakulam">Ernakulam</option>
+                                                <option value="Idukki">Idukki</option>
+                                                <option value="Kannur">Kannur</option>
+                                                <option value="Kasaragod">Kasaragod</option>
+                                                <option value="Kollam">Kollam</option>
+                                                <option value="Kottayam">Kottayam</option>
+                                                <option value="Kozhikode">Kozhikode</option>
+                                                <option value="Malappuram">Malappuram</option>
+                                                <option value="Palakkad">Palakkad</option>
+                                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                                <option value="Thrissur">Thrissur</option>
+                                                <option value="Wayanad">Wayanad</option>
+                                            </select>
+                                            <p id="districtError" class="alert text-danger"></p>
+                                        </div>
+                                        
+                                        <div class="form-group col-md-12">
+                                            <label>State <span class="required">*</span></label>
+                                            <input id="state" class="form-control square" name="state" type="text" placeholder="Enter the State"  onblur="validateState()">
+                                            <p id="stateError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Landmark(optional) </label>
+                                            <input class="form-control square" id="landmark" name="landmark" type="text"  placeholder="Enter the Landmark"  onblur="validateLandmark()">
+                                            <p id="LandmarkError" class="alert text-danger"></p>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Alternative Number <span class="required">*</span></label>
+                                            <input class="form-control square" name="mobile" id="mobile" type="number"  placeholder="Alternative Number" onblur="validateMobile()">
+                                            <p id="mobileError" class="alert text-danger"></p>
+                                        </div>
+                                        <DIV style="width: 20PX;">
+                                            <div class="form-group col-md-3" >
+                                                <label>
+                                                    <input type="radio" name="locationType" value="home" required> Home 
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>
+                                                    <input type="radio" name="locationType" value="work" required> Work 
+                                                </label>
+                                            </div>
+                                        </DIV>
+                                        
+    <div id="fromSever">
+        <% if (locals.message) { %>
+                                            
+            <p class="text-danger"><%=message  %></p>
+           <% } %>
+    </div>
+                                        
+                                       
+                                        
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-fill-out submit"  value="Submit">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+  <!--Footer-->
+  <footer id="footer">
+    <div class="newsletter-section">
+        <div class="container">
+            <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7 w-100 d-flex justify-content-start align-items-center">
+                        <div class="display-table">
+                            <div class="display-table-cell footer-newsletter">
+                                <div class="section-header text-center">
+                                    <label class="h2"><span>sign up for </span>newsletter</label>
+                                </div>
+                                <form action="#" method="post">
+                                    <div class="input-group">
+                                        <input type="email" class="input-group__field newsletter__input" name="EMAIL" value="" placeholder="Email address" required="">
+                                        <span class="input-group__btn">
+                                            <button type="submit" class="btn newsletter__submit" name="commit" id="Subscribe"><span class="newsletter__submit-text--large">Subscribe</span></button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5 d-flex justify-content-end align-items-center">
+                        <div class="footer-social">
+                            <ul class="list--inline site-footer__social-icons social-icons">
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Facebook"><i class="icon icon-facebook"></i></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Twitter"><i class="icon icon-twitter"></i> <span class="icon__fallback-text">Twitter</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Pinterest"><i class="icon icon-pinterest"></i> <span class="icon__fallback-text">Pinterest</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Instagram"><i class="icon icon-instagram"></i> <span class="icon__fallback-text">Instagram</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Tumblr"><i class="icon icon-tumblr-alt"></i> <span class="icon__fallback-text">Tumblr</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on YouTube"><i class="icon icon-youtube"></i> <span class="icon__fallback-text">YouTube</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Vimeo"><i class="icon icon-vimeo-alt"></i> <span class="icon__fallback-text">Vimeo</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>    
+    </div>
+    <div class="site-footer">
+        <div class="container">
+             <!--Footer Links-->
+            <div class="footer-top">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Quick Shop</h4>
+                        <ul>
+                            <li><a href="#">Women</a></li>
+                            <li><a href="#">Men</a></li>
+                            <li><a href="#">Kids</a></li>
+                            <li><a href="#">Sportswear</a></li>
+                            <li><a href="#">Sale</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Informations</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                            <li><a href="#">Terms &amp; condition</a></li>
+                            <li><a href="#">My Account</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Customer Services</h4>
+                        <ul>
+                            <li><a href="#">Request Personal Data</a></li>
+                            <li><a href="#">FAQ's</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Orders and Returns</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
+                        <h4 class="h4">Contact Us</h4>
+                        <ul class="addressFooter">
+                            <li><i class="icon anm anm-map-marker-al"></i><p>55 Gallaxy Enque,<br>2568 steet, 23568 NY</p></li>
+                            <li class="phone"><i class="icon anm anm-phone-s"></i><p>(440) 000 000 0000</p></li>
+                            <li class="email"><i class="icon anm anm-envelope-l"></i><p>sales@yousite.com</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--End Footer Links-->
+            <hr>
+            <div class="footer-bottom">
+                <div class="row">
+                    <!--Footer Copyright-->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-sm-center text-md-left text-lg-left"><span></span> <a href="templateshub.net">Templates Hub</a></div>
+                    <!--End Footer Copyright-->
+                    <!--Footer Payment Icon-->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-0 order-md-1 order-lg-1 order-sm-0 payment-icons text-right text-md-center">
+                        <ul class="payment-icons list--inline">
+                            <li><i class="icon fa fa-cc-visa" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-mastercard" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-discover" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-paypal" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-amex" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-credit-card" aria-hidden="true"></i></li>
+                        </ul>
+                    </div>
+                    <!--End Footer Payment Icon-->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--End Footer-->
+<!--Scoll Top-->
+<span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+<!--End Scoll Top-->
+
+ <!-- Including Jquery -->
+ <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+ <script src="assets/js/vendor/jquery.cookie.js"></script>
+ <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+ <script src="assets/js/vendor/wow.min.js"></script>
+ <!-- Including Javascript -->
+ <script src="assets/js/bootstrap.min.js"></script>
+ <script src="assets/js/plugins.js"></script>
+ <script src="assets/js/popper.min.js"></script>
+ <script src="assets/js/lazysizes.js"></script>
+ <script src="assets/js/main.js"></script>
+</div>
+
+<!-- Vendor JS-->
+<script src="Asets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="Asets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="Asets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="Asets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="Asets/js/plugins/slick.js"></script>
+<script src="Asets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="Asets/js/plugins/wow.js"></script>
+<script src="Asets/js/plugins/jquery-ui.js"></script>
+<script src="Asets/js/plugins/perfect-scrollbar.js"></script>
+<script src="Asets/js/plugins/magnific-popup.js"></script>
+<script src="Asets/js/plugins/select2.min.js"></script>
+<script src="Asets/js/plugins/waypoints.js"></script>
+<script src="Asets/js/plugins/counterup.js"></script>
+<script src="Asets/js/plugins/jquery.countdown.min.js"></script>
+<script src="Asets/js/plugins/images-loaded.js"></script>
+<script src="Asets/js/plugins/isotope.js"></script>
+<script src="Asets/js/plugins/scrollup.js"></script>
+<script src="Asets/js/plugins/jquery.vticker-min.js"></script>
+<script src="Asets/js/plugins/jquery.theia.sticky.js"></script>
+<!-- Template  JS -->
+<script src="./Asets/js/main.js?v=3.4"></script>
+</body>
+
+<!-- belle/login.html   11 Nov 2019 12:22:27 GMT -->
+</html>

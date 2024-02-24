@@ -14,6 +14,7 @@ userRoute.set("views", "./views/User");
 
 // Import the userController
 const userController = require("../controllers/userController");
+const userprofileController = require("../controllers/userprofileController");
 
 
 userRoute.get('/home',userController.loadHome)
@@ -28,14 +29,15 @@ userRoute.post('/verify-otp',userController.getOtp);
 userRoute.post('/home',userController.verifyLogin);
 
 
-userRoute.get('/profile',userController.UserProfile)
+userRoute.get('/profile',userprofileController.loadprofile)
 
 
  userRoute.get('/login',userController.userLogout);
 
 
 
-
+ userRoute.get("/addAddress",userprofileController.load_addAddress);
+ userRoute.post("/addAddress",userprofileController.addAddress)
 
 
 
