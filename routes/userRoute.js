@@ -41,6 +41,11 @@ userRoute.get('/profile',userprofileController.loadprofile)
  userRoute.post("/addressEdit",userprofileController.editAddress)
  userRoute.delete("/addresses/delete/:id",userprofileController.deleteAddress);
 
+userRoute.get("/editProfile",userprofileController.load_editProfile)
+userRoute.post("/editProfile",userprofileController.editProfile)
+
+userRoute.post("/resetPassword",userprofileController.changePassword)
+
 
 
 

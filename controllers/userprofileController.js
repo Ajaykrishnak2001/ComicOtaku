@@ -165,6 +165,71 @@ const load_addAddress = async (req, res) => {
       res.sendStatus(500); // Internal server error
     }
   };
+
+  const load_editProfile=async(req,res)=>{
+    try{
+      console.log("hello");
+      const {userId}= req.query;
+      const userData=await user.findById({_id:userId});
+      console.log(userData,"from userData");
+      res.render("editUserData",{userData:userData});
+    }catch(error){
+      console.log(error.message)
+    }
+  };
+
+  const editProfile = async (req, res) => {
+    try {
+      const userData = req.session.userId;
+      console.log("User ID from session:", req.session.userId);
+
+      const { username,mobile} = req.body;
+      const userDataEdit = await user.findByIdAndUpdate(
+        req.session.userId,
+        {
+          $set: {
+            name: username,
+            phone: mobile,
+          },
+        },
+        { new: true }
+      );
+      
+      res.redirect("/profile");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  
+
+  const changePassword= async(req,res)=>{
+    try {
+      const {currentPassword,newPassword}=req.body
+      const {userId}= req.session
+      const userData=await user.findById({_id:userId})
+    const passwordMatch= await bcrypt.compare(currentPassword,userData.password)
+    console.log(passwordMatch,"compare");
+    if(passwordMatch==false){
+      return res.json({status:"invalid password"})
+    }
+    const hashPassword=await securePassword(newPassword)
+    console.log(hashPassword,"000000000000000000000000000000000000000000");
+    if(hashPassword){
+      console.log("Hlelo");
+      userData.password=hashPassword
+      await userData.save();
+      req.session.userId=null
+      req.session.user=false
+      return res.json({status:"password reset success"})
+    }
+  
+    } catch (error) {
+      console.log(error.message)
+    }
+    
+  }
+
+
   
   
   module.exports = {
@@ -173,5 +238,8 @@ const load_addAddress = async (req, res) => {
     loadprofile,
     editAddress,
     load_editAddress,
-    deleteAddress 
+    deleteAddress,
+    load_editProfile,
+    editProfile,
+    changePassword
 };

@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<!-- belle/login.html   11 Nov 2019 12:22:27 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Account &ndash; </title>
+<meta name="description" content="description">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Favicon -->
+<link rel="shortcut icon" href="assets/images/favicon.png" />
+<!-- Plugins CSS -->
+<link rel="stylesheet" href="assets/css/plugins.css">
+<!-- Bootstap CSS -->
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<!-- Main Style CSS -->
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+
+
+   <!-- Favicon -->
+   <link rel="shortcut icon" type="image/x-icon" href="Asets/imgs/theme/favicon.svg">
+   <!-- Template CSS -->
+   <link rel="stylesheet" href="Asets/css/main.css?v=3.4">
+</head>
+
+
+
+
+<div class="container" style="display: flex;
+justify-content: center;
+align-items: center;
+height: 80vh;">
+    <div class="card-body" style=" width: 100px; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px; ">   
+    
+    
+
+
+        <form method="post" id="form" action="/editProfile">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>user Name <span class="required">*</span></label>
+                    <input  class="form-control square" id="name" name="username" type="text" value="<%= userData.name %>" onblur="validateName()">
+                    <p class="text-danger" id="username_error"></p>
+                </div>
+              
+                <div class="form-group col-md-12">
+                    <label>Mobile Number<span class="required">*</span></label>
+                    <input class="form-control square" id="phone" name="mobile" type="tel" value="<%= userData.phone %>" onblur="validatemobile()">
+                    <p class="text-danger" id="mobile_error"></p>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+ 
+
+
+ <!--Footer-->
+  <footer id="footer">
+    <div class="newsletter-section">
+        <div class="container">
+            <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7 w-100 d-flex justify-content-start align-items-center">
+                        <div class="display-table">
+                            <div class="display-table-cell footer-newsletter">
+                                <div class="section-header text-center">
+                                    <label class="h2"><span>sign up for </span>newsletter</label>
+                                </div>
+                                <form action="#" method="post">
+                                    <div class="input-group">
+                                        <input type="email" class="input-group__field newsletter__input" name="EMAIL" value="" placeholder="Email address" required="">
+                                        <span class="input-group__btn">
+                                            <button type="submit" class="btn newsletter__submit" name="commit" id="Subscribe"><span class="newsletter__submit-text--large">Subscribe</span></button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5 d-flex justify-content-end align-items-center">
+                        <div class="footer-social">
+                            <ul class="list--inline site-footer__social-icons social-icons">
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Facebook"><i class="icon icon-facebook"></i></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Twitter"><i class="icon icon-twitter"></i> <span class="icon__fallback-text">Twitter</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Pinterest"><i class="icon icon-pinterest"></i> <span class="icon__fallback-text">Pinterest</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Instagram"><i class="icon icon-instagram"></i> <span class="icon__fallback-text">Instagram</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Tumblr"><i class="icon icon-tumblr-alt"></i> <span class="icon__fallback-text">Tumblr</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on YouTube"><i class="icon icon-youtube"></i> <span class="icon__fallback-text">YouTube</span></a></li>
+                                <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Vimeo"><i class="icon icon-vimeo-alt"></i> <span class="icon__fallback-text">Vimeo</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>    
+    </div>
+    <div class="site-footer">
+        <div class="container">
+             <!--Footer Links-->
+            <div class="footer-top">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Quick Shop</h4>
+                        <ul>
+                            <li><a href="#">Women</a></li>
+                            <li><a href="#">Men</a></li>
+                            <li><a href="#">Kids</a></li>
+                            <li><a href="#">Sportswear</a></li>
+                            <li><a href="#">Sale</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Informations</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                            <li><a href="#">Terms &amp; condition</a></li>
+                            <li><a href="#">My Account</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Customer Services</h4>
+                        <ul>
+                            <li><a href="#">Request Personal Data</a></li>
+                            <li><a href="#">FAQ's</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Orders and Returns</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
+                        <h4 class="h4">Contact Us</h4>
+                        <ul class="addressFooter">
+                            <li><i class="icon anm anm-map-marker-al"></i><p>55 Gallaxy Enque,<br>2568 steet, 23568 NY</p></li>
+                            <li class="phone"><i class="icon anm anm-phone-s"></i><p>(440) 000 000 0000</p></li>
+                            <li class="email"><i class="icon anm anm-envelope-l"></i><p>sales@yousite.com</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--End Footer Links-->
+            <hr>
+            <div class="footer-bottom">
+                <div class="row">
+                    <!--Footer Copyright-->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-sm-center text-md-left text-lg-left"><span></span> <a href="templateshub.net">Templates Hub</a></div>
+                    <!--End Footer Copyright-->
+                    <!--Footer Payment Icon-->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-0 order-md-1 order-lg-1 order-sm-0 payment-icons text-right text-md-center">
+                        <ul class="payment-icons list--inline">
+                            <li><i class="icon fa fa-cc-visa" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-mastercard" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-discover" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-paypal" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-cc-amex" aria-hidden="true"></i></li>
+                            <li><i class="icon fa fa-credit-card" aria-hidden="true"></i></li>
+                        </ul>
+                    </div>
+                    <!--End Footer Payment Icon-->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--End Footer-->
+<!--Scoll Top-->
+<span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+<!--End Scoll Top-->
+
+ <!-- Including Jquery -->
+ <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+ <script src="assets/js/vendor/jquery.cookie.js"></script>
+ <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+ <script src="assets/js/vendor/wow.min.js"></script>
+ <!-- Including Javascript -->
+ <script src="assets/js/bootstrap.min.js"></script>
+ <script src="assets/js/plugins.js"></script>
+ <script src="assets/js/popper.min.js"></script>
+ <script src="assets/js/lazysizes.js"></script>
+ <script src="assets/js/main.js"></script>
+</div>
+
+<!-- Vendor JS-->
+<script src="Asets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="Asets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="Asets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="Asets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="Asets/js/plugins/slick.js"></script>
+<script src="Asets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="Asets/js/plugins/wow.js"></script>
+<script src="Asets/js/plugins/jquery-ui.js"></script>
+<script src="Asets/js/plugins/perfect-scrollbar.js"></script>
+<script src="Asets/js/plugins/magnific-popup.js"></script>
+<script src="Asets/js/plugins/select2.min.js"></script>
+<script src="Asets/js/plugins/waypoints.js"></script>
+<script src="Asets/js/plugins/counterup.js"></script>
+<script src="Asets/js/plugins/jquery.countdown.min.js"></script>
+<script src="Asets/js/plugins/images-loaded.js"></script>
+<script src="Asets/js/plugins/isotope.js"></script>
+<script src="Asets/js/plugins/scrollup.js"></script>
+<script src="Asets/js/plugins/jquery.vticker-min.js"></script>
+<script src="Asets/js/plugins/jquery.theia.sticky.js"></script>
+<!-- Template  JS -->
+<script src="./Asets/js/main.js?v=3.4"></script>
+
+<script>
+    const username = document.getElementById("username");
+    
+        const mobile = document.getElementById("mobile");
+        const user_name_error = document.getElementById("username_error");
+        
+        const mobile_error = document.getElementById("mobile_error");
+
+ 
+
+        function validatemobile() {
+            const mobileNumber = mobile.value.trim();
+            const mobilePattern = /^\d{10}$/
+            if (mobileNumber.length < 10) {
+                mobile_error.innerHTML = "Enter a valid mobile number (at least 10 digits)";
+                mobile_error.style.display = "block";
+            }
+            else if (!mobilePattern.test(mobileNumber)) {
+                mobile_error.innerHTML = "Enter a valid mobile number ";
+                mobile_error.style.display = "block";
+            }
+            else {
+                mobile_error.style.display = "none";
+                mobile_error.innerHTML = "";
+            }
+        }
+        function validateName() {
+            const name_value = username.value;
+            const nameRegex = /^[a-zA-Z\s\-',.]+$/;
+    const isValidName = nameRegex.test(name_value );
+
+            if (name_value.trim() === "") {
+                user_name_error.style.display = "block";
+                user_name_error.innerHTML = "Please Enter a valid Name.";
+            }else if(!isValidName){
+                user_name_error.style.display = "block";
+                user_name_error.innerHTML = "Please Enter a valid Name.";
+            }else if(name_value>30){
+                user_name_error.style.display = "block";
+                user_name_error.innerHTML = "Please Enter a valid Name.";
+            }
+             else {
+                user_name_error.style.display = "none";
+                user_name_error.innerHTML = "";
+            }
+        }
+        document.getElementById("form").addEventListener("submit",(e)=>{
+            validateName() 
+            validatemobile()
+       
+            if(user_name_error.innerHTML||mobile_error.innerHTM){
+               
+            e.preventDefault()
+            }else{
+
+            }
+        })
+
+
+ </script>
+</body>
+
+<!-- belle/login.html   11 Nov 2019 12:22:27 GMT -->
+</html>
