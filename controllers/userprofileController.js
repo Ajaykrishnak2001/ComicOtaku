@@ -1,6 +1,20 @@
 const express = require('express');
 const address = require("../models/addressModel");
 const user = require("../models/userModel");
+// const securePassword=require("../controllers/userController");
+const bcrypt=require("bcrypt")
+
+const securePassword = async(password)=>{
+  try{
+
+     const passwordHash = await bcrypt.hash(password,10);
+      return passwordHash;
+
+  }catch(error){
+      console.log(error.message);
+  }
+
+}
 
 
 const loadprofile = async (req, res) => {
@@ -226,7 +240,7 @@ const load_addAddress = async (req, res) => {
     } catch (error) {
       console.log(error.message)
     }
-    
+    // 
   }
 
 
