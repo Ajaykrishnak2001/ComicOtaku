@@ -15,6 +15,7 @@ userRoute.set("views", "./views/User");
 // Import the userController
 const userController = require("../controllers/userController");
 const userprofileController = require("../controllers/userprofileController");
+const cartController = require("../controllers/cartController");
 
 userRoute.get('/home',userController.loadHome)
 
@@ -50,7 +51,8 @@ userRoute.post("/resetPassword",userprofileController.changePassword)
 
 
 
-
+userRoute.get("/cart",cartController.cartpage)
+userRoute.get("/add-cart/:productId",cartController.addTocart)
 
 
 
