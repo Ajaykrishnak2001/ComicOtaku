@@ -9,7 +9,8 @@ const cartpage = async(req,res)=>{
         const email = req.session.email;
         const categories = await Category.find();
         const userData = await User.findOne({email:email});
-        const cartItems = await Cart.findOne({ user: req.session.userId }).populate('items.product');
+        const cartItems = await Cart.findOne({ user: req.session.userData}).populate('items.product');
+
 
 
         res.render('cart',{categories,userData,cartItems});

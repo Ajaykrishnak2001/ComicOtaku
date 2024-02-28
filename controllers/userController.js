@@ -221,6 +221,7 @@ const verifyLogin = async (req, res) => {
                     res.render('login');
                 } else if (userData.is_verified === 1 && userData.is_active === "1") {
                     // Save user session here
+                    req.session.user = userData;
                     req.session.userId = userData._id;
                     req.session.email = email;
                     req.session.user = true;
