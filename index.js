@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 mongoose.connect("mongodb://localhost:27017/ComicOtaku");
+const bodyParser = require('body-parser');
 
 const express = require("express");
 const app=express();
@@ -18,6 +19,11 @@ const methodOverride = require('method-override');
 
 // Add method-override middleware
 app.use(methodOverride('_method'));
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Parse JSON bodies (for API requests)
+app.use(bodyParser.json());
 
 
 const path = require("path");

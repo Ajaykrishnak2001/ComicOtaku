@@ -20,8 +20,12 @@ const addTocart = async (req, res) => {
     try {
         const product = await Product.findById(productId);
 
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
         const cartProduct = {
-            productId: productId,
+            product: productId,
             quantity: 1, // Set default quantity to 1
             subTotal: product.price // Calculate subtotal based on product price
         };
@@ -33,7 +37,7 @@ const addTocart = async (req, res) => {
         }
 
         // Check if the product already exists in the cart
-        const existingProductIndex = userCart.items.findIndex(p => p.productId === productId);
+        const existingProductIndex = userCart.items.findIndex(p => p.product.toString() === productId);
         if (existingProductIndex !== -1) {
             // If the product exists, update its quantity and subtotal
             userCart.items[existingProductIndex].quantity++;
@@ -56,6 +60,7 @@ const addTocart = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 module.exports={
