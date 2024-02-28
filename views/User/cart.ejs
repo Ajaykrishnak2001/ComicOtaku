@@ -600,10 +600,10 @@
                             
                     		<tfoot>
                                 <tr>
-                                    <td colspan="3" class="text-left"><a href="http://annimexweb.com/" class="btn btn-secondary btn--small cart-continue">Continue shopping</a></td>
+                                    <td colspan="3" class="text-left"><a href="/products" class="btn btn-secondary btn--small cart-continue">Continue shopping</a></td>
                                     <td colspan="3" class="text-right">
 	                                    <button type="submit" name="clear" class="btn btn-secondary btn--small  small--hide">Clear Cart</button>
-                                    	<button type="submit" name="update" class="btn btn-secondary btn--small cart-continue ml-2">Update Cart</button>
+                                    	<!-- <button type="submit" name="update" class="btn btn-secondary btn--small cart-continue ml-2">Update Cart</button> -->
                                     </td>
                                 </tr>
                             </tfoot>
@@ -614,7 +614,7 @@
                 
                 <div class="container mt-4">
                     <div class="row">
-                    	<div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
+                    	<!-- <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
                         	<h5>Discount Codes</h5>
                             <form action="#" method="post">
                             	<div class="form-group">
@@ -625,8 +625,8 @@
                                     <div><input type="button" class="btn btn-secondary btn--small" value="Apply Coupon"></div>
                                 </div>
                             </form>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
+                        </div> -->
+                        <!-- <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
                         	<h5>Estimate Shipping and Tax</h5>
 							<form action="#" method="post">
                                 <div class="form-group">
@@ -792,7 +792,7 @@
                                         <option value="Zimbabwe" data-provinces="[]">Zimbabwe</option></select>
                                 </div>
     
-                                <div class="form-group">
+                                 <div class="form-group">
                                     <label>State</label>
                                     <select id="address_province" name="address[province]" data-default="">
                                       <option value="Alabama">Alabama</option>
@@ -858,49 +858,35 @@
                                       <option value="Armed Forces Europe">Armed Forces Europe</option>
                                       <option value="Armed Forces Pacific">Armed Forces Pacific</option>
                                     </select>
-                                </div>
-                                <div class="form-group">
+                                </div> -->
+                                <!-- <div class="form-group">
                                     <label for="address_zip">Postal/Zip Code</label>
                                     <input type="text" id="address_zip" name="address[zip]">
-                                </div>
+                                </div> -->
     
-                                <div class="actionRow">
+                                <!-- <div class="actionRow">t
                                     <div><input type="button" class="btn btn-secondary btn--small" value="Calculate shipping"></div>
                                 </div>
                             </form>
+                        </div>  
+                         -->
+                         <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
+                            <div class="solid-border">	
+                                <div class="row border-bottom pb-2">
+                                    <span class="col-12 col-sm-6 cart__subtotal-title">Subtotal</span>
+                                    <span class="col-12 col-sm-6 text-right"><span class="money">$<%= cartItems.total %></span></span>
+                                </div>
+                                <div class="row border-bottom pb-2 pt-2">
+                                    <span class="col-12 col-sm-6 cart__subtotal-title"><strong>Grand Total</strong></span>
+                                    <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right"><span class="money">$<%= cartItems.total %></span></span>
+                                </div>
+                                <p class="cart_tearm"></p>
+                                <input type="submit" name="checkout" id="cartCheckout" class="btn btn--small-wide checkout" value="Proceed To Checkout" disabled="disabled">
+                                <div class="paymnet-img"><img src="assets/images/payment-img.jpg" alt="Payment"></div>
+                                <p><a href="#;">Checkout with Multiple Addresses</a></p>
+                            </div>
                         </div>
                         
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
-                            <div class="solid-border">	
-                              <div class="row border-bottom pb-2">
-                                <span class="col-12 col-sm-6 cart__subtotal-title">Subtotal</span>
-                                <span class="col-12 col-sm-6 text-right"><span class="money">$735.00</span></span>
-                              </div>
-                              <div class="row border-bottom pb-2 pt-2">
-                                <span class="col-12 col-sm-6 cart__subtotal-title">Tax</span>
-                                <span class="col-12 col-sm-6 text-right">$10.00</span>
-                              </div>
-                              <div class="row border-bottom pb-2 pt-2">
-                                <span class="col-12 col-sm-6 cart__subtotal-title">Shipping</span>
-                                <span class="col-12 col-sm-6 text-right">Free shipping</span>
-                              </div>
-                              <div class="row border-bottom pb-2 pt-2">
-                                <span class="col-12 col-sm-6 cart__subtotal-title"><strong>Grand Total</strong></span>
-                                <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right"><span class="money">$1001.00</span></span>
-                              </div>
-                              <div class="cart__shipping">Shipping &amp; taxes calculated at checkout</div>
-                              <p class="cart_tearm">
-                                <label>
-                                  <input type="checkbox" name="tearm" class="checkbox" value="tearm" required="">
-                                  I agree with the terms and conditions
-								</label>
-                              </p>
-                              <input type="submit" name="checkout" id="cartCheckout" class="btn btn--small-wide checkout" value="Proceed To Checkout" disabled="disabled">
-                              <div class="paymnet-img"><img src="assets/images/payment-img.jpg" alt="Payment"></div>
-                              <p><a href="#;">Checkout with Multiple Addresses</a></p>
-                            </div>
-        
-                        </div>
                     </div>
                 </div>
                 
