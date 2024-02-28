@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Cart =require("../models/cartModel");
-
+const Category =require("../models/categoryModel");
 
 
 const cartpage = async(req,res)=>{

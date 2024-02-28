@@ -222,9 +222,10 @@ const verifyLogin = async (req, res) => {
                 } else if (userData.is_verified === 1 && userData.is_active === "1") {
                     // Save user session here
                     req.session.userId = userData._id;
+                    req.session.email = email;
                     req.session.user = true;
                     req.session.save();
-
+console.log(req.session.user);
                     res.render('home');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
                     res.render('login', { message: "User is blocked" }); // Display alert message
