@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
   is_listed: {
     type: Number,
     default: 1,
-  },
-});
+  }
+},{strictPopulate:false});
 
 module.exports = mongoose.model("Product", productSchema);
