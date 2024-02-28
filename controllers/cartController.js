@@ -11,6 +11,7 @@ const cartpage = async(req,res)=>{
         const userData = await User.findOne({email:email});
         const cartItems = await Cart.findOne({ user: req.session.userId }).populate('items.product');
 
+
         res.render('cart',{categories,userData,cartItems});
     }catch(error){
         console.log(error.message);
