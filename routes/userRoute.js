@@ -16,6 +16,7 @@ userRoute.set("views", "./views/User");
 const userController = require("../controllers/userController");
 const userprofileController = require("../controllers/userprofileController");
 const cartController = require("../controllers/cartController");
+const ordercontroller=require("../controllers/ordercontroller")
 
 userRoute.get('/home',userController.loadHome)
 
@@ -55,6 +56,8 @@ userRoute.get("/cart",cartController.cartpage)
 userRoute.get("/add-cart/:productId",cartController.addTocart)
 userRoute.patch('/update-quantity/:productId',cartController.changeQuantity);
 
+
+userRoute.get('/checkOut',ordercontroller.checkoutpage)
 
 
 //  Product routes

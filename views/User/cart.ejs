@@ -887,9 +887,10 @@
                                     <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right"><span class="money">$<%= cartItems.total %></span></span>
                                 </div>
                                 <p class="cart_tearm"></p>
-                                <input type="submit" name="checkout" id="cartCheckout" class="btn btn--small-wide checkout" value="Proceed To Checkout" disabled="disabled">
+                                <button id="checkoutLink" class="btn btn--link" onclick="window.location.href='/checkout';">Proceed To Checkout</button>
                                 <div class="paymnet-img"><img src="assets/images/payment-img.jpg" alt="Payment"></div>
-                                <p><a href="#;">Checkout with Multiple Addresses</a></p>
+                                <p><a href="#;" id="checkoutLink">Checkout with Multiple Addresses</a></p>
+                                
                             </div>
                         </div>
                         
