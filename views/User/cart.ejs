@@ -578,9 +578,15 @@
                                             <td class="cart__update-wrapper cart-flex-item text-right">
                                                 <div class="cart__qty text-center">
                                                     <div class="qtyField">
-                                                        <a class="qtyBtn minus" href="javascript:void(0);"><i class="icon icon-minus"></i></a>
+                                                         <a class="qtyBtn minus" onclick="updateQuantity('<%= item.product._id %>', 'decrement')" href="javascript:void(0);"><i class="icon icon-minus"></i></a>
                                                         <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="<%= item.quantity %>" pattern="[0-9]*">
-                                                        <a class="qtyBtn plus" href="javascript:void(0);"><i class="icon icon-plus"></i></a>
+                                                        <a class="qtyBtn plus" onclick="updateQuantity('<%= item.product._id %>', 'increment')" href="javascript:void(0);"><i class="icon icon-plus"></i></a> 
+
+                                                        <!-- <a href="#" class="qtyBtn minus" onclick="updateQuantity('<%= item.product._id %>', 'decrement')"><i class="icon icon-minus"></i></a>
+                                                        <span id="quantity-<%= item.product._id %>" class="cart__qty-input qty"><%= item.quantity %></span>
+                                                        <a href="#" class="qtyBtn plus" onclick="updateQuantity('<%= item.product._id %>', 'increment')"><i class="icon icon-plus"></i></a> -->
+                                                        
+                                                        
                                                     </div>
                                                 </div>
                                             </td>
@@ -1019,6 +1025,43 @@
      <script src="assets/js/popper.min.js"></script>
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
+
+     <script>
+
+async function updateQuantity(productId, action) {
+    try {
+        const response = await fetch(`/update-quantity/${productId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: action })
+        });
+
+        if (response.ok) {
+            // Quantity updated successfully
+            const data = await response.json();
+            console.log(data);
+            // Update the quantity display
+            document.getElementById(`quantity-${productId}`).innerText = data.currentCartitem.quantity;
+            // Update the subtotal display
+            document.getElementById(`subtotal-${productId}`).innerText = data.currentCartitem.subtotal;
+            // Update the total display
+            document.getElementById('cart-subtotal').innerText = data.Total;
+            // Update the total display
+            document.getElementById('cart-total').innerText = data.Total;
+        } else {
+            // Handle error
+            console.error('Failed to update quantity');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+</script>
+    
+
 </div>
 </body>
 

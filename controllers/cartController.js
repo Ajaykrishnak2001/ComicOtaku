@@ -65,10 +65,68 @@ const addTocart = async (req, res) => {
     }
 };
 
+const changeQuantity = async (req, res) => {
+    const productId = req.params.productId;
+    const action = req.body.action; // 'increment' or 'decrement'
+
+    try {
+        // Find the cart item by product ID
+        const cartItem = await Cart.findOne({ 'items.product': productId });
+        if (!cartItem) {
+            return res.status(404).json({ error: 'Cart item not found' });
+        }
+
+        // Find the index of the product in the items array
+        const productIndex = cartItem.items.findIndex(item => item.product.toString() === productId);
+        if (productIndex === -1) {
+            return res.status(404).json({ error: 'Product not found in cart' });
+        }
+
+        // Update the quantity based on the action
+        if (action === 'increment') {
+            cartItem.items[productIndex].quantity++;
+        } else if (action === 'decrement') {
+            if (cartItem.items[productIndex].quantity > 1) {
+                cartItem.items[productIndex].quantity--;
+            }
+        }
+
+        // Calculate the new subtotal for the product
+        const product = await Product.findById(productId);
+        const newSubtotal = cartItem.items[productIndex].quantity * product.price;
+
+        // Update the subtotal for the product
+        cartItem.items[productIndex].subTotal = newSubtotal;
+
+        // Calculate the total for all products in the cart
+        const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
+
+        // Update the total in the cart
+        cartItem.total = newTotal;
+
+        // Save the updated cart item
+        await cartItem.save();
+        console.log(cartItem);
+
+        // Send the updated cart item and total in the response
+        res.status(200).json({ items: cartItem.items, total: cartItem.total });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
 
 
 module.exports={
     cartpage,
-    addTocart 
+    addTocart,
+    changeQuantity
 
 }

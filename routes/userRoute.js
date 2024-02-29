@@ -53,6 +53,7 @@ userRoute.post("/resetPassword",userprofileController.changePassword)
 
 userRoute.get("/cart",cartController.cartpage)
 userRoute.get("/add-cart/:productId",cartController.addTocart)
+userRoute.patch('/update-quantity/:productId',cartController.changeQuantity);
 
 
 
