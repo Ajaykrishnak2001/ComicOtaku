@@ -32,9 +32,17 @@ const checkoutpage = async (req, res) => {
     }
 }
 
+const load_orderSuccess = async (req, res) => {
+    try {
+      res.render("orderSucess");
+    } catch (error) {
+      console.log(error.message)
+    }
+  };
 
     
 
   module.exports ={
-    checkoutpage
+    checkoutpage,
+    load_orderSuccess
   }

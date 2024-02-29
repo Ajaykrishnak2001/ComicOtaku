@@ -781,7 +781,7 @@
                             </div>
                         </div>
                         <div class="order-button-payment">
-                            <button class="btn" value="Place order" type="submit">Place order</button>
+                            <button class="btn" id="placeOrderButton" type="button">Place order</button>
                         </div>
                     </div>
                 </div>
@@ -914,6 +914,14 @@
      <script src="assets/js/popper.min.js"></script>
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
+
+     <script>
+        document.getElementById("placeOrderButton").addEventListener("click", function() {
+            // Perform any necessary actions before redirecting (e.g., form submission)
+            // Then, redirect to the orderSuccess URL
+            window.location.href = "/orderSucess";
+        });
+    </script>
 </div>
 </body>
 
