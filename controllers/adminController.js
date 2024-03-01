@@ -382,7 +382,42 @@ const edit_product = async (req, res) => {
 };
 
 
+const editcategory = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const category = await Category.findById(id);
 
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
+
+    res.render("editCategory", { category });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const edit_Category = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const body = req.body;
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, {
+      cName: body.categoryName,
+      description: body.description,
+    });
+
+    if (!updatedCategory) {
+      return res.status(404).send("Category not found");
+    }
+
+    res.redirect("/admin/category");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 const createCategory = async (req, res) => {
   try {
@@ -426,6 +461,9 @@ const deleteCategory = async (req, res) => {
 
 
 
+
+
+
 module.exports = {
   loadAdminLog,
   adminLogin,
@@ -445,4 +483,6 @@ module.exports = {
   edit_product,
   createCategory,
   deleteCategory,
+  editcategory,
+  edit_Category,
 };
