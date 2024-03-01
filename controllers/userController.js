@@ -327,6 +327,6 @@ module.exports = {
     resendOTP,
     loadregistration,
     loadAllProducts,
-    // securePassword 
+    
     
 };

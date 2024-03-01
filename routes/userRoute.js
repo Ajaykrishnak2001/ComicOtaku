@@ -65,6 +65,8 @@ userRoute.post('/placeOrder',ordercontroller.placeorder)
 //  Product routes
 userRoute.get("/products", userController.loadAllProducts);
 
+userRoute.get("/viewOrder", userprofileController.viewOrder);
+
 userRoute.get("/products/:productId", userController.loadProduct);
 
 module.exports = userRoute;

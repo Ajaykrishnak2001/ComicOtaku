@@ -2,7 +2,8 @@ const express = require('express');
 const address = require("../models/addressModel");
 const user = require("../models/userModel");
 // const securePassword=require("../controllers/userController");
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcrypt");
+const Order = require('../models/orderModel');
 
 const securePassword = async(password)=>{
   try{
@@ -26,7 +27,8 @@ const loadprofile = async (req, res) => {
   
       const userData = await user.findById(req.session.userId);
       const userAddress = await address.find({ user: req.session.userId });
-      res.render("profile", { user: userData, userAddress: userAddress });
+      const AllOrders=await Order.find();
+      res.render("profile", { user: userData, userAddress: userAddress,AllOrders });
     } catch (error) {
       console.log(error.message);
     }
@@ -244,8 +246,18 @@ const load_addAddress = async (req, res) => {
   }
 
 
-  
-  
+  const viewOrder = async (req, res) => {
+    try {
+        const orderNumber = req.query.orderNumber;
+        const orderDetails = await Order.findOne({ orderNumber: orderNumber }).populate("User").populate("Product");
+        const totalAmount = orderDetails.totalAmount; // Assuming totalAmount is a property of orderDetails
+
+        res.render("viewOrders", { orderDetails, totalAmount });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
   module.exports = {
     load_addAddress,
     addAddress,
@@ -255,5 +267,6 @@ const load_addAddress = async (req, res) => {
     deleteAddress,
     load_editProfile,
     editProfile,
-    changePassword
+    changePassword,
+    viewOrder
 };

@@ -13,6 +13,6 @@ const categorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+},{ strictPopulate:false });
 
 module.exports = mongoose.model("Category", categorySchema);

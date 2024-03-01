@@ -48,7 +48,7 @@ const addressSchema = new Schema({
     type: Boolean,
     default: false,
   }
-});
+},{ strictPopulate:false });
 
 const Address = mongoose.model("Address", addressSchema);
 

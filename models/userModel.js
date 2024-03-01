@@ -43,7 +43,7 @@ is_active: { type: String,
     default: 1,
      required:true
     }
- });
+ },{ strictPopulate:false });
     
    
 module.exports = mongoose.model('User', userSchema)

@@ -84,7 +84,7 @@ const orderSchema = new mongoose.Schema({
   reasonForCancel:{
     type:String
   }
-});
+},{ strictPopulate:false });
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;
