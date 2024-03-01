@@ -60,6 +60,7 @@ userRoute.patch('/update-quantity/:productId',cartController.changeQuantity);
 userRoute.get('/checkOut',ordercontroller.checkoutpage)
 
 userRoute.get('/orderSucess',ordercontroller.load_orderSuccess)
+userRoute.post('/placeOrder',ordercontroller.placeorder)
 
 //  Product routes
 userRoute.get("/products", userController.loadAllProducts);

@@ -919,21 +919,52 @@
                     timer: 2000
                 });
             } else {
-                // Proceed with the order
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Your order has been placed successfully',
-                    icon: 'success',
-                    timer: 2000
-                }).then(() => {
-                    // Redirect to the order success page
-                    window.location.href = "/orderSucess";
+                const cartId = "<%= cartItems._id %>"; // Assuming cartItems is the object containing the cart ID
+
+                $.ajax({
+                    url: "/placeOrder",
+                    method: "POST",
+                    data: {
+                        cartId: cartId,
+                        addressId: selectedAddress.val(),
+                        paymentOption: selectedPayment.val()
+                    },
+                    success: function(response) {
+    if (response.status === "order placed") {
+        Swal.fire({
+            title: 'Success',
+            text: 'Your order has been placed successfully',
+            icon: 'success',
+            timer: 2000
+        }).then(() => {
+            window.location.href = "/orderSucess";
+        });
+    } else {
+        Swal.fire({
+            title: 'Success',
+            text: 'Your order has been placed successfully',
+            icon: 'success',
+            timer: 2000
+        }).then(() => {
+            window.location.href = "/orderSucess";
+        });
+    }
+},
+
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while placing the order',
+                            icon: 'error',
+                            timer: 2000
+                        });
+                    }
                 });
             }
         });
     });
 </script>
-
 
 </div>
 </body>
