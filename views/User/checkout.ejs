@@ -646,56 +646,49 @@
                             <div class="row p-30">
                                 <% for (let i=0; i < userAddress.length; i++) { %>
                                 <div class="col-lg-6">
-                                  <div class="card mb-3 mb-lg-0">
-                                    <div class="card-header">
-                                      <h5 class="mb-0">
-                                        <%= userAddress[i].addressType %> Address
-                                      </h5>
+                                    <div class="card mb-3 mb-lg-0">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">
+                                                <%= userAddress[i].addressType %> Address
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p style="font-weight: bold;">
+                                                <%= userAddress[i].name %>
+                                            </p>
+                                            <address>
+                                                <%= userAddress[i].address %>, <br>
+                                                <%= userAddress[i].locality %>,<br>
+                                                <%= userAddress[i].district %>, <br>
+                                                <%= userAddress[i].state %>, <br>
+                                                <%= userAddress[i].alternatePhone %>
+                                                , <br>
+                                                <%= userAddress[i].pinCode %>
+                                            </address>
+                                            <p>
+                                                <%= userAddress[i].state %>
+                                            </p>
+                                            <a href="/addressEdit?addressId=<%= userAddress[i]._id %>"
+                                                class="btn-small">Edit</a>
+                                            <!-- <button class="btn-small delete-button" data-id="<%= userAddress[i]._id %>">Delete</button> -->
+                                            <input type="radio" name="selectedAddress" value="<%= userAddress[i]._id %>">
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                      <p style="font-weight: bold;">
-                                        <%= userAddress[i].name %>
-                                      </p>
-                                      <address>
-                                        <%= userAddress[i].address %>, <br>
-                                        <%= userAddress[i].locality %>,<br>
-                                        <%= userAddress[i].district %>, <br>
-                                        <%= userAddress[i].state %>, <br>
-                                        <%= userAddress[i].alternatePhone %>
-                                        , <br>
-                                        <%= userAddress[i].pinCode %>
-                                      </address>
-                                      <p>
-                                        <%= userAddress[i].state %>
-                                      </p>
-                                      <a href="/addressEdit?addressId=<%= userAddress[i]._id %>" class="btn-small">Edit</a>
-                                      <button class="btn-small delete-button" data-id="<%= userAddress[i]._id %>">Delete</button>
-                                    </div>
-                                  </div>
                                 </div>
                                 <% } %>
-                              </div>
-
-                          
-
-                           
-
-                          
+                            </div>
                         </form>
-                          
                         <div>
                             <a href="/addAddress?returnUrl=/checkout" class="btn mt-10">ADD Address</a>
-
                         </div>
                     </div>
                 </div>
-
+            
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                     <div class="your-order-payment">
                         <div class="your-order">
                             <h2 class="order-title mb-4">Your Order</h2>
-
-                            <div class="table-responsive-sm order-table"> 
+                            <div class="table-responsive-sm order-table">
                                 <table class="bg-white table table-bordered table-hover text-center">
                                     <thead>
                                         <tr>
@@ -717,9 +710,6 @@
                                                         <div class="list-view-item__title">
                                                             <a href="#"><%= item.product.pname %></a>
                                                         </div>
-                                                        <!-- <div class="cart__meta-text">
-                                                            <br>Size: <%= item.product.size %><br>
-                                                        </div> -->
                                                     </td>
                                                     <td class="cart__price-wrapper cart-flex-item">
                                                         <span class="money">$<%= item.product.price %></span>
@@ -727,22 +717,13 @@
                                                     <td class="cart__update-wrapper cart-flex-item text-right">
                                                         <div class="cart__qty text-center">
                                                             <div class="qtyField">
-                                                                 <!-- <a class="qtyBtn minus" onclick="updateQuantity('<%= item.product._id %>', 'decrement')" href="javascript:void(0);"><i class="icon icon-minus"></i></a>--->
                                                                 <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="<%= item.quantity %>" pattern="[0-9]*">
-                                                                  <!--  <a class="qtyBtn plus" onclick="updateQuantity('<%= item.product._id %>', 'increment')" href="javascript:void(0);"><i class="icon icon-plus"></i></a>  -->
-        
-                                                                <!-- <a href="#" class="qtyBtn minus" onclick="updateQuantity('<%= item.product._id %>', 'decrement')"><i class="icon icon-minus"></i></a>
-                                                                <span id="quantity-<%= item.product._id %>" class="cart__qty-input qty"><%= item.quantity %></span>
-                                                                <a href="#" class="qtyBtn plus" onclick="updateQuantity('<%= item.product._id %>', 'increment')"><i class="icon icon-plus"></i></a> -->
-                                                                
-                                                                
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td class="text-right small--hide cart-price">
                                                         <div><span class="money">$<%= item.subTotal %></span></div>
                                                     </td>
-                                                    <!-- <td class="text-center small--hide"><a href="#" class="btn btn--secondary cart__remove" title="Remove item"><i class="icon icon anm anm-times-l"></i></a></td> -->
                                                 </tr>
                                             <% }); %>
                                         <% } else { %>
@@ -752,10 +733,6 @@
                                         <% } %>
                                     </tbody>
                                     <tfoot class="font-weight-600">
-                                        <!-- <tr>
-                                            <td colspan="4" class="text-right">Shipping </td>
-                                            <td>$50.00</td>
-                                        </tr> -->
                                         <tr>
                                             <td colspan="4" class="text-right">Total</td>
                                             <td>$<%= cartItems.total %></td>
@@ -764,19 +741,13 @@
                                 </table>
                             </div>
                         </div>
-                        
                         <hr />
-
                         <div class="your-payment">
                             <h2 class="payment-title mb-3">payment method</h2>
                             <div class="custome-radio">
                                 <div class="custome-radio">
-                                    <input class="form-check-input payment" type="radio" value="cod"
-                                        name="selectedPayment" id="CashOnDelivey">
-                                    <label class="form-check-label" for="CashOnDelivey" data-bs-toggle="collapse"
-                                        data-target="#CashOnDelivey" aria-controls="CashOnDelivey">Cash on
-                                        Delivery</label>
-
+                                    <input class="form-check-input payment" type="radio" value="cod" name="selectedPayment" id="CashOnDelivery">
+                                    <label class="form-check-label" for="CashOnDelivery" data-bs-toggle="collapse" data-target="#CashOnDelivery" aria-controls="CashOnDelivery">Cash on Delivery</label>
                                 </div>
                             </div>
                         </div>
@@ -786,6 +757,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
         
     </div>
@@ -915,13 +887,54 @@
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
 
-     <script>
-        document.getElementById("placeOrderButton").addEventListener("click", function() {
-            // Perform any necessary actions before redirecting (e.g., form submission)
-            // Then, redirect to the orderSuccess URL
-            window.location.href = "/orderSucess";
+    
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#placeOrderButton').click(function() {
+            const selectedAddress = $('input[name="selectedAddress"]:checked');
+            const selectedPayment = $('input[name="selectedPayment"]:checked');
+
+            if (selectedAddress.length === 0 && selectedPayment.length === 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please select an address and a payment method',
+                    icon: 'error',
+                    timer: 2000
+                });
+            } else if (selectedAddress.length === 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please select an address',
+                    icon: 'error',
+                    timer: 2000
+                });
+            } else if (selectedPayment.length === 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please select a payment method',
+                    icon: 'error',
+                    timer: 2000
+                });
+            } else {
+                // Proceed with the order
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Your order has been placed successfully',
+                    icon: 'success',
+                    timer: 2000
+                }).then(() => {
+                    // Redirect to the order success page
+                    window.location.href = "/orderSucess";
+                });
+            }
         });
-    </script>
+    });
+</script>
+
+
 </div>
 </body>
 
