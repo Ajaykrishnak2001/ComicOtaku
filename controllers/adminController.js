@@ -421,22 +421,33 @@ const edit_Category = async (req, res) => {
 
 const createCategory = async (req, res) => {
   try {
+    const existingCategory = await Category.findOne({
+      cName: req.body.categoryName,
+    });
+
+    if (existingCategory) {
+      const categories = await Category.find();
+      res.render("category", {
+        categories,
+        errorMessage: "Category already exists",
+      });
+      return;
+    }
+
     const newCategory = new Category({
       cName: req.body.categoryName,
       description: req.body.description,
     });
 
-    // Save the new category to the database
     const savedCategory = await newCategory.save();
 
-    // Redirect to a success page or do something else
     res.redirect("/admin/category");
   } catch (error) {
-    // Handle errors, you might want to render an error page
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 const deleteCategory = async (req, res) => {
   try {
     const categoryId = req.query.id;
