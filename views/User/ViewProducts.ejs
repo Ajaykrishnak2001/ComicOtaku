@@ -806,6 +806,9 @@
      <!-- Photoswipe Gallery -->
      <script src="assets/js/vendor/photoswipe.min.js"></script>
      <script src="assets/js/vendor/photoswipe-ui-default.min.js"></script>
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
      <script>
         $(function(){
             var $pswp = $('.pswp')[0],
@@ -864,6 +867,17 @@
                             const productId = button.dataset.productId;
                             const res = await fetch(`/add-cart/${productId}`, { method: 'GET' });
                             const data = await res.json();
+                            if(res.ok){
+                                console.log("sucess");
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Your product has been Added in Cart',
+                                     icon: 'success',
+                                     timer: 2000
+                });
+                            }else{
+                                console.log("Error");
+                            }
                             console.log(data);
                         } catch (error) {
                             console.log(error);
