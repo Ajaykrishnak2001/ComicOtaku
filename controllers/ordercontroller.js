@@ -96,7 +96,6 @@ const placeorder = async (req, res) => {
             price: cartItem.subTotal,
         }));
         const userAddress = await Address.findById(addressId);
-        console.log(addressId);
         if (!userAddress) {
             return res.status(404).json({ message: 'Address not found' });
         }
@@ -118,15 +117,10 @@ const placeorder = async (req, res) => {
             },
             payment: paymentOption,
         };
-        console.log(order);
         const createdOrder = await orders.create(order);
 
-        // Update product quantities and delete cart
-        // for (const orderedProduct of createdOrder.items) {
-        //     const product = await Product.findById(orderedProduct.product);
-        //     await product.save();
-        // }
-        // await cart.findByIdAndDelete(cartId);
+        // Delete the cart after successfully placing the order
+        await cart.findByIdAndDelete(cartId);
 
         res.status(200).json({ message: 'Order placed successfully', order: createdOrder });
     } catch (error) {

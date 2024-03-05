@@ -872,7 +872,7 @@
                                 </div>
                             </form>
                         </div>  
-                         -->
+                         --><% if (cartItems && cartItems.items && cartItems.items.length > 0) { %>
                          <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
                             <div class="solid-border">	
                                 <div class="row border-bottom pb-2">
@@ -883,6 +883,12 @@
                                     <span class="col-12 col-sm-6 cart__subtotal-title"><strong>Grand Total</strong></span>
                                     <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right"><span class="money">$<%= cartItems.total %></span></span>
                                 </div>
+                            
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="text-center">No items in cart</td>
+                                </tr>
+                            <% } %>
                                 <p class="cart_tearm"></p>
                                 <button id="checkoutLink" class="btn btn--link" onclick="window.location.href='/checkout';">Proceed To Checkout</button>
                                 <div class="paymnet-img"><img src="assets/images/payment-img.jpg" alt="Payment"></div>
