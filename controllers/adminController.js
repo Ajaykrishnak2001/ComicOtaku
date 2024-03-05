@@ -227,29 +227,44 @@ const delete_User = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 const add_Product = async (req, res) => {
   try {
+    console.log("Request body:", req.body); // Log the entire request body to see the structure
+
     const images = req.files.map((file) => file.filename);
+    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+    const sizes = sizeNames.map((size) => ({
+      size: size,
+      quantity: parseInt(req.body.sizes?.[size]) || 0,
+    }));
+
+    console.log("Sizes:", sizes); // Log the sizes array to see if quantities are correctly parsed
 
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
-      sizes: req.body.pname,
+      sizes: sizes,
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,
     });
+
+    console.log("New Product:", newProduct); // Log the new product object before saving
+
     await newProduct.save();
-    console.log(newProduct);
+    console.log("Product saved successfully:", newProduct);
+
     res.redirect("/admin/products");
   } catch (error) {
-    console.error(error);
+    console.error("Error adding product:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
 
 const deleteProduct = async (req, res) => {
   try {
@@ -299,74 +314,39 @@ const getCategories = async () => {
   }
 };
 
+
 const edit_product = async (req, res) => {
   try {
     const id = req.query.id;
-    const body=req.body
-    console.log(req.query.id,body);
 
-    // const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+    const sizes = sizeNames.map((size) => ({
+      size: size,
+      quantity: parseInt(req.body.sizes?.[size]) || 0,
+    }));
 
-    // Parse the removeSize checkboxes to get a list of sizes to remove
-    // let sizesToRemove = [];
-    // if (req.body.removeSize && !Array.isArray(req.body.removeSize)) {
-    //   sizesToRemove.push(req.body.removeSize);
-    // } else if (Array.isArray(req.body.removeSize)) {
-    //   sizesToRemove = req.body.removeSize;
-    // }
+    let siz=[]
 
-    // // Filter out the sizes to remove from the sizes array
-    // const sizes = sizeNames
-    //   .filter(size => !sizesToRemove.includes(size))
-    //   .map(size => ({
-    //     size: size,
-    //     quantity: req.body.sizes[size] || 0,
-    //   }));
-
-    // Parse the removeImage checkboxes to get a list of images to remove
-    let imagesToRemove = [];
-    if (req.body.removeImage && !Array.isArray(req.body.removeImage)) {
-      imagesToRemove.push(req.body.removeImage);
-    } else if (Array.isArray(req.body.removeImage)) {
-      imagesToRemove = req.body.removeImage;
-    }
-
-    // Handle image uploads
-    let newImages = [];
-    if (req.files && req.files.newImages) {
-      newImages = req.files.newImages.map(file => file.path); // Assuming the file.path contains the image URLs
-    }
-
-    // Remove images from the 'images' array
-    await Product.findByIdAndUpdate(id, {
-      $pull: { images: { $in: imagesToRemove } },
-    });
-
-    // Delete the images from the file system (assuming file paths are stored in the imagesToRemove array)
-    imagesToRemove.forEach(async (imagePath) => {
-      try {
-        await fs.unlink(imagePath); // Assuming 'fs' is the Node.js File System module
-      } catch (error) {
-        console.error(`Error deleting image: ${error}`);
-      }
-    });
-
-    // Add new images to the 'images' array
-    await Product.findByIdAndUpdate(id, {
-      $push: { images: { $each: newImages } },
-    });
+    let size="XS"
+    let quantity=req.body.sizesXS
+    let obj={}
+    obj={size,quantity}
+    siz.push(obj)
+    console.log(siz)
+    
 
     // Update other product details based on the data in req.body
     const updatedProduct = await Product.findByIdAndUpdate(id, {
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
+      sizes: siz, // Use the correct field name for sizes
       category: req.body.productCategory,
       brand: req.body.ProductBrand,
       is_listed: req.body.listed, // Assuming 'listed' is a boolean
-
     });
 
+    console.log(updatedProduct)
     // Handle the case where the product is not found
     if (!updatedProduct) {
       return res.status(404).send("Product not found");
@@ -377,9 +357,10 @@ const edit_product = async (req, res) => {
     res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server rror");
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 const editcategory = async (req, res) => {
