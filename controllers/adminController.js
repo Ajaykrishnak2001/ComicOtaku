@@ -314,39 +314,31 @@ const getCategories = async () => {
   }
 };
 
-
 const edit_product = async (req, res) => {
   try {
     const id = req.query.id;
 
+    // Set the same quantity for all sizes
+    // const quantity = parseInt(req.body.sizesXS) || 0;
+
+    // Create an array of objects with all sizes and the same quantity
     const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
     const sizes = sizeNames.map((size) => ({
       size: size,
-      quantity: parseInt(req.body.sizes?.[size]) || 0,
+      quantity: parseInt(req.body[`sizes${size}`]) || 0,
     }));
-
-    let siz=[]
-
-    let size="XS"
-    let quantity=req.body.sizesXS
-    let obj={}
-    obj={size,quantity}
-    siz.push(obj)
-    console.log(siz)
-    
 
     // Update other product details based on the data in req.body
     const updatedProduct = await Product.findByIdAndUpdate(id, {
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
-      sizes: siz, // Use the correct field name for sizes
+      sizes: sizes,
       category: req.body.productCategory,
       brand: req.body.ProductBrand,
       is_listed: req.body.listed, // Assuming 'listed' is a boolean
     });
 
-    console.log(updatedProduct)
     // Handle the case where the product is not found
     if (!updatedProduct) {
       return res.status(404).send("Product not found");
@@ -360,6 +352,7 @@ const edit_product = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
