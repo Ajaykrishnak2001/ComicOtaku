@@ -58,12 +58,13 @@ const addTocart = async (req, res) => {
         // Save the updated cart
         await userCart.save();
 
-        res.status(200).json({ });
+        res.status(200).json({ success: true, message: 'Product added to cart' });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 const changeQuantity = async (req, res) => {
     const productId = req.params.productId;
