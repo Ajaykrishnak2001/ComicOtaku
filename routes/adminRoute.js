@@ -51,8 +51,8 @@ adminRoute.post("/category/delete", adminController.deleteCategory);
 
 
 
-
-
+adminRoute.get("/orders",adminController.loadorders)
+adminRoute.get("/orderdetails",adminController.detailedOrder )
 
 
 

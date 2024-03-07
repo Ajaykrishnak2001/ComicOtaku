@@ -4,6 +4,7 @@ const user = require("../models/userModel");
 // const securePassword=require("../controllers/userController");
 const bcrypt=require("bcrypt");
 const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
 
 const securePassword = async(password)=>{
   try{
@@ -251,7 +252,9 @@ const load_addAddress = async (req, res) => {
         const orderNumber = req.query.orderNumber;
         const orderDetails = await Order.findOne({ orderNumber: orderNumber }).populate("User").populate("Product");
         const totalAmount = orderDetails.totalAmount; // Assuming totalAmount is a property of orderDetails
-
+        // console.log(orderDetails.items[0].product);
+        // const prod1 = await Product.findById(orderDetails.items[0].product)
+        // console.log(prod1)
         res.render("viewOrders", { orderDetails, totalAmount });
     } catch (error) {
         console.log(error.message);

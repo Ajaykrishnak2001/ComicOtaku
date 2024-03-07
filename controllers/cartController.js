@@ -21,6 +21,9 @@ const cartpage = async(req,res)=>{
 
 const addTocart = async (req, res) => {
     const productId = req.params.productId;
+    const size = req.query.size;
+    console.log("the size:"+size);
+
     try {
         const product = await Product.findById(productId);
 
@@ -30,33 +33,30 @@ const addTocart = async (req, res) => {
 
         const cartProduct = {
             product: productId,
-            quantity: 1, // Set default quantity to 1
-            subTotal: product.price // Calculate subtotal based on product price
+            size: size,
+            quantity: 1,
+            subTotal: product.price
         };
 
-        // Find the user's cart or create a new one if it doesn't exist
         let userCart = await Cart.findOne({ userId: req.session.userId });
         if (!userCart) {
             userCart = new Cart({ userId: req.session.userId, items: [], total: 0 });
         }
 
-        // Check if the product already exists in the cart
-        const existingProductIndex = userCart.items.findIndex(p => p.product.toString() === productId);
+        const existingProductIndex = userCart.items.findIndex(p => p.product.toString() === productId && p.size === size);
         if (existingProductIndex !== -1) {
-            // If the product exists, update its quantity and subtotal
             userCart.items[existingProductIndex].quantity++;
             userCart.items[existingProductIndex].subTotal += product.price;
         } else {
-            // If the product is not in the cart, add it
             userCart.items.push(cartProduct);
         }
 
-        // Calculate the total based on the subtotal of all products in the cart
         const total = userCart.items.reduce((acc, item) => acc + item.subTotal, 0);
         userCart.total = total;
 
-        // Save the updated cart
         await userCart.save();
+
+        console.log(`Selected size: ${size}`);
 
         res.status(200).json({ success: true, message: 'Product added to cart' });
     } catch (error) {
@@ -66,57 +66,68 @@ const addTocart = async (req, res) => {
 };
 
 
-const changeQuantity = async (req, res) => {
-    const productId = req.params.productId;
-    const action = req.body.action; // 'increment' or 'decrement'
+    const changeQuantity = async (req, res) => {
+        const productId = req.params.productId;
+        const action = req.body.action;
 
-    try {
-        // Find the cart item by product ID
-        const cartItem = await Cart.findOne({ 'items.product': productId });
-        if (!cartItem) {
-            return res.status(404).json({ error: 'Cart item not found' });
-        }
+        try {
+            const cartItem = await Cart.findOne({ 'items.product': productId });
+            if (!cartItem) {
+                return res.status(404).json({ error: 'Cart item not found' });
+            }
+        console.log("hihi");
+            const productIndex = cartItem.items.findIndex(item => item.product.toString() === productId);
+            if (productIndex === -1) {
+                return res.status(404).json({ error: 'Product not found in cart' });
+            }
+            const productInCart = cartItem.items[productIndex];
+            const product =await Product.findById(productId);
+            console.log("procuct"+product);
 
-        // Find the index of the product in the items array
-        const productIndex = cartItem.items.findIndex(item => item.product.toString() === productId);
-        if (productIndex === -1) {
-            return res.status(404).json({ error: 'Product not found in cart' });
-        }
+            const selectedSize = productInCart.size;
 
-        // Update the quantity based on the action
-        if (action === 'increment') {
-            cartItem.items[productIndex].quantity++;
-        } else if (action === 'decrement') {
-            if (cartItem.items[productIndex].quantity > 1) {
+            console.log("selectedSize:"+selectedSize);
+            const sizeObj = product.sizes.find(size => size.size === selectedSize);
+
+            if (action === 'increment' && sizeObj.quantity <= productInCart.quantity) {
+                return res.status(400).json({ error: 'Maximum quantity reached for the selected size' });
+            }
+
+            if (action === 'decrement' && productInCart.quantity <= 1) {
+                return res.status(400).json({ error: 'Minimum quantity reached' });
+            }
+
+            if (action === 'increment') {
+                cartItem.items[productIndex].quantity++;
+            } else if (action === 'decrement') {
                 cartItem.items[productIndex].quantity--;
             }
+
+            
+            const newSubtotal = cartItem.items[productIndex].quantity * product.price;
+
+            
+            cartItem.items[productIndex].subTotal = newSubtotal;
+
+        
+            const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
+
+           
+            cartItem.total = newTotal;
+
+            
+            await cartItem.save();
+
+            
+            res.status(200).json({ items: cartItem.items, total: cartItem.total });
+
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
         }
+    };
 
-        // Calculate the new subtotal for the product
-        const product = await Product.findById(productId);
-        const newSubtotal = cartItem.items[productIndex].quantity * product.price;
 
-        // Update the subtotal for the product
-        cartItem.items[productIndex].subTotal = newSubtotal;
-
-        // Calculate the total for all products in the cart
-        const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
-
-        // Update the total in the cart
-        cartItem.total = newTotal;
-
-        // Save the updated cart item
-        await cartItem.save();
-        console.log(cartItem);
-
-        // Send the updated cart item and total in the response
-        res.status(200).json({ items: cartItem.items, total: cartItem.total });
-
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
 
 
 

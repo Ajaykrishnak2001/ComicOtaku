@@ -425,31 +425,32 @@
                                         <div class="product-form__item">
                                             <label class="header">Size:</label>
                                             <div class="sizes">
-                                                <div data-value="X-Small" class="swatch-element x-small available">
-                                                    <input class="swatchInput" id="swatch-1-x-small" type="radio" name="option-1" value="X-Small">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-x-small" title="X-Small">X-Small</label>
+                                                <div data-value="XS" class="swatch-element x-small available">
+                                                    <input class="swatchInput" id="swatch-1-x-small" type="radio" name="option-1" value="XS">
+                                                    <label class="swatchLbl small rounded" for="swatch-1-x-small" title="X-Small">XS</label>
                                                 </div>
-                                                <div data-value="Small" class="swatch-element small available">
-                                                    <input class="swatchInput" id="swatch-1-small" type="radio" name="option-1" value="Small">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-small" title="Small">Small</label>
+                                                <div data-value="S" class="swatch-element small available">
+                                                    <input class="swatchInput" id="swatch-1-small" type="radio" name="option-1" value="S">
+                                                    <label class="swatchLbl small rounded" for="swatch-1-small" title="Small">S</label>
                                                 </div>
-                                                <div data-value="Medium" class="swatch-element medium available">
-                                                    <input class="swatchInput" id="swatch-1-medium" type="radio" name="option-1" value="Medium">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-medium" title="Medium">Medium</label>
+                                                <div data-value="M" class="swatch-element medium available">
+                                                    <input class="swatchInput" id="swatch-1-medium" type="radio" name="option-1" value="M">
+                                                    <label class="swatchLbl small rounded" for="swatch-1-medium" title="Medium">M</label>
                                                 </div>
-                                                <div data-value="Large" class="swatch-element large available">
-                                                    <input class="swatchInput" id="swatch-1-large" type="radio" name="option-1" value="Large">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-large" title="Large">Large</label>
+                                                <div data-value="L" class="swatch-element large available">
+                                                    <input class="swatchInput" id="swatch-1-large" type="radio" name="option-1" value="L">
+                                                    <label class="swatchLbl small rounded" for="swatch-1-large" title="Large">L</label>
                                                 </div>
-                                                <div data-value="X-Large" class="swatch-element x-large available">
-                                                    <input class="swatchInput" id="swatch-1-x-large" type="radio" name="option-1" value="X-Large">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-x-large" title="X-Large">X-Large</label>
+                                                <div data-value="XL" class="swatch-element x-large available">
+                                                    <input class="swatchInput" id="swatch-1-x-large" type="radio" name="option-1" value="XL">
+                                                    <label class="swatchLbl small rounded" for="swatch-1-x-large" title="X-Large">XL</label>
                                                 </div>
                                                 <!-- Add more sizes as needed -->
                                             </div>
                                         </div>
-                                        
                                     </div>
+                                    
+                                    
                                     <p class="infolinks"><a href="#sizechart" class="sizelink btn"> Size Guide</a> <a href="#productInquiry" class="emaillink btn"> Ask About this Product</a></p>
                                     <!-- Product Action -->
                                     <div class="product-action clearfix">
@@ -809,47 +810,7 @@
 
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script>
-        $(function(){
-            var $pswp = $('.pswp')[0],
-                image = [],
-                getItems = function() {
-                    var items = [];
-                    $('.lightboximages a').each(function() {
-                        var $href   = $(this).attr('href'),
-                            $size   = $(this).data('size').split('x'),
-                            item = {
-                                src : $href,
-                                w: $size[0],
-                                h: $size[1]
-                            }
-                            items.push(item);
-                    });
-                    return items;
-                }
-            var items = getItems();
-        
-            $.each(items, function(index, value) {
-                image[index]     = new Image();
-                image[index].src = value['src'];
-            });
-            $('.prlightbox').on('click', function (event) {
-                event.preventDefault();
-              
-                var $index = $(".active-thumb").parent().attr('data-slick-index');
-                $index++;
-                $index = $index-1;
-        
-                var options = {
-                    index: $index,
-                    bgOpacity: 0.9,
-                    showHideOpacity: true
-                }
-                var lightBox = new PhotoSwipe($pswp, PhotoSwipeUI_Default, items, options);
-                lightBox.init();
-            });
-        });
-        </script>
+     
     </div>
     </div>
 
@@ -865,17 +826,18 @@
                     button.addEventListener('click', async () => {
                         try {
                             const productId = button.dataset.productId;
-                            const res = await fetch(`/add-cart/${productId}`, { method: 'GET' });
+                            const size = document.querySelector('input[name="option-1"]:checked').value; 
+                            const res = await fetch(`/add-cart/${productId}?size=${size}`, { method: 'GET' });
                             const data = await res.json();
-                            if(res.ok){
-                                console.log("sucess");
+                            if (res.ok) {
+                                console.log("Success");
                                 Swal.fire({
                                     title: 'Success',
-                                    text: 'Your product has been Added in Cart',
-                                     icon: 'success',
-                                     timer: 2000
-                });
-                            }else{
+                                    text: 'Your product has been added to the cart',
+                                    icon: 'success',
+                                    timer: 2000
+                                });
+                            } else {
                                 console.log("Error");
                             }
                             console.log(data);
@@ -885,6 +847,7 @@
                     });
                 });
             </script>
+            
             
 </body>
 

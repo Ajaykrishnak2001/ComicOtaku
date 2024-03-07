@@ -14,6 +14,11 @@ const cartSchema = new mongoose.Schema(
           ref: "Product",
           require: true,
         },
+        size:{
+          type:String,
+          required:true
+        },
+
         subTotal: {
           type: Number,
           require: true,

@@ -561,7 +561,7 @@
                 <ul class="list-group list-group-flush m-2">
                     <% orderDetails.items.forEach(item => { %>
                         <li class="list-group-item">
-                            <%= item.pname %> - <%= item.quantity %> units at <%= item.price %>/unit
+                            <%= item.product.pname %> - <%= item.quantity %> units at <%= item.price %>/unit
                         </li>
                     <% }); %>
                 </ul>

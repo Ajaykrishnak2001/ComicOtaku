@@ -569,9 +569,9 @@
                                                     <div class="list-view-item__title">
                                                         <a href="#"><%= item.product.pname %></a>
                                                     </div>
-                                                    <!-- <div class="cart__meta-text">
-                                                        <br>Size: <%= item.product.size %><br>
-                                                    </div> -->
+                                                    <div class="cart__meta-text">
+                                                        <br>Size: <%= item.size %><br>
+                                                    </div>
                                                 </td>
                                                 <td class="cart__price-wrapper cart-flex-item">
                                                     <span class="money">$<%= item.product.price %></span>
@@ -606,8 +606,7 @@
                                     <td colspan="3" class="text-left"><a href="/products" class="btn btn-secondary btn--small cart-continue">Continue shopping</a></td>
                                     <td colspan="3" class="text-right">
 	                                    <button type="submit" name="clear" class="btn btn-secondary btn--small  small--hide">Clear Cart</button>
-                                    	<!-- <button type="submit" name="update" class="btn btn-secondary btn--small cart-continue ml-2">Update Cart</button> -->
-                                    </td>
+                                            </td>
                                 </tr>
                             </tfoot>
                     </table> 
@@ -1055,7 +1054,7 @@ async function updateQuantity(productId, action) {
             // Update the total display
             document.getElementById('cart-total').innerText = data.Total;
         } else {
-            // Handle error
+            
             console.error('Failed to update quantity');
         }
     } catch (error) {

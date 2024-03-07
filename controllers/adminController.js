@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
+const Order = require("../models/orderModel");
 
 
 
@@ -443,6 +444,30 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const loadorders = async (req, res) => {
+  try {
+    // Assuming AllOrders is an array of orders
+    const AllOrders = await Order.find(); // Assuming Order is your Mongoose model for orders
+    const user = req.user; // Assuming req.user contains the user object
+    res.render('orders', { AllOrders, user }); // Pass AllOrders and user as variables to the template
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const detailedOrder = async (req,res)=>{
+  const orderId = req.query.orderId;
+  try{
+      const orders = await Order.findOne({_id:orderId}).populate('products.product').populate('user');
+      res.render('orderdetails', { orders});
+
+  }catch(error){
+      console.log(error.message);
+  }
+}
+
+
 
 
 
@@ -470,4 +495,6 @@ module.exports = {
   deleteCategory,
   editcategory,
   edit_Category,
+  loadorders,
+  detailedOrder 
 };
