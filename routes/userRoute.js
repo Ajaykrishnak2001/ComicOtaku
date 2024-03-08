@@ -68,5 +68,6 @@ userRoute.get("/products", userController.loadAllProducts);
 userRoute.get("/viewOrder", userprofileController.viewOrder);
 
 userRoute.get("/products/:productId", userController.loadProduct);
+userRoute.get("/api/products",userController.sortProducts)
 
 module.exports = userRoute;

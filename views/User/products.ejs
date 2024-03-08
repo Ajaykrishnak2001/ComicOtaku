@@ -363,24 +363,27 @@
                         <!--Price Filter-->
                         <div class="sidebar_widget filterBox filter-widget">
                             <div class="widget-title">
-                            	<h2>Price</h2>
+                                <h2>Price</h2>
                             </div>
                             <form action="#" method="post" class="price-filter">
                                 <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
-                                	<div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                                    <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                                     <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                                     <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <p class="no-margin"><input id="amount" type="text"></p>
+                                        <p class="no-margin">
+                                            <input id="amount" type="text">
+                                        </p>
                                     </div>
                                     <div class="col-6 text-right margin-25px-top">
-                                        <button class="btn btn-secondary btn--small">filter</button>
+                                        <button class="btn btn-secondary btn--small" onclick="applyPriceFilter()">Filter</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
+                        
                         <!--End Price Filter-->
                         <!--Size Swatches-->
                         <div class="sidebar_widget filterBox filter-widget size-swacthes">
@@ -436,11 +439,16 @@
                         <div class="toolbar">
                             <div class="filters-toolbar-wrapper">
                                 <div class="row">
-                                    <div class="col-4 col-md-4 col-lg-4 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
-                                        <!-- Place product count or other information here if needed -->
-                                    </div>
                                     <div class="col-4 col-md-4 col-lg-4 text-right">
-                                        <!-- Additional toolbar elements can go here -->
+                                        <div class="filters-toolbar__item">
+                                            <label for="sortBySelect">Sort By:</label>
+                                            <select name="sortBySelect" id="sortBySelect">
+                                                <option value="default">Filter</option>
+                                                <option value="price-low-to-high">Price, low to high</option>
+                                                <option value="price-high-to-low">Price, high to low</option>
+                                            </select>
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -772,6 +780,84 @@
      <script src="assets/js/popper.min.js"></script>
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
+
+     <script>
+          document.addEventListener('DOMContentLoaded', function() {
+        function fetchAndDisplayProducts(sortBy) {
+            fetch(`/api/products?sortBy=${sortBy}`)
+                .then(response => response.json())
+                .then(products => {
+                    displayProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error fetching products:', error);
+                });
+        }
+
+        // Function to display products
+        function displayProducts(products) {
+    const productList = document.querySelector('.grid--view-items .row');
+    productList.innerHTML = '';
+
+    products.forEach(product => {
+        const productCard = `
+            <div class="col-6 col-sm-6 col-md-4 col-lg-4 item">
+                <div class="product-item">
+                    <div class="product-image">
+                        <a href="/products/${product._id}">
+                            <img class="primary blur-up lazyloaded"  src="/productAssets/${product.images[0]}" alt="${product.pname}" title="${product.pname}">
+                        </a>
+                        <a href="/products/${product._id}">
+                            <img class="hover blur-up lazyloaded" src="/productAssets/${product.images[1]}" alt="${product.pname}" title="${product.pname}">
+                        </a>
+                        <div class="button-set">
+                            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
+                                <i class="icon anm anm-search-plus-r"></i>
+                            </a>
+                            <div class="wishlist-btn">
+                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                                    <i class="icon anm anm-heart-l"></i>
+                                </a>
+                            </div>
+                            <div class="compare-btn">
+                                <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
+                                    <i class="icon anm anm-random-r"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details text-center">
+                        <div class="product-name">
+                            <a href="/products/${product._id}">${product.pname}</a>
+                        </div>
+                        <div class="product-brand">
+                            <a href="/products/${product._id}">${product.brand}</a>
+                        </div>
+                        <div class="product-price">
+                            <span class="price"><p>&#8377;${product.price}</p></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        productList.insertAdjacentHTML('beforeend', productCard);
+    });
+}
+
+
+        // Event listener for sort select change
+        const sortSelect = document.getElementById('sortBySelect');
+        sortSelect.addEventListener('change', () => {
+            const sortBy = sortSelect.value;
+            fetchAndDisplayProducts(sortBy);
+        });
+
+        // Initial fetch and display of products
+        fetchAndDisplayProducts('price-low-to-high');
+    });
+    </script>
+    
+
 </div>
 </body>
 

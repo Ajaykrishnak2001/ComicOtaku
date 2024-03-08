@@ -310,6 +310,32 @@ res.render("ViewProducts", { product });
 }
 };
 
+const sortProducts = async (req, res) => {
+    try {
+        let products;
+
+        // Fetch all products from the database
+        if (req.query.sortBy === 'price-low-to-high') {
+            products = await Product.find().sort({ price: 1 });
+            
+        } else if (req.query.sortBy === 'price-high-to-low') {
+            products = await Product.find().sort({ price: -1 });
+        } else {
+            products = await Product.find();
+        }
+        console.log(products);
+
+        // Respond with the sorted products data
+        res.json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+    
+
+
 
 
 
@@ -327,6 +353,7 @@ module.exports = {
     resendOTP,
     loadregistration,
     loadAllProducts,
+    sortProducts 
     
     
 };
