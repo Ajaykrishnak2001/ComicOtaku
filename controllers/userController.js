@@ -314,16 +314,17 @@ const sortProducts = async (req, res) => {
     try {
         let products;
 
-        // Fetch all products from the database
-        if (req.query.sortBy === 'price-low-to-high') {
+        if (req.query.sortBy === 'name-asc') {
+            products = await Product.find().sort({ pname: 1 });
+        } else if (req.query.sortBy === 'name-desc') {
+            products = await Product.find().sort({ pname: -1 });
+        } else if (req.query.sortBy === 'price-low-to-high') {
             products = await Product.find().sort({ price: 1 });
-            
         } else if (req.query.sortBy === 'price-high-to-low') {
             products = await Product.find().sort({ price: -1 });
         } else {
             products = await Product.find();
         }
-        console.log(products);
 
         // Respond with the sorted products data
         res.json(products);
@@ -332,6 +333,7 @@ const sortProducts = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
 
     
 
