@@ -36,6 +36,10 @@ const path = require("path");
 const adminRoute = require("./routes/adminRoute"); 
 app.use("/admin", adminRoute);
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+
 app.use("/static", express.static(path.join(__dirname, "public"))); 
 app.use("/products", express.static(path.join(__dirname, "public"))); 
 app.use("/admin/static", express.static(path.join(__dirname, "public")));

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const productSchema = new mongoose.Schema({
   pname: {
     type: String,
@@ -17,15 +18,16 @@ const productSchema = new mongoose.Schema({
       type: String,
     },
   ],
+  
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "category",
     required: true,
-  },
+  },  
   brand: {
     type: String,
     required: true,
   },
-
   sizes: [
     {
       size: {
@@ -38,10 +40,22 @@ const productSchema = new mongoose.Schema({
       },
     },
   ],
+  views: {
+    type: Number,
+    default: 0,
+  },
+  purchases: {
+    type: Number,
+    default: 0,
+  },
+  popularity: {
+    type: Number,
+    default: 0,
+  },
   is_listed: {
     type: Number,
     default: 1,
   }
-},{strictPopulate:false});
+}, { strictPopulate: false });
 
 module.exports = mongoose.model("Product", productSchema);

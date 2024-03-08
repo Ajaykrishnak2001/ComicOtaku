@@ -246,20 +246,37 @@ const load_addAddress = async (req, res) => {
     // 
   }
 
-
   const viewOrder = async (req, res) => {
     try {
         const orderNumber = req.query.orderNumber;
-        const orderDetails = await Order.findOne({ orderNumber: orderNumber }).populate("User").populate("Product");
-        const totalAmount = orderDetails.totalAmount; // Assuming totalAmount is a property of orderDetails
-        // console.log(orderDetails.items[0].product);
-        // const prod1 = await Product.findById(orderDetails.items[0].product)
-        // console.log(prod1)
+        const orderDetails = await Order.findOne({ orderNumber: orderNumber })
+            .populate({
+                path: 'items.product',
+                model: 'Product',
+                select: 'pname price views purchases popularity images category brand sizes'
+            });
+
+        if (!orderDetails) {
+            return res.status(404).send('Order not found');
+        }
+
+        const totalAmount = orderDetails.totalAmount;
         res.render("viewOrders", { orderDetails, totalAmount });
     } catch (error) {
         console.log(error.message);
+        res.status(500).send('Internal Server Error');
     }
 }
+
+
+
+
+
+
+
+
+
+
 
   module.exports = {
     load_addAddress,
@@ -271,5 +288,7 @@ const load_addAddress = async (req, res) => {
     load_editProfile,
     editProfile,
     changePassword,
-    viewOrder
+    viewOrder,
+    
+    
 };

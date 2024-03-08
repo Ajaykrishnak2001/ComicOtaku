@@ -530,59 +530,74 @@
 	</div>
 
 
-
-<main class="main">
-    <div class="container">
-        <!-- Your existing code -->
-        <h2 class="title mb-3">Order Details</h2>
-
-        <!-- Card for order details -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toDateString() %></h4>
-                <h4 class="card-title">Status: <span class="badge badge-pill badge-warning"><%= orderDetails.status %></span></h4>
+    <main class="main">
+        <div class="container">
+            <!-- Your existing code -->
+            <h2 class="title mb-3">Order Details</h2>
+    
+            <!-- Card for order details -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toDateString() %></h4>
+                    <h5>Order Number: <%= orderDetails.orderNumber %></h5>
+                    <h4 class="card-title">Status: <span class="badge badge-pill badge-warning"><%= orderDetails.status %></span></h4>
+                </div>
             </div>
-        </div>
-
-        <!-- Card for shipping address -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="card-title">Shipping Address</h4>
-                <p class="card-text m-2">
-                    <%= orderDetails.shippingAddress.address %>, <%= orderDetails.shippingAddress.locality %>, <%= orderDetails.shippingAddress.district %>, <%= orderDetails.shippingAddress.state %>, <%= orderDetails.shippingAddress.pinCode %>
-                </p>
+    
+            <!-- Card for shipping address -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Shipping Address</h4>
+                    <p class="card-text m-2">
+                        <%= orderDetails.shippingAddress.address %>, <%= orderDetails.shippingAddress.locality %>, <%= orderDetails.shippingAddress.district %>, <%= orderDetails.shippingAddress.state %>, <%= orderDetails.shippingAddress.pinCode %>
+                    </p>
+                </div>
             </div>
-        </div>
-
-        <!-- Card for ordered products -->
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Ordered Products</h4>
-                <ul class="list-group list-group-flush m-2">
-                    <% orderDetails.items.forEach(item => { %>
-                        <li class="list-group-item">
-                            <%= item.product.pname %> - <%= item.quantity %> units at <%= item.price %>/unit
-                        </li>
-                    <% }); %>
-                </ul>
+    
+            <!-- Card for ordered products -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Ordered Products</h4>
+                    <ul class="list-group list-group-flush m-2">
+                        <% orderDetails.items.forEach(item => { %>
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <% if (item.product.images && item.product.images.length > 0) { %>
+                                        <div class="mr-3">
+                                            <img src="/productAssets/<%= item.product.images[0] %>" alt="<%= item.product.pname %>" style="max-width: 100px;">
+                                        </div>
+                                    <% } %>
+                                    <div>
+                                        <h5><%= item.product.pname %></h5>
+                                        <p><strong>Brand:</strong> <%= item.product.brand %></p>
+                                        <% const selectedSize = item.product.sizes.find(size => size.selected); %>
+                                        <% if (selectedSize) { %>
+                                            <p><strong>Size:</strong> <%= selectedSize.size %> (<%= item.quantity %> units)</p>
+                                        <% } %>
+                                        <p><strong>Price per unit:</strong> <%= item.price %></p>
+                                    </div>
+                                </div>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
             </div>
-        </div>
-
-        <!-- Card for total amount -->
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Total Amount</h4>
-                <p class="card-text" style="font-weight: 600;text-decoration: underline;">
-                    Rs: <%= totalAmount %>/-
-                </p>
+    
+            <!-- Card for total amount -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Total Amount</h4>
+                    <p class="card-text" style="font-weight: 600;text-decoration: underline;">
+                        Rs: <%= totalAmount %>/-
+                    </p>
+                </div>
             </div>
+    
+            <!-- Back button -->
+            <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
         </div>
-
-        <!-- Back button -->
-        <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
-    </div>
-</main>
-
+    </main>
+    
 
 
 

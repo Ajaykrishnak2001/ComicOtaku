@@ -322,6 +322,8 @@ const sortProducts = async (req, res) => {
             products = await Product.find().sort({ price: 1 });
         } else if (req.query.sortBy === 'price-high-to-low') {
             products = await Product.find().sort({ price: -1 });
+        } else if (req.query.sortBy === 'popularity') {
+            products = await Product.find().sort({ popularity: -1 });
         } else {
             products = await Product.find();
         }
@@ -333,6 +335,30 @@ const sortProducts = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+const calculatePopularity = async (req, res) => {
+    try {
+      let products = await Product.find();
+  
+      // Calculate popularity for each product based on views and purchases
+      products = products.map(product => ({
+        ...product.toObject(),
+        popularity: product.views + product.purchases,
+      }));
+  
+      // Sort products by popularity
+      products.sort((a, b) => b.popularity - a.popularity);
+        console.log(products);
+      // Respond with the sorted products data
+      res.json(products);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  };
+  
+
 
 
     
@@ -355,7 +381,8 @@ module.exports = {
     resendOTP,
     loadregistration,
     loadAllProducts,
-    sortProducts 
+    sortProducts,
+    calculatePopularity
     
     
 };

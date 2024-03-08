@@ -448,6 +448,8 @@
                                                 <option value="price-high-to-low">Price, high to low</option>
                                                 <option value="name-asc">aA-zZ</option>
                                                 <option value="name-desc">zZ-aA</option>
+                                                <option value="popularity">Popularity</option>
+
                                             </select>
                                             
                                         </div>
@@ -788,11 +790,13 @@
             function fetchAndDisplayProducts(sortBy) {
     let url = `/api/products?sortBy=${sortBy}`;
 
-    if (sortBy === 'name-asc') {
-        url += '&order=asc';
-    } else if (sortBy === 'name-desc') {
-        url += '&order=desc';
-    }
+    if (sortBy === 'popularity') {
+            url = '/api/products/popularity';
+        } else if (sortBy === 'name-asc') {
+            url += '&order=asc';
+        } else if (sortBy === 'name-desc') {
+            url += '&order=desc';
+        }
     fetch(url)
                 .then(response => response.json())
                 .then(products => {
@@ -862,7 +866,7 @@
         });
 
         // Initial fetch and display of products
-        fetchAndDisplayProducts('price-low-to-high');
+        fetchAndDisplayProducts('filter');
     });
     </script>
     

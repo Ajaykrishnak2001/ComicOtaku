@@ -14,6 +14,7 @@ adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
 const adminController = require("../controllers/adminController");
+const userprofileController = require("../controllers/userprofileController");
 
 
 
@@ -51,8 +52,13 @@ adminRoute.post("/category/delete", adminController.deleteCategory);
 
 
 
+
+
+
 adminRoute.get("/orders",adminController.loadorders)
-adminRoute.get("/orderdetails",adminController.detailedOrder )
+
+
+adminRoute.get("/detailedOrder", adminController.detailedOrder);
 
 
 

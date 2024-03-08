@@ -5,6 +5,8 @@ const Order = require("../models/orderModel");
 
 
 
+
+
 const bcrypt = require("bcrypt");
 
 const securePassword = async (password) => {
@@ -456,16 +458,35 @@ const loadorders = async (req, res) => {
   }
 };
 
-const detailedOrder = async (req,res)=>{
-  const orderId = req.query.orderId;
-  try{
-      const orders = await Order.findOne({_id:orderId}).populate('products.product').populate('user');
-      res.render('orderdetails', { orders});
 
-  }catch(error){
-      console.log(error.message);
+
+const detailedOrder = async (req, res) => {
+  try {
+    const orderNumber = req.query.orderNumber;
+    const orderDetails = await Order.findOne({ orderNumber: orderNumber })
+      .populate({
+        path: 'items.product',
+        model: 'Product',
+        select: 'pname price views purchases popularity images category brand sizes'
+      })
+      .populate({
+        path: 'user',  // Corrected field name
+        model: 'User',
+        select: 'name email phone',
+      });
+
+    if (!orderDetails) {
+      return res.status(404).send('Order not found');
+    }
+
+    res.render('detailedOrder', { orderDetails });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
   }
-}
+};
+
+
 
 
 
@@ -496,5 +517,6 @@ module.exports = {
   editcategory,
   edit_Category,
   loadorders,
-  detailedOrder 
+  detailedOrder
+  
 };
