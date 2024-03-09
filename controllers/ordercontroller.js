@@ -123,10 +123,13 @@ const placeorder = async (req, res) => {
         console.log(order);
         const createdOrder = await orders.create(order);
 
-        // Empty the cart
-        userCart.items = [];
-        userCart.total = 0;
-        await userCart.save();
+        // Update product quantities and delete cart
+        for (const orderedProduct of createdOrder.items) {
+            const product = await Product.findById(orderedProduct.product);
+            product.quantity -= orderedProduct.quantity;
+            await product.save();
+        }
+        await cart.findByIdAndDelete(cartId);
 
         res.status(200).json({ message: 'Order placed successfully', order: createdOrder });
     } catch (error) {
@@ -134,7 +137,6 @@ const placeorder = async (req, res) => {
         res.status(500).json({ message: 'Failed to place order', error: error.message });
     }
 };
-
 
 
 
