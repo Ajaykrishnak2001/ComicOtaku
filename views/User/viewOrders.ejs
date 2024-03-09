@@ -592,6 +592,19 @@
                     </p>
                 </div>
             </div>
+
+            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                <select id="orderStatusSelect" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
+                    <option>Cancel Order</option>
+                   
+                    <option>Canceled</option>
+                  
+                </select>
+                <br>
+                <br>
+                <a class="btn btn-primary" href="#"onclick="changeStatus('<%= orderDetails._id %>')"> Save</a>
+                
+            </div>
     
             <!-- Back button -->
             <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
@@ -751,3 +764,24 @@
 <!-- Include this script in your HTML file -->
 <!-- Include this script in your HTML file -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+<script>
+    async function changeStatus(OrderId) {
+        try {
+            const action = document.getElementById('orderStatusSelect').value;
+            const response = await fetch(`/admin/changeStatus/${OrderId}`, {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: action })
+            });
+            const data = await response.json();
+
+            
+            location.reload(); 
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>

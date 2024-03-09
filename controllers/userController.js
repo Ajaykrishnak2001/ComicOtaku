@@ -359,6 +359,23 @@ const calculatePopularity = async (req, res) => {
   };
   
 
+  const ChangeStatus = async (req, res) => {
+    const orderDetails = req.params.orderId;
+    const { action } = req.body;
+    try {
+      const order = await Order.findOne({ _id:orderDetails});
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+      order.status = action;
+      await order.save();
+      const newStatus = order.status;
+      return res.status(200).json({ newStatus});
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
 
 
     
@@ -382,7 +399,8 @@ module.exports = {
     loadregistration,
     loadAllProducts,
     sortProducts,
-    calculatePopularity
+    calculatePopularity,
+    ChangeStatus
     
     
 };

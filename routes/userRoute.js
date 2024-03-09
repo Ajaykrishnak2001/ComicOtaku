@@ -71,4 +71,6 @@ userRoute.get("/products/:productId", userController.loadProduct);
 userRoute.get("/api/products",userController.sortProducts)
 userRoute.get('/api/products/popularity',userController.calculatePopularity)
 
+userRoute.put("/changeStatus/:orderId", userController.ChangeStatus);
+
 module.exports = userRoute;
