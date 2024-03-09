@@ -470,7 +470,7 @@ const detailedOrder = async (req, res) => {
         select: 'pname price views purchases popularity images category brand sizes'
       })
       .populate({
-        path: 'user',  // Corrected field name
+        path: 'user',
         model: 'User',
         select: 'name email phone',
       });
@@ -479,10 +479,32 @@ const detailedOrder = async (req, res) => {
       return res.status(404).send('Order not found');
     }
 
-    res.render('detailedOrder', { orderDetails });
+    res.render('detailedOrder', { orderDetails, order: orderDetails }); // Pass orderDetails as order to the template
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
+  }
+};
+
+
+
+
+
+const ChangeStatus = async (req, res) => {
+  const orderDetails = req.params.orderId;
+  const { action } = req.body;
+  try {
+    const order = await Order.findOne({ _id:orderDetails});
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    order.status = action;
+    await order.save();
+    const newStatus = order.status;
+    return res.status(200).json({ newStatus});
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -517,6 +539,8 @@ module.exports = {
   editcategory,
   edit_Category,
   loadorders,
-  detailedOrder
+  detailedOrder,
+  ChangeStatus
+  
   
 };

@@ -60,6 +60,8 @@ adminRoute.get("/orders",adminController.loadorders)
 
 adminRoute.get("/detailedOrder", adminController.detailedOrder);
 
+adminRoute.put("/changeStatus/:orderId", adminController.ChangeStatus);
+
 
 
 const storage = multer.diskStorage({
