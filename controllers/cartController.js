@@ -66,66 +66,57 @@ const addTocart = async (req, res) => {
 };
 
 
-    const changeQuantity = async (req, res) => {
-        const productId = req.params.productId;
-        const action = req.body.action;
+const changeQuantity = async (req, res) => {
+    const productId = req.params.productId;
+    const action = req.body.action;
 
-        try {
-            const cartItem = await Cart.findOne({ 'items.product': productId });
-            if (!cartItem) {
-                return res.status(404).json({ error: 'Cart item not found' });
-            }
-        console.log("hihi");
-            const productIndex = cartItem.items.findIndex(item => item.product.toString() === productId);
-            if (productIndex === -1) {
-                return res.status(404).json({ error: 'Product not found in cart' });
-            }
-            const productInCart = cartItem.items[productIndex];
-            const product =await Product.findById(productId);
-            console.log("procuct"+product);
-
-            const selectedSize = productInCart.size;
-
-            console.log("selectedSize:"+selectedSize);
-            const sizeObj = product.sizes.find(size => size.size === selectedSize);
-
-            if (action === 'increment' && sizeObj.quantity <= productInCart.quantity) {
-                return res.status(400).json({ error: 'Maximum quantity reached for the selected size' });
-            }
-
-            if (action === 'decrement' && productInCart.quantity <= 1) {
-                return res.status(400).json({ error: 'Minimum quantity reached' });
-            }
-
-            if (action === 'increment') {
-                cartItem.items[productIndex].quantity++;
-            } else if (action === 'decrement') {
-                cartItem.items[productIndex].quantity--;
-            }
-
-            
-            const newSubtotal = cartItem.items[productIndex].quantity * product.price;
-
-            
-            cartItem.items[productIndex].subTotal = newSubtotal;
-
-        
-            const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
-
-           
-            cartItem.total = newTotal;
-
-            
-            await cartItem.save();
-
-            
-            res.status(200).json({ items: cartItem.items, total: cartItem.total });
-
-        } catch (error) {
-            console.error('Error:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+    try {
+        const cartItem = await Cart.findOne({ 'items.product': productId });
+        if (!cartItem) {
+            return res.status(404).json({ error: 'Cart item not found' });
         }
-    };
+
+        const productIndex = cartItem.items.findIndex(item => item.product.toString() === productId);
+        if (productIndex === -1) {
+            return res.status(404).json({ error: 'Product not found in cart' });
+        }
+        const productInCart = cartItem.items[productIndex];
+        const product = await Product.findById(productId);
+
+        const selectedSize = productInCart.size;
+        const sizeObj = product.sizes.find(size => size.size === selectedSize);
+
+        if (action === 'increment' && sizeObj.quantity <= productInCart.quantity) {
+            return res.status(400).json({ error: 'Maximum quantity reached for the selected size' });
+        }
+
+        if (action === 'decrement' && productInCart.quantity <= 1) {
+            return res.status(400).json({ error: 'Minimum quantity reached' });
+        }
+
+        if (action === 'increment') {
+            if (productInCart.quantity + 1 <= sizeObj.quantity) {
+                cartItem.items[productIndex].quantity++;
+            }
+        } else if (action === 'decrement') {
+            cartItem.items[productIndex].quantity--;
+        }
+
+        const newSubtotal = cartItem.items[productIndex].quantity * product.price;
+        cartItem.items[productIndex].subTotal = newSubtotal;
+
+        const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
+        cartItem.total = newTotal;
+
+        await cartItem.save();
+
+        res.status(200).json({ items: cartItem.items, total: cartItem.total });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 
 
 

@@ -1030,39 +1030,42 @@
      <script src="assets/js/main.js"></script>
 
      <script>
+       
+     </script>
+     
+     <script>
+        async function updateQuantity(productId, action) {
+            try {
+                const response = await fetch(`/update-quantity/${productId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: action })
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    location.reload();  
+                    // document.getElementById(`quantity-${productId}`).innerText = data.currentCartitem.quantity;
+                    // document.getElementById(`subtotal-${productId}`).innerText = data.currentCartitem.subtotal;
+                    // document.getElementById('cart-subtotal').innerText = data.total;
+                    // document.getElementById('cart-total').innerText = data.total;
+                } else {
+                   
+                    alert('Failed to update quantity. ' + response.statusText);
+                    console.error('Failed to update quantity');
+                    location.reload();
 
-async function updateQuantity(productId, action) {
-    try {
-        const response = await fetch(`/update-quantity/${productId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ action: action })
-        });
-
-        if (response.ok) {
-            // Quantity updated successfully
-            const data = await response.json();
-            console.log(data);
-            // Update the quantity display
-            document.getElementById(`quantity-${productId}`).innerText = data.currentCartitem.quantity;
-            // Update the subtotal display
-            document.getElementById(`subtotal-${productId}`).innerText = data.currentCartitem.subtotal;
-            // Update the total display
-            document.getElementById('cart-subtotal').innerText = data.Total;
-            // Update the total display
-            document.getElementById('cart-total').innerText = data.Total;
-        } else {
-            
-            console.error('Failed to update quantity');
+                }
+            } catch (error) {
+               
+                alert('Error updating quantity. Please try again.');
+                console.error('Error updating quantity:', error);
+            }
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-</script>
+        </script>
     
 
 </div>
@@ -1070,3 +1073,5 @@ async function updateQuantity(productId, action) {
 
 <!-- belle/cart-variant1.html   11 Nov 2019 12:44:32 GMT -->
 </html>
+
+
