@@ -229,6 +229,7 @@
                                     <th>Image</th>
                                     <th>Name</th>
                                     <th>Price</th>
+                                    <th>Sizes-Quantities</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
@@ -242,7 +243,12 @@
                                         <td><%= allProducts[i].pname %></td>
                                         <td><%= allProducts[i].price %></td>
                                         <td>
-                                            <a href="/admin/products/edit-product?id=<%=allProducts[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                            <% for (let j=0; j < allProducts[i].sizes.length; j++) { %>
+                                                <div><%= allProducts[i].sizes[j].size %> - <%= allProducts[i].sizes[j].quantity %></div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/products/edit-product?id=<%= allProducts[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
                                                 <i class="material-icons md-edit"></i> Edit
                                             </a>
                                         </td>
@@ -256,6 +262,7 @@
                                     </tr>
                                 <% } %>
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>
