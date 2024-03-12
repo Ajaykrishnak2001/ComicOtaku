@@ -588,7 +588,12 @@
                                                 <td class="text-right small--hide cart-price">
                                                     <div><span class="money">$<%= item.subTotal %></span></div>
                                                 </td>
-                                                <td class="text-center small--hide"><a href="#" class="btn btn--secondary cart__remove" title="Remove item"><i class="icon icon anm anm-times-l"></i></a></td>
+                                                <td class="text-center small--hide">
+                                                    <a href="#" class="btn btn--secondary cart__remove" title="Remove item" onclick="removeFromCart('<%= item.product._id %>')">
+                                                        <i class="icon icon anm anm-times-l"></i>
+                                                    </a>
+                                                </td>
+                                                
                                             </tr>
                                         <% } %>
                                     <% }); %>
@@ -1067,7 +1072,29 @@
         }
         </script>
     
+<script>const removeFromCart = async (productId) => {
+    try {
+        const response = await fetch(`/cart/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId })
+        });
 
+        const data = await response.json();
+
+        if (data.success) {
+            // Reload the page or update the cart UI as needed
+            location.reload();
+        } else {
+            console.error(data.message);
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+};
+</script>
 </div>
 </body>
 

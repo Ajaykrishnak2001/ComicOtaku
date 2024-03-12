@@ -72,6 +72,7 @@ userRoute.post("/resetPassword",requireLogin,setnocache.user,userprofileControll
 userRoute.get("/cart",requireLogin,setnocache.user,cartController.cartpage)
 userRoute.get("/add-cart/:productId",requireLogin,setnocache.user,cartController.addTocart)
 userRoute.patch('/update-quantity/:productId',requireLogin,setnocache.user,cartController.changeQuantity);
+userRoute.delete('/cart/:productId',cartController.removeFromCart);
 
 
 userRoute.get('/checkOut',requireLogin,setnocache.user,ordercontroller.checkoutpage)
