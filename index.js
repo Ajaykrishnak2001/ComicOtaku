@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 mongoose.connect("mongodb://localhost:27017/ComicOtaku");
 const bodyParser = require('body-parser');
 
+
 const express = require("express");
 const app=express();
 
@@ -14,6 +15,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+
 
 // Your other routes and middleware
 
