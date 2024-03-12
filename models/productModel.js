@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
   pname: {
     type: String,
     required: true,
@@ -19,8 +20,8 @@ const productSchema = new mongoose.Schema({
     },
   ],
   category: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: 'Category', // This should match the model name for your category schema
   },
   brand: {
     type: String,
@@ -53,7 +54,7 @@ const productSchema = new mongoose.Schema({
   is_listed: {
     type: Number,
     default: 1,
-  }
+  },
 }, { strictPopulate: false });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);

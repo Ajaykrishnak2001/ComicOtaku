@@ -230,6 +230,7 @@ const delete_User = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 const add_Product = async (req, res) => {
   try {
     console.log("Request body:", req.body); // Log the entire request body to see the structure
@@ -243,12 +244,23 @@ const add_Product = async (req, res) => {
 
     console.log("Sizes:", sizes); // Log the sizes array to see if quantities are correctly parsed
 
+    // Find the category by name
+    let category = await Category.findOne({ cName: req.body.productCategory });
+
+    // If the category doesn't exist, create a new one
+    if (!category) {
+      category = await Category.create({
+        cName: req.body.productCategory,
+        description: "Default description", // You can set a default description or leave it empty
+      });
+    }
+
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
       sizes: sizes,
-      category: req.body.productCategory,
+      category: category._id, // Use the category ID
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,

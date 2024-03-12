@@ -282,8 +282,13 @@ try {
 
 const loadAllProducts = async (req, res) => {
     try {
-        // Fetch all products from the database
-        const products = await Product.find();
+        // Fetch all products from the database and populate the category field
+        const products = await Product.find().populate('category');
+        
+        // Iterate over each product and log the populated category
+        products.forEach(product => {
+            console.log(product.category);
+        });
 
         // Pass the products data to the view
         res.render('products', { products });
@@ -294,21 +299,23 @@ const loadAllProducts = async (req, res) => {
 };
 
 
+
 const loadProduct = async (req, res) => {
     try {
- const productId = req.params.productId;
- const product =  await Product.findById(productId);
+        const productId = req.params.productId;
+        const product = await Product.findById(productId).populate('category');
 
- if(!product) {
-    return res.status(484).send("Product not found");
-}
+        if (!product) {
+            return res.status(404).send("Product not found");
+        }
 
-res.render("ViewProducts", { product });
-} catch (error) {
-    console.log(error.message);
-    res.status(500).send("Internal Server Error");
-}
+        res.render("ViewProducts", { product });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
 };
+
 
 const sortProducts = async (req, res) => {
     try {
