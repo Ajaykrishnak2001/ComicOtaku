@@ -326,39 +326,26 @@
                 	<div class="sidebar_tags">
                     	<!--Categories-->
                     	<div class="sidebar_widget categories filter-widget">
+                            <br>
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
                                 <ul class="sidebar_categories">
-                                    <li class="level1 sub-level"><a href="#;" class="site-nav">MEN</a>
-                                    	<ul class="sublinks">
-                                        	<li class="level2"><a href="#;" class="site-nav"> OVERSIZED T-SHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">SHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">HOODIES</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">OVERSIZED FULL SLEEVE T-SHIRTS
-
-                                            </a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="level1 sub-level"><a href="#;" class="site-nav">WOMEN</a>
-                                    	<ul class="sublinks">
-                                        	<li class="level2"><a href="#;" class="site-nav">OVERSIZED T-SHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">NSHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">HOODIES</li>
-                                            <li class="level2"><a href="#;" class="site-nav">OVERSIZED FULL SLEEVE T-SHIRTS</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="level1 sub-level"><a href="#;" class="site-nav">KIDS</a>
-                                    	<ul class="sublinks">
-                                        	<li class="level2"><a href="#;" class="site-nav">OVERSIZED T-SHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">NSHIRTS</a></li>
-                                            <li class="level2"><a href="#;" class="site-nav">HOODIES</li>
-                                            <li class="level2"><a href="#;" class="site-nav">OVERSIZED FULL SLEEVE T-SHIRTS</a></li>
-                                        </ul>
-                                    </li>
-                                   
+                                    <% categories.forEach(category => { %>
+                                        <li class="level1 sub-level">
+                                            <a href="#;" class="site-nav" onclick="toggleCategoryDescription('<%= category.cName %>')">
+                                                <%= category.cName %>
+                                            </a>
+                                            <br>
+                                            <div class="category-description" id="<%= category.cName %>-description" style="display: none;">
+                                                <%= category.description %>
+                                            </div>
+                                        </li>
+                                    <% }); %>
                                 </ul>
                             </div>
                         </div>
+                        
+                        
                         <!--Categories-->
                         <!--Price Filter-->
                         <div class="sidebar_widget filterBox filter-widget">
@@ -427,7 +414,7 @@
                 <!--Main Content-->
                 <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
                 	<div class="category-description">
-                    	<h3>Category Description</h3>
+                    	<br>
                         <p>Discover the epitome of effortless style with our collection of men's T-shirts. Crafted to perfection, these wardrobe essentials seamlessly fuse comfort with sophistication, ensuring you look and feel your best, no matter the occasion.</p>
                         <p>Indulge in the luxury of soft, breathable fabrics that gently caress your skin, offering unparalleled comfort throughout the day. From classic crew necks to trendy V-necks, our range of T-shirts caters to every style preference, effortlessly transitioning from casual weekends to laid-back evenings with friends.</p>
                         <p>Experience the perfect blend of style and comfort with our men's T-shirts. Explore our collection today and discover your new favorite wardrobe staple.</p>
@@ -869,7 +856,17 @@
         fetchAndDisplayProducts('filter');
     });
     </script>
-    
+    <script>// Add event listener to category links
+       function toggleCategoryDescription(categoryName) {
+    var descriptionElement = document.getElementById(categoryName + "-description");
+    if (descriptionElement.style.display === "none") {
+        descriptionElement.style.display = "block";
+    } else {
+        descriptionElement.style.display = "none";
+    }
+}
+
+        </script>
 
 </div>
 </body>

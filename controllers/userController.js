@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Category = require('../models/categoryModel');
+
 const nodemailer = require("nodemailer");
 
 const bcrypt = require("bcrypt"); 
@@ -284,19 +286,18 @@ const loadAllProducts = async (req, res) => {
     try {
         // Fetch all products from the database and populate the category field
         const products = await Product.find().populate('category');
-        
-        // Iterate over each product and log the populated category
-        products.forEach(product => {
-            console.log(product.category);
-        });
 
-        // Pass the products data to the view
-        res.render('products', { products });
+        // Fetch all categories from the database
+        const categories = await Category.find();
+
+        // Pass the products data and categories to the view
+        res.render('products', { products, categories });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 
 
