@@ -131,6 +131,11 @@ const createOrder = async (req, res) => {
 
                 await newOrder.save();
 
+                // Empty the user's cart
+                userCart.items = [];
+                userCart.total = 0;
+                await userCart.save();
+
                 res.status(200).send({
                     success: true,
                     msg: 'Order Created',
@@ -153,6 +158,7 @@ const createOrder = async (req, res) => {
         res.status(500).send({ success: false, msg: 'Internal Server Error' });
     }
 };
+
 
 
 
