@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
 
 <style>
     /* Hide the radio button */
@@ -743,18 +745,25 @@
                         </div>
                         <hr />
                         <div class="your-payment">
-                            <h2 class="payment-title mb-3">payment method</h2>
+                            <h2 class="payment-title mb-3">Payment Method</h2>
                             <div class="custome-radio">
                                 <div class="custome-radio">
                                     <input class="form-check-input payment" type="radio" value="cod" name="selectedPayment" id="CashOnDelivery">
                                     <label class="form-check-label" for="CashOnDelivery" data-bs-toggle="collapse" data-target="#CashOnDelivery" aria-controls="CashOnDelivery">Cash on Delivery</label>
                                 </div>
                             </div>
+                            <br>
+                            <div class="custome-radioo">
+                                <div class="custome-radio">
+                                    <input class="form-check-input payment" type="radio" value="Razorpay" name="selectedPayment" id="Razorpay">
+                                    <label class="form-check-label" for="Razorpay">Razorpay</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="order-button-payment">
-                            <button class="btn" id="placeOrderButton" type="button">Place order</button>
+                            <button class="btn btn-primary" id="placeOrderButton" type="button">Place Order</button>
                         </div>
-                    </div>
+                        
                 </div>
             </div>
             
@@ -891,7 +900,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
 <script>
+ // Assuming userData is passed from the server
+
     $(document).ready(function() {
         $('#placeOrderButton').click(function() {
             const selectedAddress = $('input[name="selectedAddress"]:checked');
@@ -920,51 +936,114 @@
                 });
             } else {
                 const cartId = "<%= cartItems._id %>"; // Assuming cartItems is the object containing the cart ID
+                const userData = "<%= JSON.stringify(userData) %>";
 
-                $.ajax({
-                    url: "/placeOrder",
-                    method: "POST",
-                    data: {
-                        cartId: cartId,
-                        addressId: selectedAddress.val(),
-                        paymentOption: selectedPayment.val()
-                    },
-                    success: function(response) {
-    if (response.status === "order placed") {
-        Swal.fire({
-            title: 'Success',
-            text: 'Your order has been placed successfully',
-            icon: 'success',
-            timer: 2000
-        }).then(() => {
-            window.location.href = "/orderSucess";
-        });
-    } else {
-        Swal.fire({
-            title: 'Success',
-            text: 'Your order has been placed successfully',
-            icon: 'success',
-            timer: 2000
-        }).then(() => {
-            window.location.href = "/orderSucess";
-        });
-    }
-},
-
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while placing the order',
-                            icon: 'error',
-                            timer: 2000
-                        });
-                    }
-                });
+                if (selectedPayment.val() === 'cod') {
+                    // Handle COD payment
+                    console.log("hiiii")
+                    $.ajax({
+    url: "/placeOrder",
+    method: "POST",
+    data: {
+        userId: userData.Id, // Make sure userId, cartId, addressId, and paymentOption are defined and passed here
+        cartId: cartId,
+        addressId: selectedAddress.val(),
+        paymentOption: 'cod'
+    },
+    success: function(response) {
+                            if (response.status === "order placed") {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Your order has been placed successfully',
+                                    icon: 'success',
+                                    timer: 2000
+                                }).then(() => {
+                                    window.location.href = "/orderSucess";
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Your order has been placed successfully',
+                                    icon: 'success',
+                                    timer: 2000
+                                }).then(() => {
+                                    window.location.href = "/orderSucess";
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred while placing the order',
+                                icon: 'error',
+                                timer: 2000
+                            });
+                        }
+                    });
+                } else if (selectedPayment.val() === 'Razorpay') {
+                    // Handle Razorpay payment
+                    $.ajax({
+                        url: "/createOrder",
+                        method: "POST",
+                        data: {
+                            userId: userData.Id,
+                            cartId: cartId,
+                            addressId: selectedAddress.val(),
+                            amount: "<%= cartItems.total %>",
+                            name: "Shoes",
+                            description: "Shoes Buying",
+                            receipt: "<%= cartItems._id %>"
+                        },
+                        success: function(res) {
+                            var options = {
+                                "key": ""+res.key_id+"",
+                                "amount": ""+res.amount+"",
+                                "currency": "INR",
+                                "name": ""+res.product_name+"",
+                                "description": ""+res.description+"",
+                                "image": "https://dummyimage.com/600x400/000/fff",
+                                "order_id": ""+res.order_id+"",
+                                "handler": function (response){
+                                    alert("Payment Succeeded");
+                                    window.location.href = "/orderSucess";
+                                },
+                                "prefill": {
+                                    "contact":""+res.contact+"",
+                                    "name": ""+res.name+"",
+                                    "email": ""+res.email+""
+                                },
+                                "notes" : {
+                                    "description":""+res.description+""
+                                },
+                                "theme": {
+                                    "color": "#2300a3"
+                                }
+                            };
+                            var razorpayObject = new Razorpay(options);
+                            razorpayObject.on('payment.failed', function (response){
+                                alert("Payment Failed");
+                            });
+                            razorpayObject.open();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred while creating the order',
+                                icon: 'error',
+                                timer: 2000
+                            });
+                        }
+                    });
+                }
             }
         });
     });
 </script>
+
+
+
 
 </div>
 </body>

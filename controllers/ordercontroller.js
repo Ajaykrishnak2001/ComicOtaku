@@ -6,7 +6,11 @@ const Address = require("../models/addressModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Category =require("../models/categoryModel");
-const orders = require("../models/orderModel");
+const Order = require("../models/orderModel");
+
+
+const Razorpay = require('razorpay');
+const config = require("../config/config");
 
 
 function generateOrderNumber() {
@@ -70,7 +74,93 @@ const load_orderSuccess = async (req, res) => {
 
 
 //place order
-const placeorder = async (req, res) => {
+const createOrder = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const { cartId, addressId } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Fetch user's address details
+        const userAddress = await Address.findById(addressId);
+        if (!userAddress) {
+            return res.status(404).json({ message: 'Address not found' });
+        }
+
+        // Fetch user's cart items
+        const userCart = await cart.findById(cartId).populate('items.product');
+        if (!userCart) {
+            console.error('Cart not found for cartId:', cartId);
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const amount = req.body.amount * 100; // Convert amount to smallest currency unit
+        const options = {
+            amount: amount,
+            currency: 'INR',
+            receipt: req.body.receipt // Use a unique identifier for the receipt
+        };
+
+        razorpayInstance.orders.create(options, async (err, order) => {
+            if (!err) {
+                // Save the order details to your database
+                const newOrder = new Order({
+                    userId: req.session.userId,
+                    orderNumber: generateOrderNumber(),
+                    items: userCart.items.map(cartItem => ({
+                        product: cartItem.product,
+                        quantity: cartItem.quantity,
+                        price: cartItem.subTotal,
+                    })),
+                    totalAmount: req.body.amount,
+                    shippingAddress: {
+                        address: userAddress.address,
+                        pinCode: userAddress.pinCode,
+                        state: userAddress.state,
+                        locality: userAddress.locality,
+                        landmark: userAddress.landmark,
+                         mobile: user.phone,
+                        alternatePhone: userAddress.alternatePhone,
+                        district: userAddress.district,
+                    },
+                    payment: 'Razorpay' // Assuming you're always using Razorpay for this example
+                });
+
+                await newOrder.save();
+
+                res.status(200).send({
+                    success: true,
+                    msg: 'Order Created',
+                    order_id: order.id,
+                    amount: options.amount,
+                    key_id: config.RAZORPAY_ID_KEY,
+                    product_name: req.body.name,
+                    description: req.body.description,
+                    contact: "8567345612",
+                    name: "Sandeep Sharma",
+                    email: "sandep@gmail.com"
+                });
+            } else {
+                console.error(err);
+                res.status(400).send({ success: false, msg: 'Something went wrong!' });
+            }
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ success: false, msg: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
+
+const placeOrder = async (req, res) => {
     try {
         const userId = req.session.userId;
         const { cartId, addressId, paymentOption } = req.body;
@@ -84,12 +174,12 @@ const placeorder = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const userCart = await cart.findById(cartId).populate('items.$.product');
-        console.log(userCart); // Add this line to log the value of userCart
-
+        const userCart = await cart.findById(cartId).populate('items.product');
         if (!userCart) {
+            console.error('Cart not found for cartId:', cartId);
             return res.status(404).json({ message: 'Cart not found' });
         }
+        
 
         const orderNumber = generateOrderNumber();
         const orderProducts = userCart.items.map(cartItem => ({
@@ -98,7 +188,6 @@ const placeorder = async (req, res) => {
             price: cartItem.subTotal,
         }));
         const userAddress = await Address.findById(addressId);
-        console.log(addressId);
         if (!userAddress) {
             return res.status(404).json({ message: 'Address not found' });
         }
@@ -120,8 +209,9 @@ const placeorder = async (req, res) => {
             },
             payment: paymentOption,
         };
-        console.log(order);
-        const createdOrder = await orders.create(order);
+
+        const createdOrder = await Order.create(order); // Use Order.create instead of order.create
+
 
         // Update product quantities and delete cart
         for (const orderedProduct of createdOrder.items) {
@@ -148,11 +238,67 @@ const placeorder = async (req, res) => {
 
 
 
+
+const razorpayInstance = new Razorpay({
+    key_id: config.RAZORPAY_ID_KEY,
+    key_secret: config.RAZORPAY_SECRET_KEY
+});
+
+// const createOrder = async (req, res) => {
+//     try {
+//         const amount = req.body.amount * 100; // Convert amount to smallest currency unit
+//         const options = {
+//             amount: amount,
+//             currency: 'INR',
+//             receipt: req.body.receipt // Use a unique identifier for the receipt
+//         };
+
+//         razorpayInstance.orders.create(options, (err, order) => {
+//             if (!err) {
+//                 res.status(200).send({
+//                     success: true,
+//                     msg: 'Order Created',
+//                     order_id: order.id,
+//                     amount: options.amount,
+//                     key_id: config.RAZORPAY_ID_KEY,
+//                     product_name: req.body.name,
+//                     description: req.body.description,
+//                     contact: "8567345612",
+//                     name: "Sandeep Sharma",
+//                     email: "sandep@gmail.com"
+//                 });
+//             } else {
+//                 console.error(err);
+//                 res.status(400).send({ success: false, msg: 'Something went wrong!' });
+//             }
+//         });
+//     } catch (error) {
+//         console.error(error.message);
+//         res.status(500).send({ success: false, msg: 'Internal Server Error' });
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
     
 
   module.exports ={
     checkoutpage,
     load_orderSuccess,
-    placeorder
+    placeOrder,
+    createOrder,
+
   }

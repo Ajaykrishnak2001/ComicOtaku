@@ -82,6 +82,10 @@ const orderSchema = new mongoose.Schema({
     },
     required: true
   },
+  payment:{
+    type:String,
+    required:true
+  },
   reasonForCancel:{
     type:String
   }

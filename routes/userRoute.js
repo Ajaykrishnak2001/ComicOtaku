@@ -67,6 +67,7 @@ userRoute.post("/resetPassword",requireLogin,setnocache.user,userprofileControll
 
 
 
+// userRoute.post('/createOrder',ordercontroller.createOrder);
 
 
 userRoute.get("/cart",requireLogin,setnocache.user,cartController.cartpage)
@@ -78,7 +79,15 @@ userRoute.delete('/cart/:productId',cartController.removeFromCart);
 userRoute.get('/checkOut',requireLogin,setnocache.user,ordercontroller.checkoutpage)
 
 userRoute.get('/orderSucess',requireLogin,setnocache.user,ordercontroller.load_orderSuccess)
-userRoute.post('/placeOrder',requireLogin,setnocache.user,ordercontroller.placeorder)
+
+ userRoute.post('/placeOrder', requireLogin, setnocache.user, ordercontroller.placeOrder);
+// Define the route for creating an order
+userRoute.post('/createOrder', ordercontroller.createOrder);
+
+
+
+
+
 
 //  Product routes
 userRoute.get("/products",requireLogin,requireLogin,setnocache.user, userController.loadAllProducts);
