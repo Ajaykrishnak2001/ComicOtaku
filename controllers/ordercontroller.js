@@ -73,6 +73,11 @@ const load_orderSuccess = async (req, res) => {
 // };
 
 
+const razorpayInstance = new Razorpay({
+    key_id: config.RAZORPAY_ID_KEY,
+    key_secret: config.RAZORPAY_SECRET_KEY
+});
+
 //place order
 const createOrder = async (req, res) => {
     try {
@@ -245,10 +250,7 @@ const placeOrder = async (req, res) => {
 
 
 
-const razorpayInstance = new Razorpay({
-    key_id: config.RAZORPAY_ID_KEY,
-    key_secret: config.RAZORPAY_SECRET_KEY
-});
+
 
 // const createOrder = async (req, res) => {
 //     try {

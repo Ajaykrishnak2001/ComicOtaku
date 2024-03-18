@@ -34,6 +34,7 @@ const userController = require("../controllers/userController");
 const userprofileController = require("../controllers/userprofileController");
 const cartController = require("../controllers/cartController");
 const ordercontroller=require("../controllers/ordercontroller")
+const walletcontroller=require("../controllers/WalletController");
 
 userRoute.get('/',requireLogin,setnocache.user,userController.loadHome)
 
@@ -88,7 +89,6 @@ userRoute.post('/createOrder', ordercontroller.createOrder);
 
 
 
-
 //  Product routes
 userRoute.get("/products",requireLogin,requireLogin,setnocache.user, userController.loadAllProducts);
 
@@ -101,5 +101,12 @@ userRoute.get('/api/products/popularity',requireLogin,setnocache.user,userContro
 userRoute.put("/changeStatus/:orderId",requireLogin,setnocache.user, userController.ChangeStatus);
 
 userRoute.get('/login',isLoggedIn,setnocache.user,userController.loadlogin);
+
+
+userRoute.post("/walletMoney",walletcontroller.addWallet);
+
+userRoute.post('/verifywalletPayment',walletcontroller.walletMoney);
+
+
 
 module.exports = userRoute;
