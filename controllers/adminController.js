@@ -458,19 +458,29 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+// const loadorders = async (req, res) => {
+//   try {
+//     // Assuming AllOrders is an array of orders
+//     const AllOrders = await Order.find(); // Assuming Order is your Mongoose model for orders
+//     const user = req.user; // Assuming req.user contains the user object
+//     res.render('orders', { AllOrders, user }); // Pass AllOrders and user as variables to the template
+//   } catch (error) {
+//     console.log(error.message);
+//     res.status(500).send('Internal Server Error');
+//   }
+// };
+
 const loadorders = async (req, res) => {
   try {
-    // Assuming AllOrders is an array of orders
-    const AllOrders = await Order.find(); // Assuming Order is your Mongoose model for orders
-    const user = req.user; // Assuming req.user contains the user object
-    res.render('orders', { AllOrders, user }); // Pass AllOrders and user as variables to the template
+    const AllOrders = await Order.find();
+    const user = req.user;
+    console.log('User ID:', user ? user._id : 'User not logged in'); // Log the user ID if user is logged in, otherwise log a message
+    res.render('orders', { AllOrders, user });
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
-
-
 
 const detailedOrder = async (req, res) => {
   try {
@@ -482,7 +492,7 @@ const detailedOrder = async (req, res) => {
         select: 'pname price views purchases popularity images category brand sizes'
       })
       .populate({
-        path: 'user',
+        path: 'userId', // Assuming `userId` is the name of the field storing the user's ID
         model: 'User',
         select: 'name email phone',
       });
@@ -491,12 +501,25 @@ const detailedOrder = async (req, res) => {
       return res.status(404).send('Order not found');
     }
 
-    res.render('detailedOrder', { orderDetails, order: orderDetails }); // Pass orderDetails as order to the template
+    // Calculate the total amount for the order
+    let totalAmount = 0;
+    orderDetails.items.forEach(item => {
+      totalAmount += item.quantity * item.price; // Using `item.price` instead of `item.product.price` if `price` is stored in the `items` array
+    });
+
+    // Accessing the `userId` from the populated `user` field
+    const userId = orderDetails.userId._id; 
+    console.log('User ID:', userId);
+
+    res.render('detailedOrder', { orderDetails, order: orderDetails, totalAmount: totalAmount, userId: userId }); // Pass orderDetails and totalAmount to the template
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
+
+
+
 
 
 

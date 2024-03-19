@@ -107,6 +107,7 @@ userRoute.post("/walletMoney",walletcontroller.addWallet);
 
 userRoute.post('/verifywalletPayment',walletcontroller.walletMoney);
 
+userRoute.post('/refund',walletcontroller.refund);
 
 
 module.exports = userRoute;

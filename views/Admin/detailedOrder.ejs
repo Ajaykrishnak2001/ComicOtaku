@@ -310,6 +310,7 @@
                                 
                                 
                                 
+                                
                             </div>
                         </div> 
                     </div>
@@ -371,6 +372,31 @@
     });
 </script>
     
+<script>
+    const userId = '<%= userId %>'; // Assuming userId is a string
+    console.log('User ID:', userId);
+
+    function refund() {
+        const totalAmount = parseFloat('<%= totalAmount %>');
+        console.log("Total Amount:", totalAmount);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/refund', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Refund successful');
+                } else {
+                    console.error('Error:', xhr.responseText);
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ totalAmount: totalAmount, userId: userId }));
+    }
+</script>
+
+
 </body>
 
 

@@ -99,7 +99,40 @@ const walletMoney = async (req, res) => {
     }
 };
 
+
+const refund = async (req, res) => {
+    try {
+        const userId = req.body.userId; // Access userId from the request body
+        console.log('User ID:', userId);
+
+        const wallet = await Wallet.findOne({ user: userId });
+
+        if (!wallet) {
+            return res.status(404).json({ error: 'Wallet not found' });
+        }
+
+        const refundAmount = req.body.totalAmount;
+        console.log("Total Amount:", refundAmount);
+
+        wallet.totalRefund += refundAmount;
+        wallet.transationHistory.push({
+            date: new Date(),
+            paymentType: 'Refund',
+            transationMode: 'Credit',
+            transationamount: refundAmount
+        });
+
+        await wallet.save();
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 module.exports = {
   addWallet,
   walletMoney,
+  refund 
 };
