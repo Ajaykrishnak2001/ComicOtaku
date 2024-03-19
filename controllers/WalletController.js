@@ -50,52 +50,54 @@ const addWallet = async (req, res) => {
 
 const walletMoney = async (req, res) => {
     try {
-      // console.log("walletmoney");
-      const email = req.session.email;
-      const userData = await User.findOne({ email: email });
-  
-      if (!userData) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      const wallet = await Wallet.findOne({ user: userData._id });
-  
-      let balance = wallet ? wallet.walletbalance : 0; // If wallet exists, get balance; otherwise, set to 0
-      balance = balance + req.body.order.amount;
-  
-      if (wallet) {
-        wallet.walletbalance = balance;
-        wallet.transationHistory.push({
-          date: new Date().toISOString(),
-          paymentType: "Razorpay",
-          transationMode: "Credit",
-          transationamount: req.body.order.amount,
-        });
-        await wallet.save();
-      } else {
-        const newWallet = new Wallet({
-          user: userData._id,
-          walletbalance: balance,
-          transationHistory: [
-            {
-              date: new Date().toISOString(),
-              paymentType: "Razorpay",
-              transationMode: "Credit",
-              transationamount: req.body.order.amount,
-            },
-          ],
-          totalRefund: 0,
-        });
-        await newWallet.save();
-      }
-  
-      res.json({ razorpay_success: true });
+        const { paymentMethod, status } = req.body.order;
+
+        if (paymentMethod !== 'Razorpay' || (status !== 'Returned' && status !== 'Canceled')) {
+            return res.status(400).json({ error: 'Invalid payment method or order status' });
+        }
+
+        const email = req.session.email;
+        const userData = await User.findOne({ email: email });
+
+        if (!userData) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const wallet = await Wallet.findOne({ user: userData._id });
+
+        let balance = wallet ? wallet.walletbalance : 0;
+        balance = balance + req.body.order.amount;
+
+        if (wallet) {
+            wallet.walletbalance = balance;
+            wallet.transationHistory.push({
+                date: new Date().toISOString(),
+                paymentType: 'Razorpay',
+                transationMode: 'Credit',
+                transationamount: req.body.order.amount,
+            });
+            await wallet.save();
+        } else {
+            const newWallet = new Wallet({
+                user: userData._id,
+                walletbalance: balance,
+                transationHistory: [{
+                    date: new Date().toISOString(),
+                    paymentType: 'Razorpay',
+                    transationMode: 'Credit',
+                    transationamount: req.body.order.amount,
+                }],
+                totalRefund: 0,
+            });
+            await newWallet.save();
+        }
+
+        res.json({ razorpay_success: true });
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: "Internal Server Error" });
+        console.log(error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
-  
+};
 
 module.exports = {
   addWallet,

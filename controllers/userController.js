@@ -387,6 +387,15 @@ const calculatePopularity = async (req, res) => {
         order.reasonForCancel = action === 'Canceled' ? reason : ''; // Save reason for canceling the order
         order.reasonForReturn = action === 'Returned' ? reason : ''; // Save reason for returning the order
         await order.save();
+
+        // Check if the payment method is Razorpay and the status is Return or Canceled
+        if (order.paymentMethod === 'Razorpay' && (action === 'Canceled' || action === 'Returned')) {
+            req.body.order = {
+                amount: order.totalAmount,
+            };
+            await walletMoney(req, res);
+        }
+
         const newStatus = order.status;
         console.log('Order status changed successfully. New status:', newStatus);
         return res.status(200).json({ newStatus });
