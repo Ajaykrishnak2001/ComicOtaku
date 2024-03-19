@@ -380,11 +380,12 @@ const calculatePopularity = async (req, res) => {
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        if (action === 'Canceled' && !reason) {
-            return res.status(400).json({ error: 'Reason is required for canceling the order' });
+        if ((action === 'Canceled' || action === 'Returned') && !reason) {
+            return res.status(400).json({ error: 'Reason is required for canceling or returning the order' });
         }
         order.status = action;
-        order.reasonForCancel = reason; // Save reason for canceling the order
+        order.reasonForCancel = action === 'Canceled' ? reason : ''; // Save reason for canceling the order
+        order.reasonForReturn = action === 'Returned' ? reason : ''; // Save reason for returning the order
         await order.save();
         const newStatus = order.status;
         console.log('Order status changed successfully. New status:', newStatus);
@@ -394,6 +395,8 @@ const calculatePopularity = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
 
 
 

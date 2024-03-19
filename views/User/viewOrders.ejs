@@ -613,10 +613,9 @@
             </div>
             
             <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonDialog">Cancel Order</button>
+                <button id="cancelButton" class="btn btn-danger" onclick="submitAction('<%= orderDetails._id %>', 'Canceled')">Cancel Order</button>
+                <button id="returnButton" class="btn btn-danger" style="display: none;" onclick="submitAction('<%= orderDetails._id %>', 'Returned')">Return Order</button>
             </div>
-            
-            
             
     
             <!-- Back button -->
@@ -778,28 +777,45 @@
 <!-- Include this script in your HTML file -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 <script>
-    async function submitReason(OrderId) {
-    try {
-        const action = 'Canceled'; // Set action to 'Canceled' directly for the Cancel button
-        const reason = document.getElementById('reasonInput').value;
-        if (!reason) {
-            return; // Cancel operation if no reason is provided
+    async function submitAction(OrderId, action) {
+        try {
+            let reason = '';
+            if (action === 'Canceled' || action === 'Returned') {
+                reason = prompt(`Enter reason for ${action.toLowerCase()} the order:`);
+                if (!reason) {
+                    return; // Cancel operation if no reason is provided
+                }
+            }
+            const response = await fetch(`/changeStatus/${OrderId}`, {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: action, reason: reason })
+            });
+            const data = await response.json();
+            location.reload();
+        } catch (error) {
+            console.error('Error:', error);
         }
-        const response = await fetch(`/changeStatus/${OrderId}`, {
-            method: 'put',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ action: action, reason: reason })
-        });
-        const data = await response.json();
-        location.reload();
-    } catch (error) {
-        console.error('Error:', error);
     }
-}
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const status = '<%= orderDetails.status %>';
+    if (status === 'Delivered') {
+        document.getElementById('cancelButton').style.display = 'none';
+        document.getElementById('returnButton').style.display = 'block';
+    } else if (status === 'Returned') {
+        document.getElementById('cancelButton').style.display = 'none';
+        document.getElementById('returnButton').style.display = 'block';
+    } else {
+        document.getElementById('cancelButton').style.display = 'block';
+        document.getElementById('returnButton').style.display = 'none';
+    }
+});
 
 </script>
+
 
 
  

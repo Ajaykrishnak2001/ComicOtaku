@@ -88,6 +88,9 @@ const orderSchema = new mongoose.Schema({
   },
   reasonForCancel:{
     type:String
+  },
+  reasonForReturn:{
+    type:String
   }
 },{ strictPopulate:false });
 
