@@ -17,6 +17,8 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+
+
 </head>
 <body class="page-template belle cart-variant1">
 <div class="pageWrapper">
@@ -592,19 +594,30 @@
                     </p>
                 </div>
             </div>
-
-            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                <select id="orderStatusSelect" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
-                    <option>Cancel Order</option>
-                   
-                    <option>Canceled</option>
-                  
-                </select>
-                <br>
-                <br>
-                <a class="btn btn-primary" href="#"onclick="changeStatus('<%= orderDetails._id %>')"> Save</a>
-                
+            <div id="reasonDialog" class="reason-dialog modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Enter reason for canceling the order:</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea id="reasonInput" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="submitReason('<%= orderDetails._id %>')">Submit</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonDialog">Cancel Order</button>
+            </div>
+            
+            
+            
     
             <!-- Back button -->
             <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
@@ -765,23 +778,28 @@
 <!-- Include this script in your HTML file -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 <script>
-    async function changeStatus(OrderId) {
-        try {
-            const action = document.getElementById('orderStatusSelect').value;
-            const response = await fetch(`/admin/changeStatus/${OrderId}`, {
-                method: 'put',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ action: action })
-            });
-            const data = await response.json();
-
-            
-            location.reload(); 
-
-        } catch (error) {
-            console.error('Error:', error);
+    async function submitReason(OrderId) {
+    try {
+        const action = 'Canceled'; // Set action to 'Canceled' directly for the Cancel button
+        const reason = document.getElementById('reasonInput').value;
+        if (!reason) {
+            return; // Cancel operation if no reason is provided
         }
+        const response = await fetch(`/changeStatus/${OrderId}`, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: action, reason: reason })
+        });
+        const data = await response.json();
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
     }
+}
+
 </script>
+
+
+ 

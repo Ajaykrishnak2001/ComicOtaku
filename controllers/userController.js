@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Category = require('../models/categoryModel');
+const Order=require("../models/orderModel");
 
 const nodemailer = require("nodemailer");
 
@@ -369,21 +370,34 @@ const calculatePopularity = async (req, res) => {
 
   const ChangeStatus = async (req, res) => {
     const orderDetails = req.params.orderId;
-    const { action } = req.body;
+    const { action, reason } = req.body; // Extract the reason from the request body
     try {
-      const order = await Order.findOne({ _id:orderDetails});
-      if (!order) {
-        return res.status(404).json({ error: 'Order not found' });
-      }
-      order.status = action;
-      await order.save();
-      const newStatus = order.status;
-      return res.status(200).json({ newStatus});
+        console.log('Received request to change status for order:', orderDetails);
+        console.log('Action:', action);
+        console.log('Reason:', reason);
+
+        const order = await Order.findOne({ _id: orderDetails });
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        if (action === 'Canceled' && !reason) {
+            return res.status(400).json({ error: 'Reason is required for canceling the order' });
+        }
+        order.status = action;
+        order.reasonForCancel = reason; // Save reason for canceling the order
+        await order.save();
+        const newStatus = order.status;
+        console.log('Order status changed successfully. New status:', newStatus);
+        return res.status(200).json({ newStatus });
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: 'Internal Server Error' });
+        console.log(error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
+};
+
+
+
+ 
 
 
     
