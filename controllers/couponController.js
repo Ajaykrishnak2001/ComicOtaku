@@ -43,8 +43,22 @@ const loadaddcoupon=async(req,res)=>{
     console.log(error.message);
 }};
 
+
+const deletecoupon = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Coupon.findByIdAndDelete(id);
+        res.status(200).json({ message: 'Coupon deleted successfully' });
+    } catch (error) {
+        console.error('Failed to delete coupon:', error);
+        res.status(500).json({ message: 'Failed to delete coupon', error: error.message });
+    }
+};
+
+
 module.exports = {
     addcoupon,
     loadcoupon,
-    loadaddcoupon
+    loadaddcoupon,
+    deletecoupon
 };

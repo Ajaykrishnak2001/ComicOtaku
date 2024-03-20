@@ -191,7 +191,6 @@
                     <div class="col-md-6 text-end">
                         <a href="/admin/createcoupon" class="btn btn-primary">Add Coupon</a>
                     </div>
-                    
                 </div>
                 <div class="row">
                     <% coupons.forEach(coupon => { %>
@@ -207,7 +206,7 @@
                                     <p class="card-text"><strong>Expire Date:</strong> <%= coupon.expireDate %></p>
                                 </div>
                                 <div class="card-footer bg-light text-center">
-                                    <button class="btn btn-outline-primary">Delete Coupon</button>
+                                    <button class="btn btn-outline-primary" onclick="deleteCoupon('<%= coupon._id %>')">Delete Coupon</button>
                                 </div>
                             </div>
                         </div>
@@ -215,6 +214,7 @@
                 </div>
             </div>
         </body>
+        
         
 
 
@@ -243,7 +243,28 @@
 <script src="/admin-assets/js/main.js" type="text/javascript"></script>
 </body>
 
+<script>function deleteCoupon(couponId) {
+    console.log('Deleting coupon with ID:', couponId);
+    fetch(`/admin/deletecoupon/${couponId}`, {
+    method: 'DELETE'
+})
 
+
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete response:', data);
+        if (data.error) {
+            console.log(data.error);
+        } else {
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 
 </html>

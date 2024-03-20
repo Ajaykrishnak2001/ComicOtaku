@@ -67,6 +67,9 @@ adminRoute.get("/coupon",couponController.loadcoupon)
  adminRoute.get('/createcoupon',couponController.loadaddcoupon);
 // Assuming you have an Express app instance called 'app'
 adminRoute.post('/addcoupon',couponController.addcoupon);
+// Assuming you have an Express app instance called 'app'
+adminRoute.delete('/deletecoupon/:id', couponController.deletecoupon);
+
 
 
 const storage = multer.diskStorage({
