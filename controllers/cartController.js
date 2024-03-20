@@ -4,21 +4,29 @@ const Cart =require("../models/cartModel");
 const Category =require("../models/categoryModel");
 const Coupon = require("../models/couponModel");
 
-const cartpage = async(req,res)=>{
-    try{
+const cartpage = async (req, res) => {
+    try {
         const email = req.session.email;
         const categories = await Category.find();
-        const userData = await User.findOne({email:email});
-        const cartItems = await Cart.findOne({ user: req.session.userData}).populate('items.product');
-        const coupons = await Coupon.find(); 
+        const userData = await User.findOne({ email: email });
+        const cartItems = await Cart.findOne({ user: req.session.userData }).populate('items.product');
+        let coupons = await Coupon.find();
 
+        // Filter coupons based on cart total price
+        const totalPrice = calculateTotalPrice(cartItems.items);
+        coupons = coupons.filter(coupon => totalPrice >= coupon.minimumAmount && totalPrice <= coupon.maximumAmount);
 
-        res.render('cart',{categories,userData,cartItems,coupons });
-    }catch(error){
+        res.render('cart', { categories, userData, cartItems, coupons });
+    } catch (error) {
         console.log(error.message);
     }
 }
-    
+
+function calculateTotalPrice(items) {
+    return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+}
+
+
 const addTocart = async (req, res) => {
     const productId = req.params.productId;
     const size = req.query.size;
