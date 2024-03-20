@@ -14,7 +14,7 @@ adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
 const adminController = require("../controllers/adminController");
-const userprofileController = require("../controllers/userprofileController");
+const couponController = require("../controllers/couponController");
 
 
 
@@ -62,6 +62,11 @@ adminRoute.get("/detailedOrder", adminController.detailedOrder);
 
 adminRoute.put("/changeStatus/:orderId", adminController.ChangeStatus);
 
+adminRoute.get("/coupon",couponController.loadcoupon)
+
+
+// Assuming you have an Express app instance called 'app'
+adminRoute.post('/addCoupon',couponController.addcoupon);
 
 
 const storage = multer.diskStorage({

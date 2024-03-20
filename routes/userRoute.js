@@ -35,6 +35,7 @@ const userprofileController = require("../controllers/userprofileController");
 const cartController = require("../controllers/cartController");
 const ordercontroller=require("../controllers/ordercontroller")
 const walletcontroller=require("../controllers/WalletController");
+const couponController=require("../controllers/couponController");
 
 userRoute.get('/',requireLogin,setnocache.user,userController.loadHome)
 

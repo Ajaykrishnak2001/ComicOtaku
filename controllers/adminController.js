@@ -552,6 +552,7 @@ const ChangeStatus = async (req, res) => {
 
 
 
+
 module.exports = {
   loadAdminLog,
   adminLogin,
@@ -576,6 +577,7 @@ module.exports = {
   loadorders,
   detailedOrder,
   ChangeStatus
+
   
   
 };
