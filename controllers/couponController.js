@@ -23,16 +23,28 @@ const addcoupon =  async (req, res) => {
     }
 };
 
-const loadcoupon=async(req,res)=>{
-    try{
-      res.render("coupon")
-    }catch(error){
-      console.log(error.message)
+const loadcoupon = async (req, res) => {
+    try {
+        const coupons = await Coupon.find(); // Fetch all coupons from the database
+
+        res.render("coupons", { coupons }); // Render the coupon page with the coupons data
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Failed to load coupons', error: error.message });
     }
-  }
+};
 
 
-module.exports ={
+const loadaddcoupon=async(req,res)=>{
+    try{
+        res.render("createCoupon")
+    }catch(error)
+{
+    console.log(error.message);
+}};
+
+module.exports = {
     addcoupon,
-    loadcoupon
-} 
+    loadcoupon,
+    loadaddcoupon
+};

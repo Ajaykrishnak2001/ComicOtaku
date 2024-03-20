@@ -64,9 +64,9 @@ adminRoute.put("/changeStatus/:orderId", adminController.ChangeStatus);
 
 adminRoute.get("/coupon",couponController.loadcoupon)
 
-
+ adminRoute.get('/createcoupon',couponController.loadaddcoupon);
 // Assuming you have an Express app instance called 'app'
-adminRoute.post('/addCoupon',couponController.addcoupon);
+adminRoute.post('/addcoupon',couponController.addcoupon);
 
 
 const storage = multer.diskStorage({
