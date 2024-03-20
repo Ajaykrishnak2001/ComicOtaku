@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Cart =require("../models/cartModel");
 const Category =require("../models/categoryModel");
-
+const Coupon = require("../models/couponModel");
 
 const cartpage = async(req,res)=>{
     try{
@@ -10,15 +10,15 @@ const cartpage = async(req,res)=>{
         const categories = await Category.find();
         const userData = await User.findOne({email:email});
         const cartItems = await Cart.findOne({ user: req.session.userData}).populate('items.product');
+        const coupons = await Coupon.find(); 
 
 
-
-        res.render('cart',{categories,userData,cartItems});
+        res.render('cart',{categories,userData,cartItems,coupons });
     }catch(error){
         console.log(error.message);
     }
 }
-
+    
 const addTocart = async (req, res) => {
     const productId = req.params.productId;
     const size = req.query.size;
