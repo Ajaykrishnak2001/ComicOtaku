@@ -296,7 +296,8 @@ const loadDashboard = async (req, res) => {
         console.log("hiiiiiiiiii");
         const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
         const totalRevenue = await calculateRevenue();
-        res.render('dashboard', { AllOrders,totalRevenue});
+        const totalOrders = AllOrders.length;
+        res.render('dashboard', { AllOrders,totalRevenue,totalOrders});
         // Pass orders as an object
     } catch (err) {
         console.error(err);
