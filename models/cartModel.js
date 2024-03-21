@@ -34,6 +34,10 @@ const cartSchema = new mongoose.Schema(
       type: Number,
       require: true,
     },
+    maximumDiscount:{
+      type:Number,
+      require:true
+    }
   },
   { timestamps: true, versionKey: false,strictPopulate:false }
 );

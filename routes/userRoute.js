@@ -110,5 +110,8 @@ userRoute.post('/verifywalletPayment',walletcontroller.walletMoney);
 
 userRoute.post('/refund',walletcontroller.refund);
 
+userRoute.post('/updateCartTotalPrice',cartController.updateCartTotalPrice)
+
+userRoute.get('/getCartMaximumDiscount',cartController.discountamount)
 
 module.exports = userRoute;

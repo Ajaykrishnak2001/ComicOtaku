@@ -16,7 +16,12 @@ const cartpage = async (req, res) => {
         const totalPrice = calculateTotalPrice(cartItems.items);
         coupons = coupons.filter(coupon => totalPrice >= coupon.minimumAmount && totalPrice <= coupon.maximumAmount);
 
-        res.render('cart', { categories, userData, cartItems, coupons });
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+
+        res.render('cart', { categories, userData, cartItems, coupons,item: cartItems.items,totalPrice,cart  });
     } catch (error) {
         console.log(error.message);
     }
@@ -155,17 +160,40 @@ const removeFromCart = async (req, res) => {
 };
 
 
+const updateCartTotalPrice = async (req, res) => {
+    try {
+        const userId = req.session.userId; // Assuming you have the user's ID in the session
+        const { totalPrice, maximumDiscount } = req.body;
+
+        // Find the user's cart and update the total price
+        const cart = await Cart.findOneAndUpdate({ userId }, { total: totalPrice,maximumDiscount: maximumDiscount}, { new: true });
+
+        res.json({ message: 'Cart total price updated successfully', cart });
+    } catch (error) {
+        console.error('Error updating cart total price:', error);
+        res.status(500).json({ message: 'Failed to update cart total price' });
+    }
+};
 
 
-
-
-
+const discountamount=async (req, res) => {
+    try {
+        const userId = req.session.userId; // Assuming you have the user's ID in the session
+        const cart = await Cart.findOne({ userId });
+        res.json({ cart });
+    } catch (error) {
+        console.error('Error getting cart maximum discount:', error);
+        res.status(500).json({ message: 'Failed to get cart maximum discount' });
+    }
+};
 
 
 module.exports={
     cartpage,
     addTocart,
     changeQuantity,
-    removeFromCart
+    removeFromCart,
+    updateCartTotalPrice,
+    discountamount
 
 }
