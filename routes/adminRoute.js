@@ -73,6 +73,8 @@ adminRoute.delete('/deletecoupon/:id', couponController.deletecoupon);
 
 adminRoute.get('/dashboard',ordercontroller.loadDashboard);
 
+adminRoute.get('/revenue',ordercontroller.calculateRevenue);
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

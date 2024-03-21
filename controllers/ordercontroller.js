@@ -295,8 +295,8 @@ const loadDashboard = async (req, res) => {
     try {
         console.log("hiiiiiiiiii");
         const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
-        
-        res.render('dashboard', { AllOrders});
+        const totalRevenue = await calculateRevenue();
+        res.render('dashboard', { AllOrders,totalRevenue});
         // Pass orders as an object
     } catch (err) {
         console.error(err);
@@ -306,7 +306,22 @@ const loadDashboard = async (req, res) => {
 
 
 
+const calculateRevenue = async () => {
+    try {
+        const revenue = await Order.aggregate([
+            { $match: { status: "Delivered" } },
+            { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+        ]);
 
+        // If there are no orders with status "Delivered", set revenue to 0
+        const totalRevenue = revenue.length > 0 ? revenue[0].total : 0;
+
+        return totalRevenue;
+    } catch (err) {
+        console.error(err);
+        return 0;
+    }
+};
 
 
 
@@ -319,6 +334,7 @@ const loadDashboard = async (req, res) => {
     load_orderSuccess,
     placeOrder,
     createOrder,
-    loadDashboard
+    loadDashboard,
+    calculateRevenue
 
   }
