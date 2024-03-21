@@ -29,7 +29,7 @@ const loadprofile = async (req, res) => {
   
       const userData = await user.findById(req.session.userId);
       const userAddress = await address.find({ user: req.session.userId });
-      const AllOrders=await Order.find();
+      const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
       const wallet = await Wallet.findOne({ user: req.session.userId });
       res.render("profile", { user: userData, userAddress: userAddress,AllOrders,wallet: wallet  });
     } catch (error) {

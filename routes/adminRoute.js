@@ -15,6 +15,7 @@ adminRoute.set("views", "./views/admin");
 
 const adminController = require("../controllers/adminController");
 const couponController = require("../controllers/couponController");
+const ordercontroller = require("../controllers/ordercontroller");
 
 
 
@@ -24,7 +25,7 @@ const couponController = require("../controllers/couponController");
 
 adminRoute.get("/login", adminController.loadAdminLog);
 adminRoute.post("/login", adminController.adminLogin);
-adminRoute.get("/dashboard", adminController.loadDashboard);
+
 adminRoute.get("/products", adminController.loadProducts);
 adminRoute.get("/users", adminController.loadUsers);
 adminRoute.get("/users/edit", adminController.editUser);
@@ -70,6 +71,7 @@ adminRoute.post('/addcoupon',couponController.addcoupon);
 // Assuming you have an Express app instance called 'app'
 adminRoute.delete('/deletecoupon/:id', couponController.deletecoupon);
 
+adminRoute.get('/dashboard',ordercontroller.loadDashboard);
 
 
 const storage = multer.diskStorage({

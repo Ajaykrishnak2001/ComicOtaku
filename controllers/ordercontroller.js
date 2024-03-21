@@ -289,9 +289,20 @@ const placeOrder = async (req, res) => {
 
 
 
+//////////////////////////admin///////////////////////
 
-
-
+const loadDashboard = async (req, res) => {
+    try {
+        console.log("hiiiiiiiiii");
+        const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
+        
+        res.render('dashboard', { AllOrders});
+        // Pass orders as an object
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
 
 
 
@@ -308,5 +319,6 @@ const placeOrder = async (req, res) => {
     load_orderSuccess,
     placeOrder,
     createOrder,
+    loadDashboard
 
   }

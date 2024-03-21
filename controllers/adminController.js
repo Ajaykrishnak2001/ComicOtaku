@@ -60,13 +60,6 @@ const adminLogin = async (req, res) => {
 };
 
 
-const loadDashboard = async (req, res) => {
-  try {
-    res.render("dashboard");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
 
 const loadProducts = async (req, res) => {
   try {
@@ -472,7 +465,7 @@ const deleteCategory = async (req, res) => {
 
 const loadorders = async (req, res) => {
   try {
-    const AllOrders = await Order.find();
+    const AllOrders = await Order.find().sort({ orderDate: -1 }).exec();
     const user = req.user;
     console.log('User ID:', user ? user._id : 'User not logged in'); // Log the user ID if user is logged in, otherwise log a message
     res.render('orders', { AllOrders, user });
@@ -556,7 +549,6 @@ const ChangeStatus = async (req, res) => {
 module.exports = {
   loadAdminLog,
   adminLogin,
-  loadDashboard,
   loadProducts,
   loadUsers,
   editUser,
