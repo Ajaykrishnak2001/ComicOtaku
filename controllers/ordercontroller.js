@@ -296,8 +296,8 @@ const loadDashboard = async (req, res) => {
         console.log("hiiiiiiiiii");
         const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
         const totalRevenue = await calculateRevenue();
-        const totalOrders = AllOrders.length;
-        res.render('dashboard', { AllOrders,totalRevenue,totalOrders});
+        const totalDeliveredOrders = await calculateDeliveredOrders();
+        res.render('dashboard', { AllOrders,totalRevenue,totalDeliveredOrders});
         // Pass orders as an object
     } catch (err) {
         console.error(err);
@@ -324,6 +324,15 @@ const calculateRevenue = async () => {
     }
 };
 
+const calculateDeliveredOrders = async () => {
+    try {
+        const count = await Order.countDocuments({ status: "Delivered" });
+        return count;
+    } catch (err) {
+        console.error(err);
+        return 0;
+    }
+};
 
 
 
@@ -336,6 +345,7 @@ const calculateRevenue = async () => {
     placeOrder,
     createOrder,
     loadDashboard,
-    calculateRevenue
+    calculateRevenue,
+    calculateDeliveredOrders
 
   }
