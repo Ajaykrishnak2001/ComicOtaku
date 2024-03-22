@@ -303,30 +303,33 @@
                             </thead>
                             <tbody>
                                 <% AllOrders.forEach(order => { %>
-                                    <tr>
-                                        <td class="text-center">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="<%= order._id %>">
-                                                <label class="form-check-label" for="<%= order._id %>"></label>
-                                            </div>
-                                        </td>
-                                        <td><a href="#" class="fw-bold">#<%= order.orderNumber %></a></td>
-                                        <td><%= order.userId %></td>
-                                        <td><%= order.orderDate.toDateString() %></td>
-                                        <td>$<%= order.totalAmount %></td>
-                                        <td>
-                                            <span class="badge badge-pill badge-soft-<%= order.status === 'Paid' ? 'success' : 'danger' %>"><%= order.status %></span>
-                                        </td>
-                                        <td>
-                                            <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
-                                            <%= order.payment %>
-                                        </td>
-                                        <td>
-                                            <a href="/admin/detailedOrder?orderNumber=<%= order.orderNumber %>" class="btn btn-xs">View details</a>
-                                        </td>
-                                    </tr>
+                                    <% if (order.status === 'Delivered') { %>
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="<%= order._id %>">
+                                                    <label class="form-check-label" for="<%= order._id %>"></label>
+                                                </div>
+                                            </td>
+                                            <td><a href="#" class="fw-bold">#<%= order.orderNumber %></a></td>
+                                            <td><%= order.userId %></td>
+                                            <td><%= order.orderDate.toDateString() %></td>
+                                            <td>$<%= order.totalAmount %></td>
+                                            <td>
+                                                <span class="badge badge-pill badge-soft-<%= order.status === 'Paid' ? 'success' : 'danger' %>"><%= order.status %></span>
+                                            </td>
+                                            <td>
+                                                <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
+                                                <%= order.payment %>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/detailedOrder?orderNumber=<%= order.orderNumber %>" class="btn btn-xs">View details</a>
+                                            </td>
+                                        </tr>
+                                    <% } %>
                                 <% }); %>
                             </tbody>
+                            
                         </table>
                     </div>
                     
@@ -358,6 +361,13 @@
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
     <script src="/admin-assets/js/custom-chart.js" type="text/javascript"></script>
+
+    <!-- Include toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+<!-- Include toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 
     <script>   //filtering based on orderDate:
@@ -416,32 +426,35 @@
     if (data && data.length > 0) {
         let slNo = 1;
         data.forEach(order => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="text-center">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="${order._id}">
-                        <label class="form-check-label" for="${order._id}"></label>
-                    </div>
-                </td>
-                <td><a href="#" class="fw-bold">#${order.orderNumber}</a></td>
-                <td>${order.userId}</td>
-                <td>${new Date(order.orderDate).toDateString()}</td>
-                <td>$${order.totalAmount}</td>
-                <td>
-                    <span class="badge badge-pill badge-soft-${order.status === 'Paid' ? 'success' : 'danger'}">${order.status}</span>
-                </td>
-                <td>
-                    <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
-                    ${order.payment}
-                </td>
-                <td>
-                    <a href="/admin/detailedOrder?orderNumber=${order.orderNumber}" class="btn btn-xs">View details</a>
-                </td>
-            `;
-            tbody.appendChild(tr);
-            slNo++;
-        });
+    if (order.status === 'Delivered') {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="text-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="${order._id}">
+                    <label class="form-check-label" for="${order._id}"></label>
+                </div>
+            </td>
+            <td><a href="#" class="fw-bold">#${order.orderNumber}</a></td>
+            <td>${order.userId}</td>
+            <td>${new Date(order.orderDate).toDateString()}</td>
+            <td>$${order.totalAmount}</td>
+            <td>
+                <span class="badge badge-pill badge-soft-${order.status === 'Paid' ? 'success' : 'danger'}">${order.status}</span>
+            </td>
+            <td>
+                <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
+                ${order.payment}
+            </td>
+            <td>
+                <a href="/admin/detailedOrder?orderNumber=${order.orderNumber}" class="btn btn-xs">View details</a>
+            </td>
+        `;
+        tbody.appendChild(tr);
+        slNo++;
+    }
+});
+
     } else {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td colspan="8">No sales data available</td>`;
