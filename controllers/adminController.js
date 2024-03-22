@@ -537,6 +537,137 @@ const ChangeStatus = async (req, res) => {
 };
 
 
+const filterSalesReport = async (req, res) => {
+  try {
+      const { interval, startDate, endDate } = req.query;
+
+      // console.log('req-body', req.query);
+
+      const currentDate = new Date();
+      let startDateQuery = new Date();
+      let endDateQuery = new Date();
+
+      if (interval === 'custom' || (startDate && endDate)) {
+          startDateQuery = new Date(startDate);
+          endDateQuery = new Date(endDate);
+      } else {
+          switch (interval) {
+              case 'daily':
+                  startDateQuery.setHours(0, 0, 0, 0);
+                  endDateQuery.setDate(endDateQuery.getDate() + 1); // Set to beginning of the next day
+                  break;
+              case 'weekly':
+                  startDateQuery.setDate(startDateQuery.getDate() - 7); // Set to 7 days ago
+                  startDateQuery.setHours(0, 0, 0, 0);
+                  endDateQuery.setHours(23, 59, 59, 999); // Set to end of the day
+                  break;
+              case 'monthly':
+                  startDateQuery = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                  startDateQuery.setHours(0, 0, 0, 0);
+                  endDateQuery.setHours(23, 59, 59, 999);
+                  break;
+              case 'yearly':
+                  startDateQuery = new Date(currentDate.getFullYear(), 0, 1);
+                  startDateQuery.setHours(0, 0, 0, 0);
+                  endDateQuery.setHours(23, 59, 59, 999);
+                  break;
+              default:
+                  console.log('your at the default case');
+                  break;
+                  // return res.status(400).json({ success: false, message: 'Invalid interval specified' });
+          }
+      }
+
+      // console.log('startDateQuery:', startDateQuery);
+      // console.log('endDateQuery:', endDateQuery);
+
+      // querying based on orderDate:
+      const filteredOrders = await Order.find({ orderDate: { $gte: startDateQuery, $lte: endDateQuery } }).populate('items.productId user').sort({orderDate:-1});
+      console.log('filteredOrders', filteredOrders)
+
+      res.json(filteredOrders);
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ success: false })
+  }
+}
+
+const filterTotalRevenue = async (req, res) => {
+  try {
+    const { interval, startDate: customStartDate, endDate: customEndDate } = req.query;
+    let startDate;
+    let endDate;
+
+    switch (interval) {
+      case 'daily':
+        startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'weekly':
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'monthly':
+        startDate = new Date();
+        startDate.setDate(1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 1);
+        endDate.setDate(0);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'yearly':
+        startDate = new Date();
+        startDate.setMonth(0);
+        startDate.setDate(1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setFullYear(endDate.getFullYear() + 1);
+        endDate.setMonth(0);
+        endDate.setDate(0);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'custom':
+        startDate = new Date(customStartDate);
+        endDate = new Date(customEndDate);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      default:
+        throw new Error('Invalid interval');
+    }
+
+    const pipeline = [
+      {
+        $match: {
+          orderDate: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          orderStatus: 'Delivered',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalSalesRevenue: { $sum: '$billTotal' },
+        },
+      },
+    ];
+
+    const result = await Order.aggregate(pipeline);
+    const totalSalesRevenue = result.length > 0 ? result[0].totalSalesRevenue : 0;
+    res.json(totalSalesRevenue);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 
 
 
@@ -568,7 +699,9 @@ module.exports = {
   edit_Category,
   loadorders,
   detailedOrder,
-  ChangeStatus
+  ChangeStatus,
+  filterSalesReport,
+  filterTotalRevenue
 
   
   
