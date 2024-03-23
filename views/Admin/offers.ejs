@@ -239,7 +239,6 @@
                     <!-- <p>This is the content for the Product section.</p> -->
                     <body>
                         <div class="container" style="max-height: 80vh; overflow-y: auto;">
-                            <!-- <h1 class="text-center">Products</h1> -->
                             <div class="row">
                                 <% products.forEach(function(product) { %>
                                     <div class="col-md-3 mb-3">
@@ -251,14 +250,13 @@
                                                 <p class="card-text">Price: $<%= product.price %></p>
                                                 <% if (product.offerPrice) { %>
                                                     <p class="card-text">Offer Price: $<%= product.offerPrice %></p>
+                                                    <button class="btn btn-primary edit-offer-price" data-product-id="<%= product._id %>" data-offer-price="<%= product.offerPrice %>">Edit Offer Price</button>
                                                 <% } else { %>
                                                     <div class="form-group">
                                                         <label for="offerPrice">Offer Price:</label>
                                                         <input type="number" class="form-control" id="offerPrice" name="offerPrice" placeholder="Enter offer price" data-product-id="<%= product._id %>">
                                                         <button class="btn btn-primary add-offer-price">Add Offer Price</button>
-                                                        <button class="btn btn-primary edit-offer-price" style="display: none;">Edit Offer Price</button>
-                                                      </div>
-                                                      
+                                                    </div>
                                                 <% } %>
                                                 
                                             </div>
@@ -267,7 +265,6 @@
                                 <% }); %>
                             </div>
                         </div>
-                    </body>
                     
                     <!-- <a href="/productpage">Go to Product Page</a> -->
                 </div>
@@ -304,6 +301,30 @@
         
         
 
+         <!-- Modal for editing offer price -->
+    <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOfferModalLabel">Edit Offer Price</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editOfferForm">
+                        <div class="form-group">
+                            <label for="newOfferPrice">New Offer Price:</label>
+                            <input type="number" class="form-control" id="newOfferPrice" name="newOfferPrice" placeholder="Enter new offer price">
+                            <input type="hidden" id="productId" name="productId">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <footer class="main-footer font-xs">
     <div class="row pb-30 pt-15">
@@ -328,37 +349,79 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Main Script -->
 <script src="/admin-assets/js/main.js" type="text/javascript"></script>
-
 <script>
     $(document).ready(function() {
-  $('.add-offer-price').click(function() {
-    const productId = $(this).prev().data('product-id');
-    const offerPrice = $(this).prev().val();
+        // Add offer price
+        $('.add-offer-price').click(function() {
+            const productId = $(this).prev().data('product-id');
+            const offerPrice = $(this).prev().val();
 
-    $.ajax({
-      url: '/admin/updateOfferPrice',
-      method: 'POST',
-      data: { productId: productId, offerPrice: offerPrice },
-      success: function(response) {
-        if (response.success) {
-          console.log('Offer price updated successfully');
-          // You can update the UI or display a message here
-        } else {
-          console.error('Failed to update offer price');
-          // Handle error case
-        }
-      },
-      error: function(err) {
-        console.error('Internal server error');
-        // Handle error case
-      }
+            $.ajax({
+                url: '/admin/updateOfferPrice',
+                method: 'POST',
+                data: { productId: productId, offerPrice: offerPrice },
+                success: function(response) {
+                    if (response.success) {
+                        console.log('Offer price updated successfully');
+                        location.reload();
+                        // You can update the UI or display a message here
+                    } else {
+                        console.error('Failed to update offer price');
+                        // Handle error case
+                    }
+                },
+                error: function(err) {
+                    console.error('Internal server error');
+                    // Handle error case
+                }
+            });
+
+            // Show the edit button
+            $(this).next('.edit-offer-price').show();
+        });
+
+        // Edit offer price
+        $('.edit-offer-price').click(function() {
+            const productId = $(this).data('product-id');
+            const offerPrice = $(this).data('offer-price');
+
+            // Populate the modal with current offer price
+            $('#editOfferModal').modal('show');
+            $('#editOfferModal').find('#productId').val(productId);
+            $('#editOfferModal').find('#newOfferPrice').val(offerPrice);
+        });
+
+        // Submit edited offer price
+        $('#editOfferForm').submit(function(e) {
+            e.preventDefault();
+            const productId = $(this).find('#productId').val();
+            const newOfferPrice = $(this).find('#newOfferPrice').val();
+
+            $.ajax({
+                url: '/admin/editOfferPrice',
+                method: 'POST',
+                data: { productId: productId, newOfferPrice: newOfferPrice },
+                success: function(response) {
+                    if (response.success) {
+                       
+                        console.log('Offer price edited successfully');
+                        // You can update the UI or display a message here
+                        $('#editOfferModal').modal('hide');
+                        location.reload();
+                    } else {
+                        console.error('Failed to edit offer price');
+                        // Handle error case
+                    }
+                },
+                error: function(err) {
+                    console.error('Internal server error');
+                    // Handle error case
+                }
+            });
+        });
     });
-  });
-});
-
-
-
 </script>
+
 
 </body>
 

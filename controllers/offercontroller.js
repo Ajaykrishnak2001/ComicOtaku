@@ -33,9 +33,20 @@ const loadoffers = async (req, res) => {
   };
 
   
+  const editOfferPrice = async (req, res) => {
+    try {
+        const { productId, newOfferPrice } = req.body;
+        const product = await Product.findByIdAndUpdate(productId, { offerPrice: newOfferPrice }, { new: true });
+        res.status(200).json({ success: true, message: 'Offer price updated successfully', product: product });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
   
 
   module.exports = {
     loadoffers,
-    offerprice
+    offerprice,
+    editOfferPrice
 }
