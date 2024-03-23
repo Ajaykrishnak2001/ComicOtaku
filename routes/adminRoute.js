@@ -16,7 +16,7 @@ adminRoute.set("views", "./views/admin");
 const adminController = require("../controllers/adminController");
 const couponController = require("../controllers/couponController");
 const ordercontroller = require("../controllers/ordercontroller");
-
+const offercontroller = require("../controllers/offercontroller");
 
 
 
@@ -79,6 +79,9 @@ adminRoute.get('/admin/dashboard',ordercontroller.calculateDeliveredOrders);
 adminRoute.get('/filter/sales',adminController.filterSalesReport);
 adminRoute.get('/filter/revenue',adminController.filterTotalRevenue);
 
+adminRoute.get('/offers',offercontroller.loadoffers);
+
+adminRoute.post('/updateOfferPrice', offercontroller.offerprice);
 
 
 const storage = multer.diskStorage({

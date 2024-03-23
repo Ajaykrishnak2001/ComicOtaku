@@ -18,9 +18,50 @@
     <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <style>
+        .container {
+            font-family: Arial, sans-serif;
+            text-align: center; /* Align the container content to the center */
+        }
+        nav1 ul {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            margin: 0; /* Added to remove default margin */
+            justify-content: center; /* Align the list items to the center */
+        }
+        nav1 li {
+            margin-right: 20px;
+        }
+        .horizontal-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 24px; /* Increase the font size of the links */
+        }
+        .horizontal-menu a:hover {
+            text-decoration: underline;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center; /* Align the content to the center */
+        }
+        .content {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            flex: 1;
+        }
+        .content.active {
+            display: block;
+        }
+    </style>
+    
+    
 </head>
 
-<body>
+
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
@@ -52,7 +93,7 @@
                     </a>
                 </li>
         
-                <li class="menu-item active">
+                <li class="menu-item ">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
                         <span class="text">category</span> </a>
                 </li>
@@ -69,7 +110,7 @@
                     </a>
                     
                 </li>
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Offers</span>
                     </a>
@@ -181,68 +222,144 @@
                 </ul>
             </div>
         </header>
-        
+
+        <div>
         <div class="container">
-            <div class="row">
-              <div class="col-md-4">
-                <section class="content-main">
-                  <div class="content-header">
-                    <div>
-                      <h2 class="content-title card-title">Edit Category</h2>
-                    </div>
-                  </div>
-          
-                  <form action="/admin/category/edit-category?id=<%= category._id %>" method="post" class="mb-4">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <label for="categoryName" class="form-label">Category Name</label>
-                        <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="categoryName" value="<%= category.cName %>" required>
-                      </div>
-                      <div class="col-md-12">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea placeholder="Type here" class="form-control" id="description" name="description" required><%= category.description %></textarea>
-                      </div>
-                    </div>
-                    <div class="d-grid mt-4">
-                      <button type="submit" class="btn btn-primary">Update Category</button>
-                      
-                    </div>
-                  </form>
-                </section>
-              </div>
-            </div>
-          </div>
-          
+            <nav1>
+                <ul class="horizontal-menu">
+                    <li><a href="#" onclick="showContent('product')">Product Offer</a></li>
+                    <li><a href="#" onclick="showContent('category')">Category Offer</a></li>
+                    <li><a href="#" onclick="showContent('referral')">Referral Offer</a></li>
+                </ul>
+            </nav1>
         
-        
-        
-        
-
-
-
-
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> ©, 
+            <div class="content-container">
+                <div id="product" class="content active">
+                    <!-- <h1>Product</h1> -->
+                    <!-- <p>This is the content for the Product section.</p> -->
+                    <body>
+                        <div class="container" style="max-height: 80vh; overflow-y: auto;">
+                            <!-- <h1 class="text-center">Products</h1> -->
+                            <div class="row">
+                                <% products.forEach(function(product) { %>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card text-center">
+                                            <div class="card-body">
+                                                <img src="/productAssets/<%= product.images[0] %>" class="card-img-top img-fluid mx-auto d-block" style="max-width: 150px;" alt="...">
+                                                <h5 class="card-title"><%= product.pname %></h5>
+                                                
+                                                <p class="card-text">Price: $<%= product.price %></p>
+                                                <% if (product.offerPrice) { %>
+                                                    <p class="card-text">Offer Price: $<%= product.offerPrice %></p>
+                                                <% } else { %>
+                                                    <div class="form-group">
+                                                        <label for="offerPrice">Offer Price:</label>
+                                                        <input type="number" class="form-control" id="offerPrice" name="offerPrice" placeholder="Enter offer price" data-product-id="<%= product._id %>">
+                                                        <button class="btn btn-primary add-offer-price">Add Offer Price</button>
+                                                        <button class="btn btn-primary edit-offer-price" style="display: none;">Edit Offer Price</button>
+                                                      </div>
+                                                      
+                                                <% } %>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    </body>
+                    
+                    <!-- <a href="/productpage">Go to Product Page</a> -->
                 </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
+        
+                <div id="category" class="content">
+                    <h1>Category</h1>
+                    <p>This is the content for the Category section.</p>
+                </div>
+        
+                <div id="referral" class="content">
+                    <h1>Referral</h1>
+                    <p>This is the content for the Referral section.</p>
                 </div>
             </div>
-        </footer>
-    </main>
-    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/admin-assets/js/vendors/select2.min.js"></script>
-    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+        </div>
+    </div>
+        
+            <script>
+                function showContent(id) {
+                    // Hide all content
+                    var contents = document.getElementsByClassName('content');
+                    for (var i = 0; i < contents.length; i++) {
+                        contents[i].classList.remove('active');
+                    }
+        
+                    // Show the selected content
+                    document.getElementById(id).classList.add('active');
+        
+                    // Scroll to the selected content
+                    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+                }
+            </script>
+        
+        
+        
+
+
+<footer class="main-footer font-xs">
+    <div class="row pb-30 pt-15">
+        <div class="col-sm-6">
+            <script>
+                document.write(new Date().getFullYear())
+            </script> ©, 
+        </div>
+        <div class="col-sm-6">
+            <div class="text-sm-end">
+                All rights reserved
+            </div>
+        </div>
+    </div>
+</footer>
+</main>
+<script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="/admin-assets/js/vendors/select2.min.js"></script>
+<script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Main Script -->
+<script src="/admin-assets/js/main.js" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function() {
+  $('.add-offer-price').click(function() {
+    const productId = $(this).prev().data('product-id');
+    const offerPrice = $(this).prev().val();
+
+    $.ajax({
+      url: '/admin/updateOfferPrice',
+      method: 'POST',
+      data: { productId: productId, offerPrice: offerPrice },
+      success: function(response) {
+        if (response.success) {
+          console.log('Offer price updated successfully');
+          // You can update the UI or display a message here
+        } else {
+          console.error('Failed to update offer price');
+          // Handle error case
+        }
+      },
+      error: function(err) {
+        console.error('Internal server error');
+        // Handle error case
+      }
+    });
+  });
+});
+
+
+
+</script>
+
 </body>
 
 

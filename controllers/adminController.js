@@ -676,7 +676,6 @@ const filterTotalRevenue = async (req, res) => {
 
 
 
-
 module.exports = {
   loadAdminLog,
   adminLogin,
@@ -701,8 +700,8 @@ module.exports = {
   detailedOrder,
   ChangeStatus,
   filterSalesReport,
-  filterTotalRevenue
+  filterTotalRevenue,
 
-  
-  
+
+    
 };

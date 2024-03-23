@@ -10,6 +10,10 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
+  offerPrice:{
+    type:Number,
+    required:true
+  },
   description: {
     type: String,
     required: true,
@@ -55,6 +59,7 @@ const productSchema = new Schema({
     type: Number,
     default: 1,
   },
+  
 }, { strictPopulate: false });
 
 module.exports = mongoose.model('Product', productSchema);
