@@ -41,8 +41,8 @@
                                 <label for="otp">Enter OTP *</label>
                                 <input type="text" class="form-control" id="otp" name="otp" required>
                             </div><!-- End form-group -->
-                            <% if(typeof message !== 'undefined') { %>
-                                <p style="color: red;"><%= message %></p>
+                            <% if (incorrectOtp) { %>
+                                <p id="otp-error-message" style="color: red;">OTP is incorrect!</p>
                             <% } %>
                             <div class="form-footer">
                                 <button type="submit" class="btn btn-outline-primary-2" id="submitOTP">
@@ -57,7 +57,9 @@
                             </div><!-- End form-footer -->
                         </form>
                     </div><!-- End tab-pane -->
-                </div><!-- End tab-content -->
+                </div>
+                
+                <!-- End tab-content -->
             </div><!-- End form-tab -->
         </div><!-- End form-box -->
     </div><!-- End container -->
@@ -119,6 +121,16 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var errorMessage = document.getElementById('otp-error-message');
+        if (errorMessage) {
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+    });
+</script>
 
 
 

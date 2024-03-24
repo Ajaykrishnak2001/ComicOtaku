@@ -165,7 +165,7 @@ const resendOTP = async (req, res) => {
 
 const loadOtp = async (req, res) => {
     try {
-        res.render("OTPpage");
+        res.render('OTPpage', { incorrectOtp: false });
     } catch (error) {
         console.log(error.message);
     }
@@ -178,35 +178,38 @@ const loadOtp = async (req, res) => {
 
 //++++++++ */ getOtp */ +++++++++//
 
-const getOtp=async(req,res)=>{
+const getOtp = async (req, res) => {
     try {
-        const userOtp = req.body.otp
+        const userOtp = req.body.otp;
         const genOtp = await req.session.Data.otp;
-        console.log("n",genOtp);
-        if(genOtp===userOtp){
-            const hashedPassword = await securePassword(req.session.Data.password)
-            const user=new User({
-                name:req.session.Data.name,
-                phone:req.session.Data.phone,
-                email:req.session.Data.email,
-                password:hashedPassword,
-                is_admin:0,
-                is_verified:1,
-                is_active:1
-            })
-            const userData=await user.save()
-            
-            if(userData){
-                res.render('login',{message:"Registered Successfully"});
+
+        if (genOtp === userOtp) {
+            const hashedPassword = await securePassword(req.session.Data.password);
+            const user = new User({
+                name: req.session.Data.name,
+                phone: req.session.Data.phone,
+                email: req.session.Data.email,
+                password: hashedPassword,
+                is_admin: 0,
+                is_verified: 1,
+                is_active: 1
+            });
+
+            const userData = await user.save();
+
+            if (userData) {
+                req.session.destroy(); // Clean up session
+                return res.render('login', { message: "Registered Successfully" });
             }
-            }else{
-            res.render('otp',{message:"OTP is incorrect!"});            
-            }      
-        
+        } else {
+            res.render('OTPpage', { incorrectOtp: true });
+        }
     } catch (error) {
-        console.log(error.message)
+        console.error(error);
+        return res.status(500).send("Internal Server Error");
     }
-}
+};
+
 
 
 
