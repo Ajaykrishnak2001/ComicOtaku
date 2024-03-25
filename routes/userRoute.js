@@ -36,6 +36,7 @@ const cartController = require("../controllers/cartController");
 const ordercontroller=require("../controllers/ordercontroller")
 const walletcontroller=require("../controllers/WalletController");
 const couponController=require("../controllers/couponController");
+const wishlistcontroller=require("../controllers/wishlistController");
 
 userRoute.get('/',requireLogin,setnocache.user,userController.loadHome)
 
@@ -113,5 +114,12 @@ userRoute.post('/refund',walletcontroller.refund);
 userRoute.post('/updateCartTotalPrice',cartController.updateCartTotalPrice)
 
 userRoute.get('/getCartMaximumDiscount',cartController.discountamount)
+
+
+
+userRoute.get('/wishlist',wishlistcontroller.loadwishlist);
+userRoute.post('/wishlist/add',wishlistcontroller.addwishlist);
+
+
 
 module.exports = userRoute;

@@ -65,7 +65,7 @@
                     <ul class="customer-links list-inline">
                         <li><a href="/login">Logout</a></li>
                         <li><a href="/profile">profile</a></li>
-                        <li><a href="wishlist.html">Wishlist</a></li>
+                        <li><a href="/wishlist">Wishlist</a></li>
                     </ul>
                 </div>
             </div>
@@ -329,19 +329,28 @@
                             <br>
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
-                                <ul class="sidebar_categories">
-                                    <% categories.forEach(category => { %>
-                                        <li class="level1 sub-level">
-                                            <a href="#;" class="site-nav" onclick="toggleCategoryDescription('<%= category.cName %>')">
-                                                <%= category.cName %>
-                                            </a>
-                                            <br>
-                                            <div class="category-description" id="<%= category.cName %>-description" style="display: none;">
-                                                <%= category.description %>
-                                            </div>
-                                        </li>
-                                    <% }); %>
-                                </ul>
+                                <div>
+                                    <ul class="sidebar_categories">
+                                        <% categories.forEach(category => { %>
+                                            <li class="level1 sub-level">
+                                                <input type="radio" name="category" id="<%= category._id %>-radio" value="<%= category._id %>">
+
+                                                <label for="<%= category.cName %>-radio" class="site-nav" onclick="toggleCategoryDescription('<%= category.cName %>')">
+                                                    <%= category.cName %>
+                                                </label>
+                                                <br>
+                                                <div class="category-description" id="<%= category.cName %>-description" style="display: none;">
+                                                    <%= category.description %>
+                                                </div>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                    <div class="col-6 text-right margin-25px-top">
+                                        <button class="btn btn-secondary btn--small" onclick="applyPriceFilter()">Filter</button>
+                                    </div>
+                                </div>
+                                
+                                
                             </div>
                         </div>
                         
@@ -811,18 +820,14 @@
                             <img class="hover blur-up lazyloaded" src="/productAssets/${product.images[1]}" alt="${product.pname}" title="${product.pname}">
                         </a>
                         <div class="button-set">
-                            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                <i class="icon anm anm-search-plus-r"></i>
-                            </a>
                             <div class="wishlist-btn">
-                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist" onclick="addToWishlist('${product._id}')">
                                     <i class="icon anm anm-heart-l"></i>
                                 </a>
                             </div>
+
                             <div class="compare-btn">
-                                <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                    <i class="icon anm anm-random-r"></i>
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
@@ -867,6 +872,92 @@
 }
 
         </script>
+<script>
+    const applyPriceFilter = async () => {
+        // Get the selected category value
+        const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+        
+        try {
+            // Fetch products from the database based on the selected category
+            const response = await fetch(`/products/category/${selectedCategory}`);
+            const products = await response.json();
+            
+            // Render the filtered products
+            renderProducts(products);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
+
+    const renderProducts = (products) => {
+        const productsContainer = document.querySelector('.grid-products');
+        productsContainer.innerHTML = '';
+
+        products.forEach(product => {
+            const productCard = `
+                <div class="col-6 col-sm-6 col-md-4 col-lg-4 item">
+                    <div class="product-item">
+                        <div class="product-image">
+                            <a href="/products/${product._id}">
+                                <img class="primary blur-up lazyloaded"  src="/productAssets/${product.images[0]}" alt="${product.pname}" title="${product.pname}">
+                            </a>
+                            <a href="/products/${product._id}">
+                                <img class="hover blur-up lazyloaded" src="/productAssets/${product.images[1]}" alt="${product.pname}" title="${product.pname}">
+                            </a>
+                            <div class="button-set">
+                                <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
+                                    <i class="icon anm anm-search-plus-r"></i>
+                                </a>
+                                <div class="wishlist-btn">
+                                    <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                                        <i class="icon anm anm-heart-l"></i>
+                                    </a>
+                                </div>
+                                <div class="compare-btn">
+                                    <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
+                                        <i class="icon anm anm-random-r"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-details text-center">
+                            <div class="product-name">
+                                <a href="/products/${product._id}">${product.pname}</a>
+                            </div>
+                            <div class="product-brand">
+                                <a href="/products/${product._id}">${product.brand}</a>
+                            </div>
+                            <div class="product-price">
+                                <span class="price"><p>&#8377;${product.price}</p></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            productsContainer.insertAdjacentHTML('beforeend', productCard);
+        });
+    };
+
+    
+</script>
+<script>const addToWishlist = async (productId) => {
+    try {
+        const response = await fetch('/wishlist/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId })
+        });
+
+        const data = await response.json();
+        alert(data.message); // Display success message
+    } catch (error) {
+        console.error('Error adding product to wishlist:', error);
+        alert('Failed to add product to wishlist. Please try again later.');
+    }
+};
+</script>
 
 </div>
 </body>
