@@ -119,6 +119,7 @@ userRoute.get('/getCartMaximumDiscount',cartController.discountamount)
 
 userRoute.get('/wishlist',wishlistcontroller.loadwishlist);
 userRoute.post('/wishlist/add',wishlistcontroller.addwishlist);
+userRoute.delete('/wishlist/remove/:productId',wishlistcontroller.removewishlist);
 
 
 

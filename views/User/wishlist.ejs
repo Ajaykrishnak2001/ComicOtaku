@@ -94,7 +94,7 @@
                 	<nav class="grid__item" id="AccessibleNav"><!-- for mobile -->
                         <ul id="siteNav" class="site-nav medium center hidearrow">
                             <li class="lvl1 parent megamenu"><a href="/">Home <i class="anm anm-angle-down-l"></i></a>
-                                <div class="megamenu style1">
+                                <!-- <div class="megamenu style1">
                                     <ul class="grid mmWrapper">
                                         <li class="grid__item large-up--one-whole">
                                             <ul class="grid">
@@ -145,10 +145,10 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> -->
                             </li>
                             <li class="lvl1 parent megamenu"><a href="">Shop <i class="anm anm-angle-down-l"></i></a>
-                            	<div class="megamenu style4">
+                            	<!-- <div class="megamenu style4">
                                     <ul class="grid grid--uniform mmWrapper">
                                     	<li class="grid__item lvl-1 col-md-3 col-lg-3"><a href="#" class="site-nav lvl-1">Shop Pages</a>
                                             <ul class="subLinks">
@@ -180,10 +180,10 @@
                                         	<a href="#"><img src="assets/images/megamenu-bg1.jpg" alt="" title="" /></a>
                                         </li>
                                     </ul>
-                              	</div>
+                              	</div> -->
                             </li>
                         <li class="lvl1 parent megamenu"><a href="/products">Product <i class="anm anm-angle-down-l"></i></a>
-                        	<div class="megamenu style2">
+                        	<!-- <div class="megamenu style2">
                                 <ul class="grid mmWrapper">
                                     <li class="grid__item one-whole">
                                         <ul class="grid">
@@ -231,10 +231,10 @@
                                     </li>
                                   	<li class="grid__item large-up--one-whole imageCol"><a href="#"><img src="assets/images/megamenu-bg2.jpg" alt=""></a></li>
                                 </ul>
-                          	</div>
+                          	</div> -->
                         </li>
                         <li class="lvl1 parent dropdown"><a href="#">Pages <i class="anm anm-angle-down-l"></i></a>
-                          <ul class="dropdown">
+                          <!-- <ul class="dropdown">
                           	<li><a href="cart-variant1.html" class="site-nav">Cart Page <i class="anm anm-angle-right-l"></i></a>
                                 <ul class="dropdown">
                                     <li><a href="cart-variant1.html" class="site-nav">Cart Variant1</a></li>
@@ -259,16 +259,16 @@
                             </li>
                             <li><a href="404.html" class="site-nav">404</a></li>
                             <li><a href="coming-soon.html" class="site-nav">Coming soon <span class="lbl nm_label1">New</span> </a></li>
-                          </ul>
+                          </ul> -->
                         </li>
                         <li class="lvl1 parent dropdown"><a href="#">Blog <i class="anm anm-angle-down-l"></i></a>
-                          <ul class="dropdown">
+                          <!-- <ul class="dropdown">
                             <li><a href="blog-left-sidebar.html" class="site-nav">Left Sidebar</a></li>
                             <li><a href="blog-right-sidebar.html" class="site-nav">Right Sidebar</a></li>
                             <li><a href="blog-fullwidth.html" class="site-nav">Fullwidth</a></li>
                             <li><a href="blog-grid-view.html" class="site-nav">Gridview</a></li>
                             <li><a href="blog-article.html" class="site-nav">Article</a></li>
-                          </ul>
+                          </ul> -->
                         </li>
                         <li class="lvl1"><a href="#"><b>Buy Now!</b></a></li>
                       </ul>
@@ -548,18 +548,21 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                    	<th class="product-name text-center alt-font">Remove</th>
                                         <th class="product-price text-center alt-font">Images</th>
+                                    	
+
+                                        
                                         <th class="product-name alt-font">Product</th>
                                         <th class="product-price text-center alt-font">Unit Price</th>
                                         <!-- <th class="stock-status text-center alt-font">Stock Status</th> -->
                                         <th class="product-subtotal text-center alt-font">Add to Cart</th>
+                                        <th class="product-name text-center alt-font">Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% wishlist.products.forEach(wishlistItem => { %>
                                     <tr>
-                                    	<td class="product-remove text-center" valign="middle"><a href="#"><i class="icon icon anm anm-times-l"></i></a></td>
+                                    	
                                         <td class="product-thumbnail text-center">
                                             <a href="#"><img src="/productAssets/<%= wishlistItem.product.images[0] %>"  alt="" title="" /></a>
                                         </td>
@@ -568,7 +571,10 @@
                                         <!-- <td class="stock text-center">
                                             <span class="in-stock">in stock</span>
                                         </td> -->
+                                       
+
                                         <td class="product-subtotal text-center"><button type="button" class="btn btn-small">Add To Cart</button></td>
+                                        <td class="product-remove text-center" valign="middle"><button type="button" name="remove" class="btn product-form__cart-submit product-remove" data-product-id="<%= wishlistItem.product._id %>">Remove</button></td>
                                     </tr>
                                
                                     <% }); %>
@@ -707,8 +713,32 @@
      <script src="assets/js/popper.min.js"></script>
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
+
+     <script>document.querySelectorAll('.product-remove').forEach(button => {
+        button.addEventListener('click', async function() {
+            const productId = this.dataset.productId;
+            try {
+                const response = await fetch(`/wishlist/remove/${productId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    // Remove the product row from the table
+                    this.closest('tr').remove();
+                    alert(data.message);
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error removing product from wishlist:', error);
+                alert('Failed to remove product from wishlist. Please try again later.');
+            }
+        });
+    });
+    </script>
 </div>
 </body>
+
 
 <!-- belle/wishlist.html   11 Nov 2019 12:22:27 GMT -->
 </html>
