@@ -232,7 +232,7 @@ const verifyLogin = async (req, res) => {
                     req.session.email = email;
                     req.session.user = true;
                     req.session.save();
-console.log(req.session.user);
+                    console.log(req.session.user);
                     res.render('home');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
                     res.render('login', { message: "User is blocked" }); // Display alert message
@@ -410,10 +410,31 @@ const calculatePopularity = async (req, res) => {
 
 
 
-
+const loadlandingpage=async(req,res)=>{
+    try{
+        res.render('landingpage');
+    }catch(error){
+        console.log(error.message);
+    }
+}
 
  
 
+const loadlandingpageproducts = async (req, res) => {
+    try {
+        // Fetch all products from the database and populate the category field
+        const products = await Product.find().populate('category');
+
+        // Fetch all categories from the database
+        const categories = await Category.find();
+
+        // Pass the products data and categories to the view
+        res.render('landingpage', { products, categories });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
     
 
@@ -437,7 +458,9 @@ module.exports = {
     loadAllProducts,
     sortProducts,
     calculatePopularity,
-    ChangeStatus
+    ChangeStatus,
+    loadlandingpage,
+    loadlandingpageproducts 
     
     
 };
