@@ -331,9 +331,9 @@ const sortProducts = async (req, res) => {
         } else if (req.query.sortBy === 'name-desc') {
             products = await Product.find().sort({ pname: -1 });
         } else if (req.query.sortBy === 'price-low-to-high') {
-            products = await Product.find().sort({ price: 1 });
+            products = await Product.find().sort({ offerPrice: 1, price: 1 });
         } else if (req.query.sortBy === 'price-high-to-low') {
-            products = await Product.find().sort({ price: -1 });
+            products = await Product.find().sort({ offerPrice: -1, price: -1 });
         } else if (req.query.sortBy === 'popularity') {
             products = await Product.find().sort({ popularity: -1 });
         } else {
@@ -347,6 +347,7 @@ const sortProducts = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 
 const calculatePopularity = async (req, res) => {

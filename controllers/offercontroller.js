@@ -3,16 +3,17 @@ const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Order = require("../models/orderModel");
 
-
 const loadoffers = async (req, res) => {
-    try {
+  try {
       const products = await Product.find(); // Fetch all products
-      res.render('offers', { products }); // Pass the products array to the 'offers' view
-    } catch (error) {
+      const categories = await Category.find(); // Fetch all categories
+      res.render('offers', { products, categories }); // Pass the products and categories arrays to the 'offers' view
+  } catch (error) {
       console.log(error.message);
       res.status(500).send('Internal Server Error');
-    }
   }
+}
+
 
 
 
@@ -45,8 +46,28 @@ const loadoffers = async (req, res) => {
 };
   
 
+const categoryoffer=async (req, res) => {
+  const categoryId = req.params.categoryId;
+  const discountPercentage = req.body.discountPercentage;
+  try {
+      const products = await Product.find({ category: categoryId });
+      console.log(products);
+      products.forEach(async (product) => {
+          const newPrice = product.price - (product.price * (discountPercentage / 100));
+          product.offerPrice = newPrice;
+          await product.save();
+      });
+      res.sendStatus(200);
+  } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+  }
+};
+
+
   module.exports = {
     loadoffers,
     offerprice,
-    editOfferPrice
+    editOfferPrice,
+    categoryoffer
 }

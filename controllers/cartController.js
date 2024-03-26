@@ -35,7 +35,7 @@ function calculateTotalPrice(items) {
 const addTocart = async (req, res) => {
     const productId = req.params.productId;
     const size = req.query.size;
-    console.log("the size:"+size);
+    console.log("the size:" + size);
 
     try {
         const product = await Product.findById(productId);
@@ -48,7 +48,7 @@ const addTocart = async (req, res) => {
             product: productId,
             size: size,
             quantity: 1,
-            subTotal: product.price
+            subTotal: product.offerPrice ? product.offerPrice : product.price
         };
 
         let userCart = await Cart.findOne({ userId: req.session.userId });
@@ -59,7 +59,7 @@ const addTocart = async (req, res) => {
         const existingProductIndex = userCart.items.findIndex(p => p.product.toString() === productId && p.size === size);
         if (existingProductIndex !== -1) {
             userCart.items[existingProductIndex].quantity++;
-            userCart.items[existingProductIndex].subTotal += product.price;
+            userCart.items[existingProductIndex].subTotal += product.offerPrice ? product.offerPrice : product.price;
         } else {
             userCart.items.push(cartProduct);
         }
@@ -115,12 +115,12 @@ const changeQuantity = async (req, res) => {
             cartItem.items[productIndex].quantity--;
         }
 
-        const newSubtotal = cartItem.items[productIndex].quantity * product.price;
+        const newSubtotal = cartItem.items[productIndex].quantity * (product.offerPrice || product.price);
         cartItem.items[productIndex].subTotal = newSubtotal;
 
         const newTotal = cartItem.items.reduce((acc, item) => acc + item.subTotal, 0);
         cartItem.total = newTotal;
-
+        console.log(newTotal );
         await cartItem.save();
 
         res.status(200).json({ items: cartItem.items, total: cartItem.total });
@@ -165,13 +165,13 @@ const updateCartTotalPrice = async (req, res) => {
         const userId = req.session.userId; // Assuming you have the user's ID in the session
         const { totalPrice, maximumDiscount } = req.body;
 
-        // Find the user's cart and update the total price
-        const cart = await Cart.findOneAndUpdate({ userId }, { total: totalPrice,maximumDiscount: maximumDiscount}, { new: true });
+        // Find the user's cart and update the total price and maximum discount
+        const cart = await Cart.findOneAndUpdate({ userId }, { total: totalPrice, maximumDiscount }, { new: true });
 
-        res.json({ message: 'Cart total price updated successfully', cart });
+        res.json({ message: 'Cart total price and maximum discount updated successfully', cart });
     } catch (error) {
-        console.error('Error updating cart total price:', error);
-        res.status(500).json({ message: 'Failed to update cart total price' });
+        console.error('Error updating cart total price and maximum discount:', error);
+        res.status(500).json({ message: 'Failed to update cart total price and maximum discount' });
     }
 };
 

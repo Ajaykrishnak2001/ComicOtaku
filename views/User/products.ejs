@@ -17,6 +17,12 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+    .product-price {
+        display: inline-block;
+        margin-right: 60px; /* Adjust the spacing between the prices */
+    }
+    </style>
 </head>
 <body class="template-product belle">
 	<div class="pageWrapper">
@@ -326,6 +332,7 @@
                 	<div class="sidebar_tags">
                     	<!--Categories-->
                         <div class="sidebar_widget categories filter-widget">
+                            <br><br>
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
                                 <div>
@@ -336,7 +343,7 @@
                                                 <label for="<%= category.cName %>-radio" class="site-nav">
                                                     <%= category.cName %>
                                                 </label>
-                                                <br>
+                                                <br>    
                                                 <div class="category-description" id="<%= category.cName %>-description" style="display: none;">
                                                     <%= category.description %>
                                                 </div>
@@ -454,73 +461,50 @@
                             <div class="row">
                                 <% products.forEach(product => { %>
                                     <div class="col-6 col-sm-6 col-md-4 col-lg-4 item">
-                                        <!-- Start product item -->
                                         <div class="product-item">
-                                            <!-- start product image -->
                                             <div class="product-image">
-                                                <a href="/products/<%= product._id %>"> <!-- Updated anchor tag -->
-                                                    <!-- Primary image -->
-                                                    <img class="primary blur-up lazyloaded" data-src="<%= product.images[0] %>" src="/productAssets/<%=product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
-                                                    <!-- End primary image -->
-                                                    <!-- Hover image -->
+                                                <a href="/products/<%= product._id %>">
+                                                    <img class="primary blur-up lazyloaded" data-src="<%= product.images[0] %>" src="/productAssets/<%= product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
                                                     <img class="hover blur-up lazyloaded" data-src="<%= product.images[1] %>" src="/productAssets/<%= product.images[1] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
-                                                    <!-- End hover image -->
-                                                    <!-- Product labels -->
-                                                    <div class="product-labels rectangular">
-                                                        <% if (product.discount > 0) { %>
-                                                            <span class="lbl on-sale">-<%= product.discount %>%</span>
-                                                        <% } %>
-                                                        <% if (product.isNew) { %>
-                                                            <span class="lbl pr-label1">New</span>
-                                                        <% } %>
+                                                    <div class="button-set">
+                                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
+                                                            <i class="icon anm anm-search-plus-r"></i>
+                                                        </a>
+                                                        <div class="wishlist-btn">
+                                                            <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                                                                <i class="icon anm anm-heart-l"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="compare-btn">
+                                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
+                                                                <i class="icon anm anm-random-r"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
-                                                    <!-- End product labels -->
                                                 </a>
-                                                <!-- Product buttons -->
-                                                <div class="button-set">
-                                                    <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                                        <i class="icon anm anm-search-plus-r"></i>
-                                                    </a>
-                                                    <div class="wishlist-btn">
-                                                        <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
-                                                            <i class="icon anm anm-heart-l"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="compare-btn">
-                                                        <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                            <i class="icon anm anm-random-r"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <!-- End product buttons -->
                                             </div>
-                                            <!-- End product image -->
-                    
-                                            <!-- Product details -->
                                             <div class="product-details text-center">
-                                                <!-- Product name -->
                                                 <div class="product-name">
-                                                    <a href="/products/<%= product._id %>"><%= product.pname %></a> <!-- Updated anchor tag -->
+                                                    <a href="/products/<%= product._id %>"><%= product.pname %></a>
                                                 </div>
                                                 <div class="product-brand">
-                                                    <a href="/products/<%= product._id %>"><%= product.brand %></a> <!-- Updated anchor tag -->
+                                                    <a href="/products/<%= product._id %>"><%= product.brand %></a>
                                                 </div>
-                                                <!-- End product name -->
-                                                <!-- Product price -->
                                                 <div class="product-price">
-                                                    <span class="price"><p> &#8377;<%= product.price %></p>
-                                                        </span>
+                                                    <% if (product.offerPrice) { %>
+                                                        <span class="original-price" style="text-decoration: line-through; color: red;">&#8377;<%= product.price %></span>
+                                                        <span class="offer-price">&#8377;<%= product.offerPrice %></span>
+                                                    <% } else { %>
+                                                        <span class="price">&#8377;<%= product.price %></span>
+                                                    <% } %>
                                                 </div>
-                                                <!-- End product price -->
-                                                <!-- Additional details or variants can go here -->
                                             </div>
-                                            <!-- End product details -->
                                         </div>
-                                        <!-- End product item -->
                                     </div>
                                 <% }); %>
                             </div>
                         </div>
+                        
                     </div>
                     
 
@@ -835,8 +819,14 @@
                             <a href="/products/${product._id}">${product.brand}</a>
                         </div>
                         <div class="product-price">
-                            <span class="price"><p>&#8377;${product.price}</p></span>
-                        </div>
+    ${product.offerPrice && product.price !== product.offerPrice ? `
+        <span class="original-price" style="text-decoration: line-through; color: red;">&#8377;${product.price}</span>
+        <span class="offer-price">&#8377;${product.offerPrice}</span>
+    ` : `
+        <span class="price">&#8377;${product.price}</span>
+    `}
+</div>
+
                     </div>
                 </div>
             </div>
@@ -846,12 +836,17 @@
 }
 
 
+
         // Event listener for sort select change
-        const sortSelect = document.getElementById('sortBySelect');
-        sortSelect.addEventListener('change', () => {
-            const sortBy = sortSelect.value;
-            fetchAndDisplayProducts(sortBy);
-        });
+      // Event listener for sort select change
+const sortSelect = document.getElementById('sortBySelect');
+sortSelect.addEventListener('change', () => {
+    const sortBy = sortSelect.value;
+    if (sortBy !== 'default') {
+        fetchAndDisplayProducts(sortBy);
+    }
+});
+
 
         // Initial fetch and display of products
         fetchAndDisplayProducts('filter');

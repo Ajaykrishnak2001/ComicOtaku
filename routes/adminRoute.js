@@ -83,6 +83,7 @@ adminRoute.get('/offers',offercontroller.loadoffers);
 
 adminRoute.post('/updateOfferPrice', offercontroller.offerprice);
 adminRoute.post('/editOfferPrice', offercontroller.editOfferPrice);
+adminRoute.post('/applyDiscount/:categoryId',offercontroller.categoryoffer);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
