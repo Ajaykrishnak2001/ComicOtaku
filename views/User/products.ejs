@@ -325,8 +325,7 @@
                 	<div class="closeFilter d-block d-md-none d-lg-none"><i class="icon icon anm anm-times-l"></i></div>
                 	<div class="sidebar_tags">
                     	<!--Categories-->
-                    	<div class="sidebar_widget categories filter-widget">
-                            <br>
+                        <div class="sidebar_widget categories filter-widget">
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
                                 <div>
@@ -334,8 +333,7 @@
                                         <% categories.forEach(category => { %>
                                             <li class="level1 sub-level">
                                                 <input type="radio" name="category" id="<%= category._id %>-radio" value="<%= category._id %>">
-
-                                                <label for="<%= category.cName %>-radio" class="site-nav" onclick="toggleCategoryDescription('<%= category.cName %>')">
+                                                <label for="<%= category.cName %>-radio" class="site-nav">
                                                     <%= category.cName %>
                                                 </label>
                                                 <br>
@@ -346,11 +344,9 @@
                                         <% }); %>
                                     </ul>
                                     <div class="col-6 text-right margin-25px-top">
-                                        <button class="btn btn-secondary btn--small" onclick="applyPriceFilter()">Filter</button>
+                                        <button class="btn btn-secondary btn--small" onclick="applyCategoryFilter()">Filter</button>
                                     </div>
                                 </div>
-                                
-                                
                             </div>
                         </div>
                         
@@ -373,9 +369,9 @@
                                             <input id="amount" type="text">
                                         </p>
                                     </div>
-                                    <div class="col-6 text-right margin-25px-top">
+                                    <!-- <div class="col-6 text-right margin-25px-top">
                                         <button class="btn btn-secondary btn--small" onclick="applyPriceFilter()">Filter</button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </div>
@@ -861,6 +857,7 @@
         fetchAndDisplayProducts('filter');
     });
     </script>
+
     <script>// Add event listener to category links
        function toggleCategoryDescription(categoryName) {
     var descriptionElement = document.getElementById(categoryName + "-description");
@@ -872,6 +869,7 @@
 }
 
         </script>
+
 <script>
     const applyPriceFilter = async () => {
         // Get the selected category value
@@ -940,6 +938,9 @@
 
     
 </script>
+
+
+
 <script>const addToWishlist = async (productId) => {
     try {
         const response = await fetch('/wishlist/add', {
@@ -957,6 +958,84 @@
         alert('Failed to add product to wishlist. Please try again later.');
     }
 };
+</script>
+
+
+<script>function applyCategoryFilter() {
+    const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+
+    fetch(`/api/products?category=${selectedCategory}`)
+        .then(response => response.json())
+        .then(products => {
+            // Call a function to display the filtered products
+            displayProducts(products);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+        });
+}
+
+
+
+const productsContainer = document.querySelector('.grid--view-items .row');
+function displayProducts(products) {
+    const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+
+    // Filter products based on the selected category
+    const filteredProducts = products.filter(product => product.category.toString() === selectedCategory);
+
+    productsContainer.innerHTML = '';
+
+    filteredProducts.forEach(product => {
+        const productCard = `
+            <div class="col-6 col-sm-6 col-md-4 col-lg-4 item">
+                <div class="product-item">
+                    <div class="product-image">
+                        <a href="/products/${product._id}">
+                            <img class="primary blur-up lazyloaded"  src="/productAssets/${product.images[0]}" alt="${product.pname}" title="${product.pname}">
+                        </a>
+                        <a href="/products/${product._id}">
+                            <img class="hover blur-up lazyloaded" src="/productAssets/${product.images[1]}" alt="${product.pname}" title="${product.pname}">
+                        </a>
+                        <div class="button-set">
+                           
+                            <div class="wishlist-btn">
+                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist" onclick="addToWishlist('${product._id}')">
+                                    <i class="icon anm anm-heart-l"></i>
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="product-details text-center">
+                        <div class="product-name">
+                            <a href="/products/${product._id}">${product.pname}</a>
+                        </div>
+                        <div class="product-brand">
+                            <a href="/products/${product._id}">${product.brand}</a>
+                        </div>
+                        <div class="product-price">
+                            <span class="price"><p>&#8377;${product.price}</p></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        productsContainer.insertAdjacentHTML('beforeend', productCard);
+    });
+}
+
+    function fetchAndDisplayProducts() {
+    fetch('/api/products')
+        .then(response => response.json())
+        .then(products => {
+            displayProducts(products);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+        });
+}
+fetchAndDisplayProducts();
 </script>
 
 </div>

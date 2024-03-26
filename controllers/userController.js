@@ -436,8 +436,20 @@ const loadlandingpageproducts = async (req, res) => {
     }
 };
 
-    
-
+const categegoryfilter= async (req, res) => {
+    try {
+      let filter = {};
+      if (req.query.category) {
+        filter.category = req.query.category;
+      }
+  
+      const products = await Product.find(filter);
+      res.json(products);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  };
 
 
 
@@ -460,7 +472,8 @@ module.exports = {
     calculatePopularity,
     ChangeStatus,
     loadlandingpage,
-    loadlandingpageproducts 
+    loadlandingpageproducts,
+    categegoryfilter
     
     
 };

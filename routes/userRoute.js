@@ -125,4 +125,7 @@ userRoute.delete('/wishlist/remove/:productId',wishlistcontroller.removewishlist
 
 userRoute.get('/landingpage',setnocache.user, userController.loadlandingpageproducts) ;
 
+
+userRoute.get('/products',userController.categegoryfilter);
+
 module.exports = userRoute;
