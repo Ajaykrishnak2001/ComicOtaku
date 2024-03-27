@@ -60,15 +60,23 @@ const adminLogin = async (req, res) => {
 };
 
 
+const PAGE_SIZE = 9;
 
 const loadProducts = async (req, res) => {
   try {
-    const allProducts = await Product.find();
-    res.render("products", { allProducts });
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * PAGE_SIZE;
+
+    const allProducts = await Product.find().skip(skip).limit(PAGE_SIZE);
+    const totalCount = await Product.countDocuments();
+    const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+    res.render("products", { allProducts, currentPage: page, totalPages });
   } catch (error) {
     error.message;
   }
 };
+
 
 const loadUsers = async (req, res) => {
   try {
