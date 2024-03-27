@@ -183,7 +183,7 @@
                                                     <h6>Total Transaction Amount: ₹<%= wallet?.totalTransation %></h6>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <form>
+                                                    <form id="addWalletForm">
                                                         <div class="mb-3">
                                                             <label for="addAmount" class="form-label">Add Amount to Wallet</label>
                                                             <input type="text" class="form-control" id="addAmount" placeholder="Enter amount">
@@ -532,7 +532,7 @@
 </script>
 
 
-<script>
+<!-- <script>
 
     async function walletMoney(event) {
         try {
@@ -616,10 +616,90 @@
             console.error('Error verifying payment:', error);
         }
     }
-</script>
+</script> -->
 
 
-   
+   <script>
+
+    async function walletMoney(event) {
+        try {
+            event.preventDefault();
+            const amount = document.getElementById('addAmount').value;
+
+            // Make a fetch request to your backend to generate a Razorpay order
+            const response = await fetch('/generateRazorpayOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const options = {
+                    key: 'rzp_test_WIdya6jpB8PeBm',
+                    amount: data.amount,
+                    currency: 'INR',
+                    name: 'ComicOtaku',
+                    description: 'Adding money to wallet',
+                    order_id: data.orderId,
+                    handler: function (response) {
+                        // Payment success, make a request to your backend to update the wallet balance
+                        verifyPayment(response, data);
+                    },
+                    prefill: {
+                        name: 'User Name',
+                        email: 'user@example.com',
+                        contact: '1234567890'
+                    },
+                    theme: {
+                        color: '#3399cc'
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function verifyPayment(response, data) {
+    try {
+        const paymentId = response.razorpay_payment_id;
+        console.log('Payment ID:', paymentId);
+      
+
+        // Log the request data
+        const requestData = { data, paymentId };
+        console.log('Request Data:', requestData);
+
+        // Make a fetch request to your backend to verify the payment and update the wallet balance
+        const verifyResponse = await fetch('/verifyRazorpayPayment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+        const verifyData = await verifyResponse.json();
+
+        console.log('Verify Data:', verifyData);
+
+        if (verifyData.success) {
+            // Payment verified, show success message or redirect to a success page
+            console.log('Payment successful!');
+        } else {
+            console.error('Payment verification failed');
+        }
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+    }
+}
+
+
+    </script>
 
   
 

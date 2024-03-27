@@ -104,10 +104,12 @@ userRoute.put("/changeStatus/:orderId",requireLogin,setnocache.user, userControl
 
 userRoute.get('/login',isLoggedIn,setnocache.user,userController.loadlogin);
 
+userRoute.post('/generateRazorpayOrder',walletcontroller.addWallet);
+userRoute.post('/verifyRazorpayPayment',walletcontroller.verfiypayment);
 
-userRoute.post("/walletMoney",walletcontroller.addWallet);
+// userRoute.post("/walletMoney",walletcontroller.addWallet);
 
-userRoute.post('/verifywalletPayment',walletcontroller.walletMoney);
+// userRoute.post('/verifywalletPayment',walletcontroller.walletMoney);
 
 userRoute.post('/refund',walletcontroller.refund);
 
