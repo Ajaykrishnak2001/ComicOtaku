@@ -202,8 +202,11 @@
                     <p>Entire Sales Report Available Here....</p>
                 </div>
                 <div class="export-buttons">
-                    <button class="btn btn-primary export-button" id="export-pdf">Export as PDF</button>
-                    <button class="btn btn-primary export-button" id="export-excel">Export as Excel</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#salesReportModal" id="generateReportBtn">
+                        Generate
+                    </button>
+                      
+                    
                 </div>
             </div>
             <div class="row">
@@ -293,17 +296,23 @@
                                         </div>
                                     </th>
                                     <th class="align-middle" scope="col">Order ID</th>
-                                    <th class="align-middle" scope="col">User ID</th>
+                                    <th class="align-middle" scope="col">User Email</th>
                                     <th class="align-middle" scope="col">Date</th>
-                                    <th class="align-middle" scope="col">Total</th>
                                     <th class="align-middle" scope="col">Payment Status</th>
+                                    <th class="align-middle" scope="col">Total</th>
+                                    <th class="align-middle" scope="col">Coupon Applied</th>
+                                    <th class="align-middle" scope="col">Discount Amount</th>
                                     <th class="align-middle" scope="col">Payment Method</th>
                                     <th class="align-middle" scope="col">View Details</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <% let totalAmountSum = 0; %>
+                                <% let couponDiscountSum = 0; %>
                                 <% AllOrders.forEach(order => { %>
                                     <% if (order.status === 'Delivered') { %>
+                                        <% totalAmountSum += order.totalAmount; %>
+                                        <% if (!isNaN(order.coupondiscount)) { couponDiscountSum += order.coupondiscount; } %>
                                         <tr>
                                             <td class="text-center">
                                                 <div class="form-check">
@@ -312,12 +321,14 @@
                                                 </div>
                                             </td>
                                             <td><a href="#" class="fw-bold">#<%= order.orderNumber %></a></td>
-                                            <td><%= order.userId %></td>
+                                            <td><%= order.userId.email %></td>
                                             <td><%= order.orderDate.toDateString() %></td>
-                                            <td>$<%= order.totalAmount %></td>
                                             <td>
                                                 <span class="badge badge-pill badge-soft-<%= order.status === 'Paid' ? 'success' : 'danger' %>"><%= order.status %></span>
                                             </td>
+                                            <td>₹<%= order.totalAmount %></td>
+                                            <td><%= order.coupondiscount > 0 ? 'Yes' : 'No' %></td>
+                                            <td><%= order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0' %></td>
                                             <td>
                                                 <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
                                                 <%= order.payment %>
@@ -328,7 +339,22 @@
                                         </tr>
                                     <% } %>
                                 <% }); %>
+                                <!-- Display the sums at the bottom of the respective columns -->
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total:₹<%= totalAmountSum %></td>
+                                    <td></td>
+                                    <td>Total:₹<%= couponDiscountSum %></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
+                            
+                            
                             
                         </table>
                     </div>
@@ -367,6 +393,8 @@
 
 <!-- Include toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
 
 
 
@@ -419,42 +447,45 @@
             });
     }
     
+    let filteredOrders = [];
+
+
     function updatePaymentList(data) {
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = "";
 
     if (data && data.length > 0) {
+        filteredOrders = data.filter(order => order.status === 'Delivered');
         let slNo = 1;
-        data.forEach(order => {
-    if (order.status === 'Delivered') {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="text-center">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="${order._id}">
-                    <label class="form-check-label" for="${order._id}"></label>
-                </div>
-            </td>
-            <td><a href="#" class="fw-bold">#${order.orderNumber}</a></td>
-            <td>${order.userId}</td>
-            <td>${new Date(order.orderDate).toDateString()}</td>
-            <td>$${order.totalAmount}</td>
-            <td>
-                <span class="badge badge-pill badge-soft-${order.status === 'Paid' ? 'success' : 'danger'}">${order.status}</span>
-            </td>
-            <td>
-                <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
-                ${order.payment}
-            </td>
-            <td>
-                <a href="/admin/detailedOrder?orderNumber=${order.orderNumber}" class="btn btn-xs">View details</a>
-            </td>
-        `;
-        tbody.appendChild(tr);
-        slNo++;
-    }
-});
-
+        filteredOrders.forEach(order => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="text-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="${order._id}">
+                        <label class="form-check-label" for="${order._id}"></label>
+                    </div>
+                </td>
+                <td><a href="#" class="fw-bold">#${order.orderNumber}</a></td>
+                <td>${order.userId?.email }</td>
+                <td>${new Date(order.orderDate).toDateString()}</td>
+                <td>
+                    <span class="badge badge-pill badge-soft-${order.status === 'Paid' ? 'success' : 'danger'}">${order.status}</span>
+                </td>
+                <td>₹${order.totalAmount}</td>
+                <td>${order.coupondiscount > 0 ? 'Yes' : 'No' }</td> 
+                <td>${order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0'}</td>
+                <td>
+                    <i class="material-icons md-payment font-xxl text-muted mr-5"></i>
+                    ${order.payment}
+                </td>
+                <td>
+                    <a href="/admin/detailedOrder?orderNumber=${order.orderNumber}" class="btn btn-xs">View details</a>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            slNo++;
+        });
     } else {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td colspan="8">No sales data available</td>`;
@@ -462,54 +493,110 @@
     }
 }
 
+
     </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-        <script>
-            function exportToPDF(){
-            if (typeof jsPDF !== 'undefined') {
-                const content = document.querySelector('.table-responsive');
-                html2canvas(content).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF();
-                    const imgWidth = 200;
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                    pdf.save('sales_report.pdf');
-                })
-            } else {
-                console.error('jsPDF library is not available');
-            }
-            }
-              //Event listener for exporting to pdf   
-    
+<script>
+    document.getElementById('generateReportBtn').addEventListener('click', function() {
+        const tbody = document.querySelector('#salesReportModal tbody');
+        tbody.innerHTML = "";
 
-    function exportToExcel(){
-        const table = document.querySelector('.table-responsive table');
-        let csvContent = "data:text/csv;charset=utf-8,";
-        const rows = table.querySelectorAll('tr');
-        rows.forEach(row => {
-            const rowData = [];
-            row.querySelectorAll('th, td').forEach(cell => {
-                rowData.push(cell.textContent.trim());
+        if (filteredOrders.length > 0) {
+            let slNo = 1;
+            filteredOrders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                    <td>${order.orderNumber}</td>
+                    <td>${order.userId}</td>
+                  
+                    <td>${order.status}</td>
+                    <td>${order.payment}</td>
+                    <td>${order.coupondiscount > 0 ? 'Yes' : 'No' }</td> 
+                    <td>${order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0'}</td>
+                    <td>₹${order.totalAmount}</td>
+                `;
+                tbody.appendChild(tr);
+                slNo++;
             });
-            csvContent += rowData.join(',') + '\n';
-        });
+        } else {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td colspan="9">No sales data available</td>`;
+            tbody.appendChild(tr);
+        }
+    });
+</script>
 
-        const encodeUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodeUri);
-        link.setAttribute('download', 'sales_report.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+
+
+
+       
+
+
+
+
+/////////////////moda////////////////////
+
+<div class="modal fade" id="salesReportModal" tabindex="-1" aria-labelledby="salesReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="salesReportModalLabel">Sales Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="mt-4 mb-4 text-center">Sales Report</h2>
+                <div class="table-responsive container">
+                    <table id="ordersTable"   class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="align-middle" scope="col">Date</th>
+                                <th class="align-middle" scope="col">Order ID</th>
+                                <th class="align-middle" scope="col">User Email</th>
+                               
+                                <th class="align-middle" scope="col">Payment Status</th>
+                                <th class="align-middle" scope="col">Payment Method</th>
+                                <th class="align-middle" scope="col">Coupon Applied</th>
+                                <th class="align-middle" scope="col">Discount Amount</th>
+                                <th class="align-middle" scope="col">Total Amount</th>
+                                
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <!-- Table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                
+                <button onclick="pdf()" class="btn btn-danger" type="button">Download PDF</button>
+                <button onclick="exportToExcel()" class="btn btn-danger" type="button">Download Excel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js/dist/html2pdf.bundle.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<script>
+    function exportToExcel() {
+        const table = document.getElementById("ordersTable");
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+        XLSX.writeFile(wb, 'sales_report.xlsx');
     }
+</script>
 
-    document.getElementById('export-pdf').addEventListener('click',exportToPDF);
-    document.getElementById('export-excel').addEventListener('click', exportToExcel);
-            </script>
-            
+<script>
+    function pdf() {
+            const table = document.getElementById("ordersTable")
+            html2pdf().from(table).save();
+        }
+    </script>
+  
 </body>
 
 

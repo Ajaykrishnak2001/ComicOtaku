@@ -38,7 +38,8 @@ const checkoutpage = async (req, res) => {
         console.log(userAddress);
 
         const cartItems = await cart.findOne({ user: req.session.userData }).populate('items.product');
-        res.render('checkout', { categories, userData, userAddress, cartItems });
+        console.log(cartItems);
+        res.render('checkout', { categories, userData, userAddress, cartItems});
         console.log("xyz");
 
     } catch (error) {
@@ -208,6 +209,7 @@ const placeOrder = async (req, res) => {
             orderNumber: orderNumber,
             items: orderProducts,
             totalAmount: userCart.total,
+            coupondiscount: userCart.maximumDiscount,
             shippingAddress: {
                 address: userAddress.address,
                 pinCode: userAddress.pinCode,
@@ -294,7 +296,7 @@ const placeOrder = async (req, res) => {
 const loadDashboard = async (req, res) => {
     try {
         console.log("hiiiiiiiiii");
-        const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
+        const AllOrders=await Order.find().populate('userId').sort({ orderDate: -1 }).exec();
         const totalRevenue = await calculateRevenue();
         const totalDeliveredOrders = await calculateDeliveredOrders();
         res.render('dashboard', { AllOrders,totalRevenue,totalDeliveredOrders});
@@ -304,6 +306,7 @@ const loadDashboard = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
 
 
 

@@ -554,6 +554,7 @@
                                 <tr>
                                     <th colspan="2" class="text-center">Product</th>
                                     <th class="text-center">Price</th>
+                                    <th class="text-center">offerPrice</th>
                                     <th class="text-center">Quantity</th>
                                     <th class="text-right">Total</th>
                                     <th class="action">&nbsp;</th>
@@ -577,6 +578,9 @@
                                                 </td>
                                                 <td class="cart__price-wrapper cart-flex-item">
                                                     <span class="money">$<%= item.product.price %></span>
+                                                </td>
+                                                <td class="cart__price-wrapper cart-flex-item">
+                                                    <span class="money">$<%= item.product.offerPrice %></span>
                                                 </td>
                                                 <td class="cart__update-wrapper cart-flex-item text-right">
                                                     <div class="cart__qty text-center">
@@ -883,7 +887,7 @@
                             <li class="list-group-item">
                                 <strong>Coupon ID:</strong> <%= coupon.couponId %><br>
                                 <strong>Description:</strong> <%= coupon.description %><br>
-                                <strong>Maximum Discount:</strong> <%= coupon.maximumDiscount %><br>
+                                <strong> Discount:</strong> <%= coupon.maximumDiscount %><br>
                                 <strong>Expiry Date:</strong> <%= coupon.expireDate %><br>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-primary mt-2" onclick="applyCoupon('<%= coupon.couponId %>', '<%= coupon.maximumDiscount %>')">Apply Coupon</button>

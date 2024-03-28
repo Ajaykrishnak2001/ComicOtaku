@@ -677,7 +677,13 @@ const filterTotalRevenue = async (req, res) => {
 };
 
 
-
+const loadsalesreport=async(req,res)=>{
+  try{
+    res.render("salesReport")
+  }catch(error){
+    console.log(error.message);
+  }
+}
 
 
 
@@ -709,6 +715,7 @@ module.exports = {
   ChangeStatus,
   filterSalesReport,
   filterTotalRevenue,
+  loadsalesreport
 
 
     

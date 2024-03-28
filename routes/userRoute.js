@@ -130,4 +130,6 @@ userRoute.get('/landingpage',setnocache.user, userController.loadlandingpageprod
 
 userRoute.get('/products',userController.categegoryfilter);
 
+// userRoute.post('/applyCoupon',cartController.maximumdiscount);
+
 module.exports = userRoute;

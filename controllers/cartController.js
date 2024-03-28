@@ -188,12 +188,36 @@ const discountamount=async (req, res) => {
 };
 
 
+// const maximumdiscount= async (req, res) => {
+//     try {
+//         const orderId = req.body.orderId;
+//         const couponId = req.body.couponId;
+//         const maximumDiscount = req.body.maximumDiscount;
+
+//         // Find the order by orderId
+//         const order = await Order.findById(orderId);
+
+//         // Update the couponapplied field
+//         order.couponapplied = maximumDiscount;
+
+//         // Save the updated order
+//         await order.save();
+
+//         res.status(200).json({ message: 'Coupon applied successfully' });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server Error' });
+//     }
+// };
+
+
 module.exports={
     cartpage,
     addTocart,
     changeQuantity,
     removeFromCart,
     updateCartTotalPrice,
-    discountamount
+    discountamount,
+  
 
 }

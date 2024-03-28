@@ -694,9 +694,10 @@
                                 <table class="bg-white table table-bordered table-hover text-center">
                                     <thead>
                                         <tr>
-                                            <th class="text-left">Product Name</th>
+                                            <th class="text-left">Product</th>
+                                            <th>ProductName</th>
                                             <th>Price</th>
-                                            <th>Size</th>
+                                            <th>offerPrice</th>
                                             <th>Qty</th>
                                             <th>Subtotal</th>
                                         </tr>
@@ -715,6 +716,9 @@
                                                     </td>
                                                     <td class="cart__price-wrapper cart-flex-item">
                                                         <span class="money">$<%= item.product.price %></span>
+                                                    </td>
+                                                    <td class="cart__price-wrapper cart-flex-item">
+                                                        <span class="money">$<%= item.product.offerPrice %></span>
                                                     </td>
                                                     <td class="cart__update-wrapper cart-flex-item text-right">
                                                         <div class="cart__qty text-center">
@@ -736,7 +740,7 @@
                                     </tbody>
                                     <tfoot class="font-weight-600">
                                         <tr>
-                                            <td colspan="4" class="text-right">Total</td>
+                                            <td colspan="5" class="text-right">Total</td>
                                             <td>$<%= cartItems.total %></td>
                                         </tr>
                                     </tfoot>

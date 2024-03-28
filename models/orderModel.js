@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: "User",
     required: true,
-  }, 
+  },
   orderNumber: {
     type: String,
     required: true,
@@ -16,9 +16,8 @@ const orderSchema = new mongoose.Schema({
       product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        required: true
+        required: true,
       },
-      
       quantity: {
         type: Number,
         required: true,
@@ -27,72 +26,77 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-     
-      isCancelled:{
+      isCancelled: {
         type: Boolean,
-        default: false
-      }
+        default: false,
+      },
     },
   ],
   totalAmount: {
     type: Number,
     required: true,
   },
-  orderDate: {
+    orderDate: {
     type: Date,
     default: Date.now,
   },
+  coupondiscount:{
+    type: Number,
+    required: false,
+  },
+
   status: {
     type: String,
-    enum: ["pending", "Confirmed", "shipped", "Delivered","Canceled","Returned"],
+    enum: ["pending", "Confirmed", "shipped", "Delivered", "Canceled", "Returned"],
     default: "pending",
   },
   shippingAddress: {
     type: {
       address: {
         type: String,
-        required: true
+        required: true,
       },
       pinCode: {
         type: String,
-        required: true
+        required: true,
       },
       state: {
         type: String,
-        required: true
+        required: true,
       },
       locality: {
-        type: String
+        type: String,
       },
       landmark: {
         type: [String],
       },
       addressType: {
-        type: String
+        type: String,
       },
       mobile: {
-        type: Number
+        type: Number,
       },
       alternatePhone: {
-        type: Number
+        type: Number,
       },
-      district:{
-        type:String
-      }
+      district: {
+        type: String,
+      },
     },
-    required: true
+    required: true,
   },
-  payment:{
-    type:String,
-    required:true
+  payment: {
+    type: String,
+    required: true,
   },
-  reasonForCancel:{
-    type:String
+  reasonForCancel: {
+    type: String,
   },
-  reasonForReturn:{
-    type:String
-  }
-},{ strictPopulate:false });
+  reasonForReturn: {
+    type: String,
+  },
+}, { strictPopulate: false });
+
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;
