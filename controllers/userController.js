@@ -5,7 +5,7 @@ const Order=require("../models/orderModel");
 const Wallet=require("../models/WalletModel");
 
 const nodemailer = require("nodemailer");
-
+const session = require('express-session');
 const bcrypt = require("bcrypt"); 
 const randomstring=require("randomstring")
 const config=require("../config/config")
@@ -532,6 +532,114 @@ const categegoryfilter= async (req, res) => {
 
 
 
+  const verifyEmail = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (user) {
+            req.session.email = email; // Store email in session
+            res.json({ exists: true });
+        } else {
+            res.json({ exists: false });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+const loadForgotOtpPage = async (req, res) => {
+    try {
+        res.render('forgotpage'); // Render the forgotpage.ejs
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const forgotOtp = async (req, res) => {
+    const { email } = req.body;
+
+    // Generate OTP
+    const otp = generateOTP();
+
+    try {
+        // Send email
+        await transporter.sendMail({
+            from: config.emailUser,
+            to: email,
+            subject: 'OTP for Password Reset',
+            text: `Your OTP is: ${otp}`
+        });
+        req.session.otp = otp;
+
+        console.log(`OTP for ${email}: ${otp}`);
+        res.redirect('/forgotpage'); // Redirect to the OTP verification page
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to send OTP' });
+    }
+};
+
+const otpForgotPage = async (req, res) => {
+    const { userotp } = req.body;
+
+    // Retrieve the OTP from the session
+    const otp = req.session.otp;
+    console.log(otp);
+    console.log(userotp);
+    // Compare the OTP with the one entered by the user
+    if (userotp === otp) {
+        // If OTP is correct, redirect to the password changing page
+        res.json({ success: true }); // Send success response
+    } else {
+        // If OTP is incorrect, show an error message
+        res.status(400).json({ message: 'Invalid OTP' });
+    }
+};
+
+
+const  renderForgotPasswordPage= async (req, res) => {
+    try {
+        res.render('forgotpassword');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+const changePassword = async (req, res) => {
+    try {
+        const { newPassword } = req.body;
+        console.log("New Password:", newPassword);
+        const email = req.session.email; // Retrieve email from session
+        console.log(email);
+        if (!email) {
+            return res.status(400).json({ status: "Email not found in session" });
+        }
+        const userData = await User.findOne({ email });
+        if (!userData) {
+            return res.status(400).json({ status: "User not found" });
+        }
+        const hashPassword = await securePassword(newPassword);
+        if (!hashPassword) {
+            return res.status(500).json({ status: "Error hashing password" });
+        }
+        userData.password = hashPassword;
+        await userData.save();
+        req.session.userId = null;
+        req.session.user = false;
+        return res.json({ status: "password reset success" });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ status: "Internal server error" });
+    }
+};
+
+
+
+
 
 module.exports = {
     loadlogin,
@@ -552,7 +660,12 @@ module.exports = {
     ChangeStatus,
     loadlandingpage,
     loadlandingpageproducts,
-    categegoryfilter
-    
+    categegoryfilter,
+    verifyEmail,
+    loadForgotOtpPage,
+    forgotOtp,
+    otpForgotPage,
+    renderForgotPasswordPage,
+    changePassword 
     
 };

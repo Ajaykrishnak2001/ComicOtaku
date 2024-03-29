@@ -1,0 +1,48 @@
+<!-- otp.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTP Verification</title>
+</head>
+<body>
+<h1>Enter OTP</h1>
+<form id="otpForm">
+    <input type="text" id="otpInput" name="userotp" placeholder="Enter OTP" required>
+    <button type="submit">Submit</button>
+</form>
+
+<p id="errorText" style="color: red; display: none;">Invalid OTP. Please try again.</p>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#otpForm').submit(function(e) {
+        e.preventDefault();
+        var userotp = $('#otpInput').val();
+        $.ajax({
+            type: 'POST',
+            url: '/verify-forotp',
+            data: { userotp: userotp },
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = '/forgotpassword'; // Redirect to forgotpassword page
+                } else {
+                    $('#errorText').show();
+                    setTimeout(function() {
+                        $('#errorText').hide();
+                    }, 5000); // Hide error message after 5 seconds
+                }
+            },
+            error: function() {
+                console.log('Error verifying OTP');
+            }
+        });
+    });
+});
+
+</script>
+
+</body>
+</html>

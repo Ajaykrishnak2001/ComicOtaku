@@ -130,6 +130,15 @@ userRoute.get('/landingpage',setnocache.user, userController.loadlandingpageprod
 
 userRoute.get('/products',userController.categegoryfilter);
 
+userRoute.post('/check-email', userController.verifyEmail); // Route to check email existence
+userRoute.post('/send-otp', userController.forgotOtp); // Route to send OTP
+userRoute.get('/forgotpage', userController.loadForgotOtpPage); // Route to load OTP verification page
+userRoute.post('/verify-forotp', userController.otpForgotPage); // Route to verify OTP
 // userRoute.post('/applyCoupon',cartController.maximumdiscount);
+
+// Define a route to render the forgotpassword.ejs page
+userRoute.get('/forgotpassword', userController.renderForgotPasswordPage);
+userRoute.post('/change-password',userController.changePassword);
+
 
 module.exports = userRoute;
