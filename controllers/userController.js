@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Category = require('../models/categoryModel');
 const Order=require("../models/orderModel");
+const Wallet=require("../models/WalletModel");
 
 const nodemailer = require("nodemailer");
 
@@ -37,7 +38,10 @@ const securePassword = async(password)=>{
   
  const loadregistration = async (req, res) => {
   try {
-    res.render("register");
+    const userData = await User.find();
+    const referralArray = userData.map(user => user.referralCode);
+    res.render("register", { referralArray });
+    console.log(referralArray);
     } catch (error) {
     console.log(error.message);
    }
@@ -100,8 +104,12 @@ const insertUser = async (req, res) => {
                 phone,
                 email,
                 password,
-                otp
+                otp,
+                // otpCreatedAt: Date.now()
             };
+            if (req.body.referralID) {
+                req.session.referralID = req.body.referralID;
+            }
             req.session.Data = data;
             req.session.save();
             console.log(otp, 'this is otp');
@@ -182,9 +190,33 @@ const getOtp = async (req, res) => {
     try {
         const userOtp = req.body.otp;
         const genOtp = await req.session.Data.otp;
+        const otpCreatedAt = req.session.Data.otpCreatedAt;
+        const otpExpirationTime = 60 * 1000;
+        const currentTime = Date.now();
+        console.log(genOtp);
+        console.log(userOtp);
+        if (currentTime - otpCreatedAt > otpExpirationTime) {
 
-        if (genOtp === userOtp) {
+            return res.status(400).json({ message: 'OTP has expired. Please request a new OTP.' });
+        }
+
+        else if (genOtp === userOtp) {
             const hashedPassword = await securePassword(req.session.Data.password);
+            let couponId;
+            function UniqueId() {
+                const generateCustomCode = length => Array.from({ length }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('');
+                const generateCustomCodes = (length, count) => Array.from({ length: count }, () => generateCustomCode(length));
+
+                const length = 8;
+                const count = 1;
+
+                const customCodes = generateCustomCodes(length, count);
+                const customCode = customCodes[0];
+                couponId = customCode;
+                console.log(couponId)
+
+            };
+            UniqueId();
             const user = new User({
                 name: req.session.Data.name,
                 phone: req.session.Data.phone,
@@ -192,10 +224,56 @@ const getOtp = async (req, res) => {
                 password: hashedPassword,
                 is_admin: 0,
                 is_verified: 1,
-                is_active: 1
+                is_active: 1,
+                referralCode: couponId
             });
 
             const userData = await user.save();
+
+            if (req.session.referralID) {
+                const referror = await User.findOne({ referralCode: req.session.referralID });
+                const referrorWallet = await Wallet.findOne({ user: referror._id });
+                const newWallet = new Wallet({
+                    user: userData._id,
+                    walletbalance: 100,
+                    transationHistory: [{
+                        createdAt: Date.now(),
+                        paymentType: "Referral",
+                        transationMode: "Credit",
+                        transationamount: 100
+                    }],
+                    totalRefund: 0
+                });
+                await newWallet.save();
+
+                let balance = referrorWallet ? referrorWallet.walletbalance : 0;
+                balance = balance + 100;
+
+                if (referrorWallet) {
+                    referrorWallet.walletbalance = balance;
+                    referrorWallet.transationHistory.push({
+                        createdAt: Date.now(),
+                        paymentType: "Referral",
+                        transationMode: "Credit",
+                        transationamount: 100
+                    });
+                    await referrorWallet.save();
+                } else {
+                    const walletNew = new Wallet({
+                        user: referror._id,
+                        walletbalance: balance,
+                        transationHistory: [{
+                            createdAt: Date.now(),
+                            paymentType: "Referral",
+                            transationMode: "Credit",
+                            transationamount: 100
+                        }],
+                        totalRefund: 0
+                    });
+                    await walletNew.save();
+                }
+            }
+
 
             if (userData) {
                 req.session.destroy(); // Clean up session

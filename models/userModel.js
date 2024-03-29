@@ -38,6 +38,10 @@ otp:{
     type:Number,
     required:false
 },
+referralCode: {
+    type: String,
+    required:true
+},
     
 is_active: { type: String, 
     default: 1,
