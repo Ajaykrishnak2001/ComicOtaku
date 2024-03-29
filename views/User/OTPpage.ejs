@@ -68,57 +68,76 @@
 </div><!-- End page-wrapper -->
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let countdownTime = 30; // Initial countdown time in seconds
-        let timerInterval; // Variable to store the timer interval
-        const timerDisplay = document.getElementById('otp-timer');
-        const expiredMessage = document.getElementById('otp-expired-message');
+   document.addEventListener('DOMContentLoaded', function() {
+    let countdownTime = localStorage.getItem('countdownTime') || 30; // Initial countdown time in seconds, defaulting to 30 seconds
+    let timerInterval; // Variable to store the timer interval
+    const timerDisplay = document.getElementById('otp-timer');
+    const expiredMessage = document.getElementById('otp-expired-message');
 
-        // Function to update the timer display
-        function updateTimer() {
-            if (countdownTime >= 0) {
-                timerDisplay.innerText = `Time left: ${countdownTime} sec`;
-                countdownTime--;
-            } else {
-                clearInterval(timerInterval);
-                timerDisplay.style.display = 'none';
-                expiredMessage.innerText = 'OTP expired. Please resend OTP.';
-                expiredMessage.style.display = 'block';
-            }
+    // Function to update the timer display
+  // Function to update the timer display
+function updateTimer() {
+    if (countdownTime >= 0) {
+        timerDisplay.innerText = `Time left: ${countdownTime} sec`;
+        countdownTime--;
+        localStorage.setItem('countdownTime', countdownTime); // Store the updated countdown time in localStorage
+    } else {
+        clearInterval(timerInterval);
+        timerDisplay.style.display = 'none';
+        expiredMessage.innerText = 'OTP expired. Please resend OTP.';
+        expiredMessage.style.display = 'block';
+        localStorage.removeItem('countdownTime'); // Remove the countdown time from localStorage when it reaches 0
+        document.getElementById('submitOTP').disabled = true; // Disable the submit button
+    }
+}
+
+
+    // Start the timer interval
+    timerInterval = setInterval(updateTimer, 1000);
+
+    document.getElementById('resendOTP').addEventListener('click', function() {
+    // Send request to resend OTP
+    fetch('/resend-otp', {
+        method: 'POST'
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Resend OTP request successful');
+            // Optionally update UI or show a message
+            // Reset countdown time to 60 seconds
+            countdownTime = 30;
+            localStorage.setItem('countdownTime', countdownTime); // Store the new countdown time in localStorage
+            // Restart timer interval
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+            // Hide the expired message
+            expiredMessage.style.display = 'none';
+            // Update the resend message
+            expiredMessage.innerText = 'OTP resent successfully.';
+            document.getElementById('submitOTP').disabled = false; // Enable the submit button
+
+            // Display the timer display
+            timerDisplay.style.display = 'block';
+        } else {
+            console.error('Failed to resend OTP');
+            // Optionally show an error message
         }
-
-        // Start the timer interval
-        timerInterval = setInterval(updateTimer, 1000);
-
-        document.getElementById('resendOTP').addEventListener('click', function() {
-            // Send request to resend OTP
-            fetch('/resend-otp', {
-                method: 'POST'
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Resend OTP request successful');
-                    // Optionally update UI or show a message
-                    // Reset countdown time to 60 seconds
-                    countdownTime = 60;
-                    // Restart timer interval
-                    clearInterval(timerInterval);
-                    timerInterval = setInterval(updateTimer, 1000);
-                    // Hide the expired message
-                    expiredMessage.style.display = 'none';
-                    // Update the resend message
-                    expiredMessage.innerText = 'OTP resent successfully.';
-                } else {
-                    console.error('Failed to resend OTP');
-                    // Optionally show an error message
-                }
-            })
-            .catch(error => {
-                console.error('Error occurred while resending OTP:', error);
-                // Optionally show an error message
-            });
-        });
+    })
+    .catch(error => {
+        console.error('Error occurred while resending OTP:', error);
+        // Optionally show an error message
     });
+});
+
+    // Check if the timer is already running before resetting it
+    document.getElementById('otp-submit').addEventListener('click', function() {
+        if (!timerInterval) {
+            // Start the timer interval
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+    });
+});
+
 </script>
 
 <script>
