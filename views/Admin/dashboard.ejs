@@ -321,7 +321,7 @@
                                                 </div>
                                             </td>
                                             <td><a href="#" class="fw-bold">#<%= order.orderNumber %></a></td>
-                                            <td><%= order.userId.email %></td>
+                                            <td><%= order.userId %></td>
                                             <td><%= order.orderDate.toDateString() %></td>
                                             <td>
                                                 <span class="badge badge-pill badge-soft-<%= order.status === 'Paid' ? 'success' : 'danger' %>"><%= order.status %></span>
