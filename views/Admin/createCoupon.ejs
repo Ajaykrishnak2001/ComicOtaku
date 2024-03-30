@@ -28,7 +28,13 @@
             padding: 20px; /* Add some padding inside the container */
         }
     
-       
+        .error-text {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+
     </style>
 </head>
 
@@ -197,44 +203,153 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title">Create a New Coupon</h2>
-                        <form id="add-coupon-form"> <!-- Updated id to add-coupon-form -->
+                        <form id="add-coupon-form">
                             <div class="mb-3">
                                 <label for="coupon-id" class="form-label">Coupon ID</label>
                                 <input type="text" class="form-control" id="coupon-id" name="couponId" placeholder="Enter Coupon ID">
+                                <div id="coupon-id-error" class="error-text"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <input type="text" class="form-control" id="description" name="description" placeholder="Enter Description">
+                                <div id="description-error" class="error-text"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="max-discount" class="form-label">Maximum Discount</label>
                                 <input type="text" class="form-control" id="max-discount" name="maximumDiscount" placeholder="Enter Maximum Discount">
+                                <div id="max-discount-error" class="error-text"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="max-amount" class="form-label">Maximum Amount</label>
                                 <input type="text" class="form-control" id="max-amount" name="maximumAmount" placeholder="Enter Maximum Amount">
+                                <div id="max-amount-error" class="error-text"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="min-amount" class="form-label">Minimum Amount</label>
                                 <input type="text" class="form-control" id="min-amount" name="minimumAmount" placeholder="Enter Minimum Amount">
+                                <div id="min-amount-error" class="error-text"></div>
                             </div>
-                            
-                            
                             <div class="mb-3">
                                 <label for="max-user" class="form-label">Maximum User</label>
                                 <input type="text" class="form-control" id="max-user" name="maximumUser" placeholder="Enter Maximum User">
+                                <div id="max-user-error" class="error-text"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="expire-date" class="form-label">Expire Date</label>
                                 <input type="date" class="form-control" id="expire-date" name="expireDate">
+                                <div id="expire-date-error" class="error-text"></div>
                             </div>
-                            
                             <button type="submit" class="btn btn-primary">Create Coupon</button>
-        
                         </form>
                     </div>
                 </div>
             </div>
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const couponId = document.getElementById("coupon-id");
+                    const description = document.getElementById("description");
+                    const maxDiscount = document.getElementById("max-discount");
+                    const maxAmount = document.getElementById("max-amount");
+                    const minAmount = document.getElementById("min-amount");
+                    const maxUser = document.getElementById("max-user");
+                    const expireDate = document.getElementById("expire-date");
+                    const form = document.getElementById("add-coupon-form");
+        
+                    couponId.addEventListener("blur", function() {
+                        const value = couponId.value.trim();
+                        if (value === "" || /[\s,.]/.test(value.charAt(0))) {
+                            showError(couponId, "Coupon ID is required .");
+                        } else {
+                            hideError(couponId);
+                        }
+                    });
+        
+                    description.addEventListener("blur", function() {
+                        const value = description.value.trim();
+                        if (value === "" || /[^\w\s]/.test(value)) {
+                            showError(description, "Description is Invalid.");
+                        } else {
+                            hideError(description);
+                        }
+                    });
+        
+                    maxDiscount.addEventListener("blur", function() {
+                        const value = maxDiscount.value.trim();
+                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || parseFloat(value) > 5000) {
+                            showError(maxDiscount, "Maximum Discount must be a positive number less than or equal to 5000.");
+                        } else {
+                            hideError(maxDiscount);
+                        }
+                    });
+        
+                    maxAmount.addEventListener("blur", function() {
+                        const value = maxAmount.value.trim();
+                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || /[^\d\s]/.test(value)) {
+                            showError(maxAmount, "Maximum Amount must be a positive number.");
+                        } else {
+                            hideError(maxAmount);
+                        }
+                    });
+        
+                    minAmount.addEventListener("blur", function() {
+                        const value = minAmount.value.trim();
+                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || /[^\d\s]/.test(value)) {
+                            showError(minAmount, "Minimum Amount must be a positive number.");
+                        } else {
+                            hideError(minAmount);
+                        }
+                    });
+        
+                    maxUser.addEventListener("blur", function() {
+                        const value = maxUser.value.trim();
+                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || /[^\d\s]/.test(value)) {
+                            showError(maxUser, "Maximum User must be a positive number.");
+                        } else {
+                            hideError(maxUser);
+                        }
+                    });
+        
+                    expireDate.addEventListener("blur", function() {
+                        const value = expireDate.value.trim();
+                        const currentDate = new Date();
+                        const selectedDate = new Date(value);
+                        if (isNaN(selectedDate.getTime()) || selectedDate <= currentDate) {
+                            showError(expireDate, "Expiry date must be a future date.");
+                        } else {
+                            hideError(expireDate);
+                        }
+                    });
+        
+                    form.addEventListener("submit", function(event) {
+                        if (
+                            couponId.value.trim() === "" ||
+                            description.value.trim() === "" ||
+                            maxDiscount.value.trim() === "" ||
+                            maxAmount.value.trim() === "" ||
+                            minAmount.value.trim() === "" ||
+                            maxUser.value.trim() === "" ||
+                            expireDate.value.trim() === ""
+                        ) {
+                            event.preventDefault();
+                            alert("All fields are required.");
+                        }
+                    });
+        
+                    function showError(element, message) {
+                        const errorElement = document.getElementById(element.id + "-error");
+                        errorElement.textContent = message;
+                        errorElement.classList.add("error-text");
+                    }
+        
+                    function hideError(element) {
+                        const errorElement = document.getElementById(element.id + "-error");
+                        errorElement.textContent = "";
+                        errorElement.classList.remove("error-text");
+                    }
+                });
+            </script>
         </body>
             
       
