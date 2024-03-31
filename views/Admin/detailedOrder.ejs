@@ -208,15 +208,15 @@
                            <small> Order Status: <%= orderDetails.status %></small>
                         </div>
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                            <select id="orderStatusSelect" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
+                            <select id="orderStatusSelect" class="form-select d-inline-block mb-lg-0 mb-15 mw-200" onchange="toggleElements()">
                                 <option>Change status</option>
-                                <option> Confirmed</option>
-                                <option>shipped</option>
+                                <option>Confirmed</option>
+                                <option>Shipped</option>
                                 <option>Delivered</option>
                                 <option>Canceled</option>
-                              
                             </select>
-                            <a class="btn btn-primary" href="#"onclick="changeStatus('<%= orderDetails._id %>')"> Save</a>
+                            <span id="statusDisplay" style="display: none;">Canceled</span>
+                            <a id="saveButton" class="btn btn-primary" href="#" onclick="changeStatus('<%= orderDetails._id %>')">Save</a>
                             <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
                         </div>
                     </div>
@@ -400,7 +400,29 @@
 
 </script>
 
+<script>
+    // Assume orderStatus is fetched from the database
+    const orderStatus = "<%= orderDetails.status %>";
 
+    function toggleElements() {
+        const orderStatusSelect = document.getElementById("orderStatusSelect");
+        const saveButton = document.getElementById("saveButton");
+        const statusDisplay = document.getElementById("statusDisplay");
+
+        if (orderStatus === "Canceled") {
+            orderStatusSelect.disabled = true;
+            saveButton.style.display = "none";
+            statusDisplay.style.display = "inline";
+        } else {
+            orderStatusSelect.disabled = false;
+            saveButton.style.display = "inline-block";
+            statusDisplay.style.display = "none";
+        }
+    }
+
+    // Call toggleElements to set initial state
+    toggleElements();
+</script>
 </body>
 
 
