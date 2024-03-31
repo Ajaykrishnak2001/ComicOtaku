@@ -297,14 +297,29 @@
                                 </p>
                             </div> 
                             <div class="h-25 pt-4">
-                                <div class="mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="notes" id="notes" placeholder="Type some note"></textarea>
-                                </div>
+                                <% if (orderDetails.status === 'Canceled') { %>
+                                    <div class="mb-3">
+                                        <h5>Reason For Cancel</h5>
+                                        <label><%= orderDetails.reasonForCancel %></label>
+                                    </div>
+                                <% } else if (orderDetails.status === 'Returned') { %>
+                                    <div class="mb-3">
+                                        <h5>Reason For Return</h5>
+                                        <label><%= orderDetails.reasonForReturn %></label>
+                                    </div>
+                                <% } %>
+                                
+                                
                                 <!-- <button class="btn btn-primary">Save note</button> -->
                                 <div class="h-25 pt-4 mt-50" id="refundButtonContainer">
+                                    <!-- <div class="mb-3">
+                                        <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event)">Approve for Refund</a>
+                                    </div> -->
                                     <div class="mb-3">
                                         <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event)">Approve for Refund</a>
+                                    </div>
+                                    <div id="refundMessage" style="display: none; color: green;">
+                                        Refund is successful
                                     </div>
                                 </div>
                                 
@@ -379,26 +394,28 @@
     console.log('User ID:', userId);
 
     function refund(event) {
-    event.preventDefault(); // Prevent the default behavior of the anchor tag
-    const totalAmount = parseFloat('<%= totalAmount %>');
-    console.log("Total Amount:", totalAmount);
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+        const totalAmount = parseFloat('<%= totalAmount %>');
+        console.log("Total Amount:", totalAmount);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/refund', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                console.log('Refund successful');
-            } else {
-                console.error('Error:', xhr.responseText);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/refund', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Refund successful');
+                    document.getElementById("refund").style.display = "none"; // Hide the button
+                    document.getElementById("refundMessage").style.display = "block"; // Show the success message
+                } else {
+                    console.error('Error:', xhr.responseText);
+                }
             }
-        }
-    };
-    xhr.send(JSON.stringify({ totalAmount: totalAmount, userId: userId }));
-}
-
+        };
+        xhr.send(JSON.stringify({ totalAmount: totalAmount, userId: userId }));
+    }
 </script>
+
 
 <script>
     // Assume orderStatus is fetched from the database

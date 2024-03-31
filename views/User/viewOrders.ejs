@@ -616,7 +616,6 @@
                 <button id="cancelButton" class="btn btn-danger" onclick="submitAction('<%= orderDetails._id %>', 'Canceled')">Cancel Order</button>
                 <button id="returnButton" class="btn btn-danger" style="display: none;" onclick="submitAction('<%= orderDetails._id %>', 'Returned')">Return Order</button>
             </div>
-            
     
             <!-- Back button -->
             <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
@@ -794,26 +793,32 @@
                 body: JSON.stringify({ action: action, reason: reason })
             });
             const data = await response.json();
-            location.reload();
+            if (response.ok) {
+                const button = document.getElementById(action === 'Canceled' ? 'cancelButton' : 'returnButton');
+                const successMessage = document.createElement('div');
+                successMessage.classList.add('text-success');
+                successMessage.innerText = `Order ${action.toLowerCase()} successful`;
+                button.parentElement.insertBefore(successMessage, button.nextSibling);
+                button.style.display = 'none';
+            }
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-    const status = '<%= orderDetails.status %>';
-    if (status === 'Delivered') {
-        document.getElementById('cancelButton').style.display = 'none';
-        document.getElementById('returnButton').style.display = 'block';
-    } else if (status === 'Returned') {
-        document.getElementById('cancelButton').style.display = 'none';
-        document.getElementById('returnButton').style.display = 'block';
-    } else {
-        document.getElementById('cancelButton').style.display = 'block';
-        document.getElementById('returnButton').style.display = 'none';
-    }
-});
-
+        const status = '<%= orderDetails.status %>';
+        if (status === 'Delivered') {
+            document.getElementById('cancelButton').style.display = 'none';
+            document.getElementById('returnButton').style.display = 'block';
+        } else if (status === 'Returned') {
+            document.getElementById('cancelButton').style.display = 'none';
+            document.getElementById('returnButton').style.display = 'block';
+        } else {
+            document.getElementById('cancelButton').style.display = 'block';
+            document.getElementById('returnButton').style.display = 'none';
+        }
+    });
 </script>
 
 
