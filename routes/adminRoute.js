@@ -6,12 +6,29 @@ const multer = require("multer");
 const path = require("path");
 
 const adminRoute = express();
+const setnocache=require("../middleware/setNoCache")
 
 adminRoute.use(bodyParser.json());
 adminRoute.use(bodyParser.urlencoded({ extended: true }));
 
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
+
+async function requireLogin(req, res, next) {
+   
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  next();
+}
+
+async function isLoggedIn(req, res, next) {
+  if (req.session.user) {
+    return res.redirect('/');
+  }
+  next();
+}
+
 
 const adminController = require("../controllers/adminController");
 const couponController = require("../controllers/couponController");
@@ -23,8 +40,8 @@ const offercontroller = require("../controllers/offercontroller");
 
 
 
-adminRoute.get("/login", adminController.loadAdminLog);
-adminRoute.post("/login", adminController.adminLogin);
+adminRoute.get("/login",isLoggedIn,setnocache.admin,adminController.loadAdminLog);
+adminRoute.post("/login",isLoggedIn,setnocache.admin, adminController.adminLogin);
 
 adminRoute.get("/products", adminController.loadProducts);
 adminRoute.get("/users", adminController.loadUsers);
