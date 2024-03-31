@@ -275,6 +275,45 @@ height: 80vh;">
 
 
  </script>
+
+ <script>function validateName() {
+    const nameInput = document.getElementById('name');
+    const nameError = document.getElementById('username_error');
+    let name = nameInput.value.trim();
+    const regex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
+
+    if (name.length === 0) {
+        nameError.textContent = 'Username cannot be empty.';
+        nameInput.classList.add('is-invalid');
+    } else if (!regex.test(name)) {
+        nameError.textContent = 'Invalid Username.';
+        nameInput.classList.add('is-invalid');
+    } else {
+        nameError.textContent = '';
+        nameInput.classList.remove('is-invalid');
+    }
+}
+
+
+function validatemobile() {
+    const mobileInput = document.getElementById('phone');
+    const mobileError = document.getElementById('mobile_error');
+    const mobile = mobileInput.value.trim();
+    const regex = /^[0-9]{10}$/;
+
+    if (!regex.test(mobile)) {
+        mobileError.textContent = 'Mobile number must be 10 digits long and contain only numbers.';
+        mobileInput.classList.add('is-invalid');
+    } else {
+        mobileError.textContent = '';
+        mobileInput.classList.remove('is-invalid');
+    }
+}
+
+// Event listeners
+document.getElementById('name').addEventListener('blur', validateName);
+document.getElementById('phone').addEventListener('blur', validatemobile);
+</script>
 </body>
 
 <!-- belle/login.html   11 Nov 2019 12:22:27 GMT -->
