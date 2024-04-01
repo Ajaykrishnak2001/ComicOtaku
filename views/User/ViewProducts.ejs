@@ -17,6 +17,8 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+
+
 </head>
 <body class="template-product belle">
 	<div class="pageWrapper">
@@ -439,30 +441,18 @@
                                         <div class="product-form__item">
                                             <label class="header">Size:</label>
                                             <div class="sizes">
-                                                <div data-value="XS" class="swatch-element x-small available">
-                                                    <input class="swatchInput" id="swatch-1-x-small" type="radio" name="option-1" value="XS">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-x-small" title="X-Small">XS</label>
-                                                </div>
-                                                <div data-value="S" class="swatch-element small available">
-                                                    <input class="swatchInput" id="swatch-1-small" type="radio" name="option-1" value="S">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-small" title="Small">S</label>
-                                                </div>
-                                                <div data-value="M" class="swatch-element medium available">
-                                                    <input class="swatchInput" id="swatch-1-medium" type="radio" name="option-1" value="M">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-medium" title="Medium">M</label>
-                                                </div>
-                                                <div data-value="L" class="swatch-element large available">
-                                                    <input class="swatchInput" id="swatch-1-large" type="radio" name="option-1" value="L">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-large" title="Large">L</label>
-                                                </div>
-                                                <div data-value="XL" class="swatch-element x-large available">
-                                                    <input class="swatchInput" id="swatch-1-x-large" type="radio" name="option-1" value="XL">
-                                                    <label class="swatchLbl small rounded" for="swatch-1-x-large" title="X-Large">XL</label>
-                                                </div>
-                                                <!-- Add more sizes as needed -->
+                                                <% product.sizes.forEach((size) => { %>
+                                                    <div data-value="<%= size.size %>" class="swatch-element <%= size.quantity === 0 ? 'disabled' : 'available' %>">
+                                                        <input class="swatchInput" id="swatch-1-<%= size.size %>" type="radio" name="option-1" value="<%= size.size %>" <%= size.quantity === 0 ? 'disabled' : '' %>>
+                                                        <label class="swatchLbl small rounded <%= size.quantity === 0 ? 'text-danger' : '' %>" for="swatch-1-<%= size.size %>" title="<%= size.size %>"><%= size.size %></label>
+                                                    </div>
+                                                <% }); %>
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    
+                                    
                                     
                                     
                                     <p class="infolinks"><a href="#sizechart" class="sizelink btn"> Size Guide</a> <a href="#productInquiry" class="emaillink btn"> Ask About this Product</a></p>
@@ -861,6 +851,7 @@
                     });
                 });
             </script>
+            
             
             
 </body>
