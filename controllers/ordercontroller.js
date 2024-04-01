@@ -153,7 +153,8 @@ const createOrder = async (req, res) => {
                         description: req.body.description,
                         contact: "8567345612",
                         name: "Sandeep Sharma",
-                        email: "sandep@gmail.com"
+                        email: "sandep@gmail.com",
+                        url:`http://localhost:3000/viewOrder?orderNumber=${newOrder.orderNumber}`
                     });
                 } else {
                     console.error(err);

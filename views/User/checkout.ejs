@@ -1190,7 +1190,13 @@
                 },
                 "theme": {
                     "color": "#2300a3"
+                },
+                "modal":{
+                    "ondismiss":function(){
+                        window.location.href=res.url
+                    }
                 }
+
             };
             var razorpayObject = new Razorpay(options);
             razorpayObject.on('payment.failed', function (response){
