@@ -21,8 +21,22 @@ const securePassword = async (password) => {
   }
 };
 
+
+const adminlogout=async(req,res)=>{
+  try{
+
+      req.session.destroy();
+      res.redirect('/admin/login');
+
+  }catch(error){
+      console.log(error.message);
+  }
+}
+
+
 const loadAdminLog = async (req, res) => {
   try {
+  
     const errorMessage = req.query.error || req.session.errorMessage;
     req.session.errorMessage = null;
 
@@ -43,6 +57,13 @@ const adminLogin = async (req, res) => {
       // Compare passwords
       const passwordMatch = await bcrypt.compare(password, adminData.password);
       if (passwordMatch) {
+        // Initialize session data
+        req.session.admin = adminData;
+        req.session.adminId = adminData._id; // Storing adminId in the session
+        req.session.email = email;
+        req.session.admin = true;
+        req.session.save();
+
         // Redirect to admin page if password matches
         res.redirect("/admin/products");
       } else {
@@ -58,6 +79,7 @@ const adminLogin = async (req, res) => {
     // Handle error appropriately
   }
 };
+
 
 
 const PAGE_SIZE = 9;
@@ -715,7 +737,8 @@ module.exports = {
   ChangeStatus,
   filterSalesReport,
   filterTotalRevenue,
-  loadsalesreport
+  loadsalesreport,
+  adminlogout
 
 
     

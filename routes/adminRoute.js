@@ -16,15 +16,18 @@ adminRoute.set("views", "./views/admin");
 
 async function requireLogin(req, res, next) {
    
-  if (!req.session.user) {
-    return res.redirect('/login');
+  if (!req.session.admin) {
+    console.log(req.session.admin);
+    return res.redirect('/admin/login');
   }
   next();
 }
 
 async function isLoggedIn(req, res, next) {
-  if (req.session.user) {
-    return res.redirect('/');
+  console.log(req.session);
+  if (req.session.admin) {
+    console.log(req.session.admin);
+    return res.redirect('/admin/dashboard');
   }
   next();
 }
@@ -38,71 +41,71 @@ const offercontroller = require("../controllers/offercontroller");
 
 
 
-
+adminRoute.get("/logout",adminController.adminlogout);
 
 adminRoute.get("/login",isLoggedIn,setnocache.admin,adminController.loadAdminLog);
-adminRoute.post("/login",isLoggedIn,setnocache.admin, adminController.adminLogin);
+adminRoute.post("/login",isLoggedIn,setnocache.admin, setnocache.admin, adminController.adminLogin);
 
-adminRoute.get("/products", adminController.loadProducts);
-adminRoute.get("/users", adminController.loadUsers);
-adminRoute.get("/users/edit", adminController.editUser);
-adminRoute.get("/users/add-user", adminController.addUser);
-adminRoute.post("/users/add-user", adminController.add_User);
-adminRoute.get("/products/add-product", adminController.addProduct);
+adminRoute.get("/products",requireLogin, setnocache.admin, adminController.loadProducts);
+adminRoute.get("/users",requireLogin,setnocache.admin, adminController.loadUsers);
+adminRoute.get("/users/edit",requireLogin,setnocache.admin, adminController.editUser);
+adminRoute.get("/users/add-user",requireLogin, setnocache.admin, adminController.addUser);
+adminRoute.post("/users/add-user",requireLogin,setnocache.admin, adminController.add_User);
+adminRoute.get("/products/add-product",requireLogin, setnocache.admin, adminController.addProduct);
 
-adminRoute.get("/products/edit-product", adminController.editProduct);
-adminRoute.post("/products/edit-product",adminController.edit_product);
+adminRoute.get("/products/edit-product",requireLogin, setnocache.admin, adminController.editProduct);
+adminRoute.post("/products/edit-product",requireLogin,adminController.edit_product);
 
-adminRoute.get("/category", adminController.viewCategory);
-adminRoute.get("/users/delete", adminController.delete_User);
+adminRoute.get("/category",requireLogin, setnocache.admin, adminController.viewCategory);
+adminRoute.get("/users/delete",requireLogin, setnocache.admin, adminController.delete_User);
   
-adminRoute.post("/users/edit", adminController.edit_User);
+adminRoute.post("/users/edit",requireLogin, setnocache.admin, adminController.edit_User);
 
-adminRoute.get("/delete-product/:productId", adminController.deleteProduct);
-
-
-
-adminRoute.get("/category/edit-category", adminController.editcategory);
-
-adminRoute.post("/category/edit-category", adminController.edit_Category);
-
-adminRoute.post("/category/delete", adminController.deleteCategory);
+adminRoute.get("/delete-product/:productId",requireLogin, setnocache.admin, adminController.deleteProduct);
 
 
+
+adminRoute.get("/category/edit-category",requireLogin, setnocache.admin, adminController.editcategory);
+
+adminRoute.post("/category/edit-category",requireLogin, setnocache.admin, adminController.edit_Category);
+
+adminRoute.post("/category/delete",requireLogin, setnocache.admin, adminController.deleteCategory);
 
 
 
 
-adminRoute.get("/orders",adminController.loadorders)
 
 
-adminRoute.get("/detailedOrder", adminController.detailedOrder);
+adminRoute.get("/orders",requireLogin,setnocache.admin,adminController.loadorders)
 
-adminRoute.put("/changeStatus/:orderId", adminController.ChangeStatus);
 
-adminRoute.get("/coupon",couponController.loadcoupon)
+adminRoute.get("/detailedOrder",requireLogin, setnocache.admin, adminController.detailedOrder);
 
- adminRoute.get('/createcoupon',couponController.loadaddcoupon);
+adminRoute.put("/changeStatus/:orderId",requireLogin, setnocache.admin, adminController.ChangeStatus);
+
+adminRoute.get("/coupon",requireLogin,setnocache.admin,couponController.loadcoupon)
+
+ adminRoute.get('/createcoupon',requireLogin,setnocache.admin,couponController.loadaddcoupon);
 // Assuming you have an Express app instance called 'app'
-adminRoute.post('/addcoupon',couponController.addcoupon);
+adminRoute.post('/addcoupon',requireLogin,setnocache.admin,couponController.addcoupon);
 // Assuming you have an Express app instance called 'app'
-adminRoute.delete('/deletecoupon/:id', couponController.deletecoupon);
+adminRoute.delete('/deletecoupon/:id',requireLogin,setnocache.admin, couponController.deletecoupon);
 
-adminRoute.get('/dashboard',ordercontroller.loadDashboard);
+adminRoute.get('/dashboard',requireLogin,setnocache.admin,ordercontroller.loadDashboard);
 
-adminRoute.get('/revenue',ordercontroller.calculateRevenue);
-adminRoute.get('/admin/dashboard',ordercontroller.calculateDeliveredOrders);
+adminRoute.get('/revenue',requireLogin,setnocache.admin,ordercontroller.calculateRevenue);
+adminRoute.get('/admin/dashboard',requireLogin,setnocache.admin,ordercontroller.calculateDeliveredOrders);
 
-adminRoute.get('/filter/sales',adminController.filterSalesReport);
-adminRoute.get('/filter/revenue',adminController.filterTotalRevenue);
+adminRoute.get('/filter/sales',requireLogin,setnocache.admin,adminController.filterSalesReport);
+adminRoute.get('/filter/revenue',requireLogin,setnocache.admin,adminController.filterTotalRevenue);
 
-adminRoute.get('/offers',offercontroller.loadoffers);
+adminRoute.get('/offers',requireLogin,setnocache.admin,offercontroller.loadoffers);
 
-adminRoute.post('/updateOfferPrice', offercontroller.offerprice);
-adminRoute.post('/editOfferPrice', offercontroller.editOfferPrice);
-adminRoute.post('/applyDiscount/:categoryId',offercontroller.categoryoffer);
+adminRoute.post('/updateOfferPrice',requireLogin,setnocache.admin, offercontroller.offerprice);
+adminRoute.post('/editOfferPrice',requireLogin,setnocache.admin, offercontroller.editOfferPrice);
+adminRoute.post('/applyDiscount/:categoryId',requireLogin,setnocache.admin,offercontroller.categoryoffer);
 
-adminRoute.get("/salesReport",adminController.loadsalesreport);
+adminRoute.get("/salesReport",requireLogin,setnocache.admin,adminController.loadsalesreport);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -127,6 +130,6 @@ adminRoute.post(
   adminController.add_Product
 );
 
-adminRoute.post("/category", adminController.createCategory);
+adminRoute.post("/category",requireLogin,setnocache.admin, adminController.createCategory);
 
 module.exports = adminRoute;
