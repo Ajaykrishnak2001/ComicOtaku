@@ -195,15 +195,17 @@
                             </div> -->
                         </div>
         
-                        <form action="/admin/category" method="post" class="mb-4">
+                        <form id="categoryForm" action="/admin/category" method="post" class="mb-4">
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="categoryName" class="form-label">Category Name</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="categoryName" required>
+                                    <div id="categoryNameError" class="text-danger"></div>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="description" class="form-label">Description</label>
                                     <textarea placeholder="Type here" class="form-control" id="description" name="description" required></textarea>
+                                    <div id="descriptionError" class="text-danger"></div>
                                 </div>
                             </div>
                             <div class="d-grid mt-4">
@@ -265,6 +267,40 @@
             </div>
         </div>
         
+        <script>
+            document.getElementById('categoryForm').addEventListener('submit', function(event) {
+                const categoryName = document.getElementById('categoryName').value;
+                const description = document.getElementById('description').value;
+                const categoryNameError = document.getElementById('categoryNameError');
+                const descriptionError = document.getElementById('descriptionError');
+                categoryNameError.innerText = '';
+                descriptionError.innerText = '';
+        
+                // Check if category name contains only letters
+                if (!/^[a-zA-Z]+$/.test(categoryName)) {
+                    categoryNameError.innerText = 'Category name must contain only letters.';
+                    event.preventDefault(); // Prevent form submission
+                }
+        
+                // Check if category name is not empty
+                if (!categoryName.trim()) {
+                    categoryNameError.innerText = 'Category name cannot be empty.';
+                    event.preventDefault(); // Prevent form submission
+                }
+        
+                // Check if description is not empty
+                if (!description.trim()) {
+                    descriptionError.innerText = 'Description cannot be empty.';
+                    event.preventDefault(); // Prevent form submission
+                }
+        
+                // Check if description contains special symbols or numbers
+                if (/[^a-zA-Z\s]/.test(description)) {
+                    descriptionError.innerText = 'Description cannot contain special symbols or numbers.';
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        </script>
         
         
         

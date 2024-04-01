@@ -415,21 +415,49 @@ const edit_Category = async (req, res) => {
     const id = req.query.id;
     const body = req.body;
 
+    // Check if the new category name already exists
+    const existingCategory = await Category.findOne({
+      cName: body.categoryName,
+      _id: { $ne: id } // Exclude the current category from the check
+    });
+
+    if (existingCategory) {
+      // Category name already exists, send an alert message
+      return res.status(400).send(`
+        <script>
+          alert("Category name already exists");
+          window.location.href = "/admin/category/edit-category?id=${id}";
+        </script>
+      `);
+    }
+
     const updatedCategory = await Category.findByIdAndUpdate(id, {
       cName: body.categoryName,
       description: body.description,
     });
 
     if (!updatedCategory) {
-      return res.status(404).send("Category not found");
+      return res.status(404).send(`
+        <script>
+          alert("Category not found");
+          window.location.href = "/admin/category";
+        </script>
+      `);
     }
 
     res.redirect("/admin/category");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send(`
+      <script>
+        alert("Internal Server Error");
+        window.location.href = "/admin/category";
+      </script>
+    `);
   }
 };
+
+
 
 const createCategory = async (req, res) => {
   try {
