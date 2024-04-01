@@ -286,14 +286,17 @@
                     });
 
                     minAmount.addEventListener("blur", function() {
-                        const value = minAmount.value.trim();
-                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || /[^\d\s]/.test(value)) {
-                            showError(minAmount, "Minimum Amount must be a positive number.");
-                        } else {
-                            hideError(minAmount);
-                        }
-                    });
-            
+    const minAmountValue = parseFloat(minAmount.value.trim());
+    const maxDiscountValue = parseFloat(maxDiscount.value.trim());
+    if (isNaN(minAmountValue) || minAmountValue <= 0 || /[^\d\s]/.test(minAmount.value.trim())) {
+        showError(minAmount, "Minimum Amount must be a positive number.");
+    } else if (maxDiscountValue > minAmountValue) {
+        showError(minAmount, "Minimum Amount must be greater than Discount.");
+    } else {
+        hideError(minAmount);
+    }
+});
+
                     maxAmount.addEventListener("blur", function() {
                         const value = parseFloat(maxAmount.value.trim());
                         const minAmountValue = parseFloat(minAmount.value.trim());
