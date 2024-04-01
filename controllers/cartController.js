@@ -28,7 +28,10 @@ const cartpage = async (req, res) => {
 }
 
 function calculateTotalPrice(items) {
-    return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    return items.reduce((total, item) => {
+        const price = item.product.offerPrice || item.product.price;
+        return total + (price * item.quantity);
+    }, 0);
 }
 
 
