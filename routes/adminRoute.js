@@ -41,7 +41,7 @@ const offercontroller = require("../controllers/offercontroller");
 
 
 
-adminRoute.get("/logout",adminController.adminlogout);
+adminRoute.get("/logout",setnocache.admin,adminController.adminlogout);
 
 adminRoute.get("/login",isLoggedIn,setnocache.admin,adminController.loadAdminLog);
 adminRoute.post("/login",isLoggedIn,setnocache.admin, setnocache.admin, adminController.adminLogin);
