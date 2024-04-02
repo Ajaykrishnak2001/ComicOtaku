@@ -14,9 +14,9 @@ const securePassword = async (password) => {
     const passwordHash = await bcrypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
-    // Handle the error appropriately
+    
     console.error("Error hashing password:", error);
-    // Optionally re-throw the error
+    
     throw error;
   }
 };
@@ -59,24 +59,24 @@ const adminLogin = async (req, res) => {
       if (passwordMatch) {
         // Initialize session data
         req.session.admin = adminData;
-        req.session.adminId = adminData._id; // Storing adminId in the session
+        req.session.adminId = adminData._id; 
         req.session.email = email;
         req.session.admin = true;
         req.session.save();
 
-        // Redirect to admin page if password matches
+       
         res.redirect("/admin/products");
       } else {
-        // Render login page with error message if password is incorrect
+        
         res.render("login", { errorMessage: "Invalid password" });
       }
     } else {
-      // Render login page with error message if admin email is incorrect or not an admin
+      
       res.render("login", { errorMessage: "Invalid Credentials" });
     }
   } catch (error) {
     console.log(error.message);
-    // Handle error appropriately
+    
   }
 };
 
@@ -190,17 +190,17 @@ const editUser = async (req, res) => {
 
 const edit_User = async (req, res) => {
   try {
-    // Extract the user ID from the query parameter
+    
     const id = req.query.id;
 
-    // Retrieve the existing user details
+    
     const existingUser = await User.findById(id);
 
     if (!existingUser) {
       return res.status(404).send("User not found.");
     }
 
-    // Check if the email or mobile is being updated to an existing value
+   
     if (
       (req.body.email &&
         req.body.email !== existingUser.email &&
@@ -215,7 +215,7 @@ const edit_User = async (req, res) => {
       });
     }
 
-    // Update the user details based on the data in req.body
+    
     const updatedUser = await User.findByIdAndUpdate(id, {
       name: req.body.name,
       email: req.body.email,
@@ -226,7 +226,7 @@ const edit_User = async (req, res) => {
       is_active: req.body.status,
     });
 
-    // Redirect to the user details page or render a success message
+  
     res.redirect(`/admin/users`);
   } catch (error) {
     console.log(error.message);
@@ -239,14 +239,14 @@ const delete_User = async (req, res) => {
   try {
     const id = req.query.id;
 
-    // Find and delete the user by ID
+    
     const deletedUser = await User.findByIdAndDelete(id);
 
     if (!deletedUser) {
       return res.status(404).send("User not found");
     }
 
-    // Redirect to the user list page or render a success message
+    
     res.redirect("/admin/users");
   } catch (error) {
     console.log(error.message);
@@ -256,7 +256,7 @@ const delete_User = async (req, res) => {
 
 const add_Product = async (req, res) => {
   try {
-    console.log("Request body:", req.body); // Log the entire request body to see the structure
+    console.log("Request body:", req.body); 
 
     const images = req.files.map((file) => file.filename);
     const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -265,16 +265,16 @@ const add_Product = async (req, res) => {
       quantity: parseInt(req.body.sizes?.[size]) || 0,
     }));
 
-    console.log("Sizes:", sizes); // Log the sizes array to see if quantities are correctly parsed
+    console.log("Sizes:", sizes); 
 
-    // Find the category by name
+    
     let category = await Category.findOne({ cName: req.body.productCategory });
 
-    // If the category doesn't exist, create a new one
+    
     if (!category) {
       category = await Category.create({
         cName: req.body.productCategory,
-        description: "Default description", // You can set a default description or leave it empty
+        description: "Default description", 
       });
     }
 
@@ -283,13 +283,13 @@ const add_Product = async (req, res) => {
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
       sizes: sizes,
-      category: category._id, // Use the category ID
+      category: category._id, 
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,
     });
 
-    console.log("New Product:", newProduct); // Log the new product object before saving
+    console.log("New Product:", newProduct); 
 
     await newProduct.save();
     console.log("Product saved successfully:", newProduct);
@@ -308,7 +308,7 @@ const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
 
-    // Find the product by ID and remove it
+    
     const result = await Product.deleteOne({ _id: productId });
 
     if (result) {
@@ -328,12 +328,12 @@ const editProduct = async (req, res) => {
     const product = await Product.findById(id);
 
     if (!product) {
-      // Handle the case where the product is not found
+      
       return res.status(404).send("Product not found");
     }
 
     const categories = await getCategories();
-    const selectedCategory = product.category; // Assuming the category is stored in the 'category' field of the product
+    const selectedCategory = product.category; 
 
     res.render("editProduct", { product, categories, selectedCategory });
   } catch (error) {
@@ -344,7 +344,7 @@ const editProduct = async (req, res) => {
 
 const getCategories = async () => {
   try {
-    const categories = await Category.find({}, "cName"); // Assuming 'Category' is your mongoose model
+    const categories = await Category.find({}, "cName"); 
     return categories;
   } catch (error) {
     console.error(error);
@@ -366,7 +366,7 @@ const edit_product = async (req, res) => {
       quantity: parseInt(req.body[`sizes${size}`]) || 0,
     }));
 
-    // Update other product details based on the data in req.body
+    
     const updatedProduct = await Product.findByIdAndUpdate(id, {
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
@@ -374,15 +374,15 @@ const edit_product = async (req, res) => {
       sizes: sizes,
       category: req.body.productCategory,
       brand: req.body.ProductBrand,
-      is_listed: req.body.listed, // Assuming 'listed' is a boolean
+      is_listed: req.body.listed, 
     });
 
-    // Handle the case where the product is not found
+    
     if (!updatedProduct) {
       return res.status(404).send("Product not found");
     }
 
-    // Redirect to the products page with the selected category
+   
     const selectedCategory = req.body.productCategory;
     res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
   } catch (error) {

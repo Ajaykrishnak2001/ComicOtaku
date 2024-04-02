@@ -5,9 +5,9 @@ const Order = require("../models/orderModel");
 
 const loadoffers = async (req, res) => {
   try {
-      const products = await Product.find(); // Fetch all products
-      const categories = await Category.find(); // Fetch all categories
-      res.render('offers', { products, categories }); // Pass the products and categories arrays to the 'offers' view
+      const products = await Product.find(); 
+      const categories = await Category.find(); 
+      res.render('offers', { products, categories }); 
   } catch (error) {
       console.log(error.message);
       res.status(500).send('Internal Server Error');

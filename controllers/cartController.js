@@ -9,23 +9,23 @@ const cartpage = async (req, res) => {
         const email = req.session.email;
         const categories = await Category.find();
         const userData = await User.findOne({ email: email });
-        const cartItems = await Cart.findOne({ user: req.session.userData }).populate('items.product');
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+        const cartItems = await Cart.findOne({ userId: req.session.userId }).populate('items.product');
         let coupons = await Coupon.find();
 
         // Filter coupons based on cart total price
         const totalPrice = calculateTotalPrice(cartItems.items);
         coupons = coupons.filter(coupon => totalPrice >= coupon.minimumAmount && totalPrice <= coupon.maximumAmount);
 
-        const cart = await Cart.findOne({ userId: req.session.userId });
-        if (!cart) {
-            throw new Error('Cart not found');
-        }
-
-        res.render('cart', { categories, userData, cartItems, coupons,item: cartItems.items,totalPrice,cart  });
+        res.render('cart', { categories, userData, cartItems, coupons, item: cartItems.items, totalPrice, cart });
     } catch (error) {
         console.log(error.message);
     }
 }
+
 
 function calculateTotalPrice(items) {
     return items.reduce((total, item) => {
@@ -55,6 +55,7 @@ const addTocart = async (req, res) => {
         };
 
         let userCart = await Cart.findOne({ userId: req.session.userId });
+        console.log("iubuibiubiuhbhb"+userCart);
         if (!userCart) {
             userCart = new Cart({ userId: req.session.userId, items: [], total: 0 });
         }
