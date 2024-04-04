@@ -3,7 +3,8 @@ const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Order = require("../models/orderModel");
 
-
+const multer = require("multer");
+const upload = multer({ dest: "productAssets/" });
 
 
 
@@ -278,6 +279,9 @@ const add_Product = async (req, res) => {
       });
     }
 
+    // Store images in the session
+    req.session.images = images;
+
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
@@ -286,7 +290,7 @@ const add_Product = async (req, res) => {
       category: category._id, 
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
-      images: images,
+      images: req.session.images,
     });
 
     console.log("New Product:", newProduct); 
@@ -334,6 +338,7 @@ const editProduct = async (req, res) => {
 
     const categories = await getCategories();
     const selectedCategory = product.category; 
+    req.session.images=product.images
 
     res.render("editProduct", { product, categories, selectedCategory });
   } catch (error) {
@@ -356,33 +361,46 @@ const edit_product = async (req, res) => {
   try {
     const id = req.query.id;
 
-    // Set the same quantity for all sizes
-    // const quantity = parseInt(req.body.sizesXS) || 0;
-
-    // Create an array of objects with all sizes and the same quantity
     const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
     const sizes = sizeNames.map((size) => ({
       size: size,
       quantity: parseInt(req.body[`sizes${size}`]) || 0,
     }));
 
-    
-    const updatedProduct = await Product.findByIdAndUpdate(id, {
-      pname: req.body.ProductName,
-      price: req.body.ProductPrice,
-      description: req.body.ProductDetails,
-      sizes: sizes,
-      category: req.body.productCategory,
-      brand: req.body.ProductBrand,
-      is_listed: req.body.listed, 
-    });
+    let product = await Product.findById(id);
 
-    
-    if (!updatedProduct) {
+    if (!product) {
       return res.status(404).send("Product not found");
     }
 
-   
+    // Remove images marked for removal
+    // Remove images marked for removal
+if (req.body.removeImage) {
+  if (!Array.isArray(req.body.removeImage)) {
+    req.body.removeImage = [req.body.removeImage]; // Convert to array if it's a single value
+  }
+  req.body.removeImage.forEach((imageName) => {
+    product.images = product.images.filter((image) => image !== imageName);
+  });
+}
+
+    // Add new images
+    if (req.files && req.files.length > 0) {
+      req.files.forEach((file) => {
+        product.images.push(file.filename);
+      });
+    }
+
+    // Update product fields
+    product.pname = req.body.ProductName;
+    product.price = req.body.ProductPrice;
+    product.description = req.body.ProductDetails;
+    product.sizes = sizes;
+    product.category = req.body.productCategory;
+    product.brand = req.body.ProductBrand;
+
+    await product.save();
+
     const selectedCategory = req.body.productCategory;
     res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
   } catch (error) {
@@ -392,6 +410,23 @@ const edit_product = async (req, res) => {
 };
 
 
+
+
+const removeImage=(req,res)=>{
+  const {filename}=req.body
+  console.log(filename)
+  console.log(req.session.images); 
+
+  if (Array.isArray(req.session.images)) {
+    const index = req.session.images.indexOf(filename);
+    if (index !== -1) {
+      req.session.images.splice(index, 1); 
+    }
+  }
+  console.log(req.session.images); 
+  res.send("Success")
+
+}
 
 
 const editcategory = async (req, res) => {
@@ -766,7 +801,8 @@ module.exports = {
   filterSalesReport,
   filterTotalRevenue,
   loadsalesreport,
-  adminlogout
+  adminlogout,
+  removeImage
 
 
     

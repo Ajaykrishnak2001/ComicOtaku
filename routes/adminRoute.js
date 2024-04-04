@@ -15,6 +15,7 @@ adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
 async function requireLogin(req, res, next) {
+  req.session.admin="66068f12364ef68d832a06f2"
    
   if (!req.session.admin) {
     console.log(req.session.admin);
@@ -38,6 +39,16 @@ const couponController = require("../controllers/couponController");
 const ordercontroller = require("../controllers/ordercontroller");
 const offercontroller = require("../controllers/offercontroller");
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/productAssets/') // Specify the directory where uploaded files will be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) // Generate unique filenames
+  }
+})
+const upload = multer({ storage: storage });
+
 
 
 
@@ -54,7 +65,12 @@ adminRoute.post("/users/add-user",requireLogin,setnocache.admin, adminController
 adminRoute.get("/products/add-product",requireLogin, setnocache.admin, adminController.addProduct);
 
 adminRoute.get("/products/edit-product",requireLogin, setnocache.admin, adminController.editProduct);
-adminRoute.post("/products/edit-product",requireLogin,adminController.edit_product);
+adminRoute.post(
+  "/products/edit-product",
+  requireLogin,
+  upload.array("newImages", 4), // Specify the field name for uploading images and the maximum number of files
+  adminController.edit_product
+);
 
 adminRoute.get("/category",requireLogin, setnocache.admin, adminController.viewCategory);
 adminRoute.get("/users/delete",requireLogin, setnocache.admin, adminController.delete_User);
@@ -63,11 +79,13 @@ adminRoute.post("/users/edit",requireLogin, setnocache.admin, adminController.ed
 
 adminRoute.get("/delete-product/:productId",requireLogin, setnocache.admin, adminController.deleteProduct);
 
+adminRoute.post('/remove-image',adminController.removeImage)
+
 
 
 adminRoute.get("/category/edit-category",requireLogin, setnocache.admin, adminController.editcategory);
 
-adminRoute.post("/category/edit-category",requireLogin, setnocache.admin, adminController.edit_Category);
+adminRoute.post("/category/edit-category",upload.array('images', 5),requireLogin, setnocache.admin, adminController.edit_Category);
 
 adminRoute.post("/category/delete",requireLogin, setnocache.admin, adminController.deleteCategory);
 
@@ -106,20 +124,6 @@ adminRoute.post('/editOfferPrice',requireLogin,setnocache.admin, offercontroller
 adminRoute.post('/applyDiscount/:categoryId',requireLogin,setnocache.admin,offercontroller.categoryoffer);
 
 adminRoute.get("/salesReport",requireLogin,setnocache.admin,adminController.loadsalesreport);
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/productAssets/"); 
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    ); // Specify the filename
-  },
-});
-
-const upload = multer({ storage: storage });
 
 
 

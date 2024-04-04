@@ -13,19 +13,19 @@
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
     <!-- Favicon -->
-<link rel="shortcut icon" type="image/x-icon" href=" /productAssets/administration-vector-icon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href=" /productAssets/administration-vector-icon.svg">
     <!-- Template CSS -->
-    <link href="admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="admin-assets\css\main.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body class="">
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
-        <!-- <div class="aside-top">
+        <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="assets\images\Logo1.png" alt="OOF Logo" width="30">
+            <img src="assets\images\Logo1.png" alt="cOtaku" width="30">
             </a>
-            <div> -->
+            <div>
                 <button class="btn btn-icon btn-aside-minimize">
                     <i class="text-muted material-icons md-menu_open"></i>
                 </button>
@@ -53,10 +53,10 @@
                     </a>
                 </li>
 
-            <li class="menu-item">
-                <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
-                    <span class="text">category</span> </a>
-            </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">category</span> </a>
+                </li>
 
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/orders">
@@ -89,7 +89,12 @@
                         <span class="text">Reviews</span>
                     </a>
                 </li>
-                
+                <li class="menu-item">
+                    <a class="menu-link" href="page-brands.html">
+                        <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span>
+                    </a>
+                </li>
                 <li class="menu-item">
                     <a class="menu-link" disabled href="#">
                         <i class="icon material-icons md-pie_chart"></i>
@@ -117,83 +122,74 @@
         </nav>
     </aside>
     <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                </div>
+    
+            </form>
+        </div>
+        <div class="col-nav">
+    
+            <ul class="nav">
+    
+                <li class="dropdown nav-item">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                        aria-expanded="false"> <img class="img-xs rounded-circle"
+                            src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                        <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Profile</a>
+    
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="/admin/login"><i
+                                class="material-icons md-exit_to_app"></i>Logout</a>
                     </div>
-        
-                </form>
-            </div>
-            <div class="col-nav">
-        
-                <ul class="nav">
-        
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                            aria-expanded="false"> <img class="img-xs rounded-circle"
-                                src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Profile</a>
-        
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/login"><i
-                                    class="material-icons md-exit_to_app"></i>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <form action="/admin/products/edit-product?id=<%= product._id %>" method="post" enctype="multipart/form-data">
+
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product</h2>
+                        <div>
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">
+                                EDIT
+                            </button>
                         </div>
-                    </li>
-                </ul>
-            </div>
-        </header>
-    <form action="/admin/products/edit-product?id=<%= product._id %>" method="post" >
-        <!-- Other form fields -->
-            <section class="content-main">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            <h2 class="content-title">Edit Product</h2>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label for="product_title" class="form-label">Product title</label>
+                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" maxlength="100" required value="<%=product.pname%>" required/>
+                            </div>
+                            <div class="row gx-3"></div>
+    
+                            <div class="mb-4">
+                                <label for="product_brand" class="form-label">Brand</label>
+                                <input type="text" placeholder="Type here" class="form-control" maxlength="30" name="ProductBrand" value="<%=product.brand%>"  required />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-body">
                             <div>
-                                <button type="submit" class="btn btn-md rounded font-sm hover-up">
-                                    EDIT
-                                </button>
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here" class="form-control" name="ProductDetails" maxlength="500" rows="6" required><%=product.description%></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label for="product_title" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="ProductName" value="<%=product.pname%>" 
-                                        required />
-                                </div>
-                                <div class="row gx-3"></div>
-        
-                                <div class="mb-4">
-                                    <label for="product_brand" class="form-label">Brand</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="ProductBrand" value="<%=product.brand%>"
-                                        required />
-                                </div>
-                            </div>
-                        </div>
-                        <!-- card end// -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div>
-                                        <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" class="form-control" name="ProductDetails"
-                                            rows="4"><%=product.description%></textarea>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            </div>
-                        </div>
-                        <!-- card end// -->
+                    <!-- card end// -->
                     <div class="card mb-4">
                         <div class="card-body">
                             <div>
@@ -205,6 +201,7 @@
                                         <label>Current Image: <%= image %></label>
                                         <!-- Add a checkbox to mark images for removal -->
                                         <input type="checkbox" name="removeImage" value="<%= image %>">
+
                                         <label>Remove</label>
                                     </div>
                                     <% }); %>
@@ -214,106 +211,81 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Other form fields -->
-                    
-                   
-                    </form>
-                        <!-- card end// -->
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label class="form-label">Price</label> 
-                                   <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice" value="<%=product.price%>" class="form-control" required />
-
-                                </div>
-        
-                                <!-- Status -->
-                                <!-- <h5 class="mb-3">Status</h5>
+    
+                    <!-- card end// -->
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label class="form-label">Price</label>
+                                <input type="text" placeholder="Type here" name="ProductPrice" maxlength="4" id="productPrice"  value="<%=product.price%>" class="form-control" required />
+                            </div>
+    
+                            <br>
+                            <h5 class="mb-3">Categories</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="productCategory" id="category" value="none" <% if
+                                    (selectedCategory==='none' ) { %>checked<% } %>>
+                                    <label class="form-check-label" for="category">None</label>
+                            </div>
+                            
+                            <% categories.forEach(category => { %>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="listed" id="status1" value="0" <%=product.is_listed===0
-                                        ? 'checked' : '' %>>
-                                    <label class="form-check-label" for="status1">Draft</label>
+                                  <input class="form-check-input" type="radio" name="productCategory" value="<%= category._id %>" <% if (selectedCategory.equals(category._id)) { %>checked<% } %>>
+                                  <label class="form-check-label" for="category">
+                                    <%= category.cName %>
+                                  </label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="listed" id="status2" value="1" <%=product.is_listed===1
-                                        ? 'checked' : '' %>>
-                                    <label class="form-check-label" for="status2">Published</label>
-                                </div> -->
-                                
-                                <br>
-                                
-                                <!-- Categories -->
-<h5 class="mb-3">Categories</h5>
-<div class="form-check">
-    <input class="form-check-input" type="radio" name="productCategory" id="category" value="none" <% if
-        (selectedCategory==='none' ) { %>checked<% } %>>
-        <label class="form-check-label" for="category">None</label>
-</div>
-
-<% categories.forEach(category => { %>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="productCategory" value="<%= category._id %>" <% if (selectedCategory.equals(category._id)) { %>checked<% } %>>
-      <label class="form-check-label" for="category">
-        <%= category.cName %>
-      </label>
-    </div>
-  <% }); %>
-  
-
-
-
-        
+                              <% }); %>
+                                </select>
                             </div>
                         </div>
-        
-        
                     </div>
-                     <div class="card ">
-                        <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                            <label class="form-label">Sizes and Stock</label>
-        
-                            <div class="row gx-3">
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xs" class="form-label">XS</label>
-                                    <input type="number" placeholder="Stock" id="size_xs"  class="form-control" name="sizesXS"  value="<%= product.sizes[0].quantity %>" style="width: 6rem;">
-                                </div>
-        
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_s" class="form-label">S</label>
-                                    <input type="number" placeholder="Stock" id="size_s"  class="form-control" name="sizesS" value="<%= product.sizes[1].quantity %>"  style="width: 6rem;">
-                                </div>
-        
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_m" class="form-label">M</label>
-                                    <input type="number" placeholder="Stock" id="size_m"   class="form-control" name="sizesM"  value="<%= product.sizes[2].quantity %>"   style="width: 6rem;">
-                                </div>
-        
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_l" class="form-label">L</label>
-                                    <input type="number" placeholder="Stock" id="size_l"  class="form-control" name="sizesL"  value="<%= product.sizes[3].quantity %>"   style="width: 6rem;">
-                                </div>
-        
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xl" class="form-label">XL</label>
-                                    <input type="number" placeholder="Stock" id="size_xl"   class="form-control" name="sizesXL"  value="<%= product.sizes[4].quantity %>"  style="width: 6rem;">
-                                </div>
-        
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xxl" class="form-label">XXL</label>
-                                    <input type="number" placeholder="Stock" id="size_xxl"  class="form-control" name="sizesXXL"  value="<%= product.sizes[5].quantity %>"   style="width: 6rem;">
-                                </div>
-                                <!--Add more size fields as needed -->
+                </div>
+                <div class="card ">
+                    <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                        <label class="form-label">Sizes and Stock</label>
+    
+                        <div class="row gx-3">
+                            <div class="col-md-4 mb-2">
+                                <label for="size_xs" class="form-label">XS</label>
+                                <input type="number" placeholder="Stock" id="size_xs"  class="form-control" name="sizesXS"  value="<%= product.sizes[0].quantity %>" style="width: 6rem;">
                             </div>
-
-
+    
+                            <div class="col-md-4 mb-2">
+                                <label for="size_s" class="form-label">S</label>
+                                <input type="number" placeholder="Stock" id="size_s"  class="form-control" name="sizesS" value="<%= product.sizes[1].quantity %>"  style="width: 6rem;">
+                            </div>
+    
+                            <div class="col-md-4 mb-2">
+                                <label for="size_m" class="form-label">M</label>
+                                <input type="number" placeholder="Stock" id="size_m"   class="form-control" name="sizesM"  value="<%= product.sizes[2].quantity %>"   style="width: 6rem;">
+                            </div>
+    
+                            <div class="col-md-4 mb-2">
+                                <label for="size_l" class="form-label">L</label>
+                                <input type="number" placeholder="Stock" id="size_l"  class="form-control" name="sizesL"  value="<%= product.sizes[3].quantity %>"   style="width: 6rem;">
+                            </div>
+    
+                            <div class="col-md-4 mb-2">
+                                <label for="size_xl" class="form-label">XL</label>
+                                <input type="number" placeholder="Stock" id="size_xl"   class="form-control" name="sizesXL"  value="<%= product.sizes[4].quantity %>"  style="width: 6rem;">
+                            </div>
+    
+                            <div class="col-md-4 mb-2">
+                                <label for="size_xxl" class="form-label">XXL</label>
+                                <input type="number" placeholder="Stock" id="size_xxl"  class="form-control" name="sizesXXL"  value="<%= product.sizes[5].quantity %>"   style="width: 6rem;">
+                            </div>
+                            <!--Add more size fields as needed -->
                         </div>
                     </div>
-         
-            </section>
-        </form>
+                </div>
+    
+            </div>
+        </section>
+    </form>
+        
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -335,6 +307,7 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+
     <script>
         // Function to limit the number of files selected
         function limitFiles(input, maxFiles) {
@@ -354,6 +327,45 @@
                 priceInput.value = "";
             }
         });
+
+        
+        function previewImages(input) {
+    var preview = document.getElementById("imagePreview");
+    preview.innerHTML = ""; // Clear existing preview
+
+    if (input.files) {
+        for (var i = 0; i < input.files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.createElement("img");
+                img.src = e.target.result;
+                img.style.maxWidth = "100px";
+                img.style.marginRight = "10px";
+
+                var deleteBtn = document.createElement("button");
+                deleteBtn.innerHTML = "Delete";
+                deleteBtn.className = "btn btn-sm btn-danger";
+                deleteBtn.style.marginBottom = "10px";
+                deleteBtn.onclick = function () {
+                    var index = images.indexOf(img.src); // Get the index of the image
+                    if (index !== -1) {
+                        images.splice(index, 1); // Remove the image from the array
+                    }
+                    this.parentNode.remove(); // Remove the image preview
+                    input.value = null; // Clear the file input value to allow re-uploading the same file
+                };
+
+                var div = document.createElement("div");
+                div.appendChild(img);
+                div.appendChild(deleteBtn);
+                preview.appendChild(div);
+
+                images.push(img.src); // Add the image src to the array
+            };
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+}
     </script>
 
     
