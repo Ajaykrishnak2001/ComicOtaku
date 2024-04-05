@@ -56,6 +56,49 @@ const deletecoupon = async (req, res) => {
 };
 
 
+const editCouponPage = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const coupon = await Coupon.findById(id);
+        console.log(coupon);
+        if (!coupon) {
+            return res.status(404).send("Coupon not found");
+        }
+        res.render("editCoupon", { coupon });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+const updateCoupon = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { description, maximumDiscount, minimumAmount, maximumAmount, maximumUser, expireDate } = req.body;
+
+        const updatedCoupon = await Coupon.findByIdAndUpdate(id, {
+            description,
+            maximumDiscount,
+            minimumAmount,
+            maximumAmount,
+            maximumUser,
+            expireDate
+        });
+
+        if (!updatedCoupon) {
+            return res.status(404).send("Coupon not found");
+        }
+
+        res.redirect("/admin/coupon"); // Redirect to the coupons page after updating
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+
 
 
 
@@ -65,5 +108,7 @@ module.exports = {
     loadcoupon,
     loadaddcoupon,
     deletecoupon,
+    editCouponPage,
+    updateCoupon
    
 };

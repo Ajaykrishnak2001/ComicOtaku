@@ -206,12 +206,15 @@
                                     <p class="card-text"><strong>Expire Date:</strong> <%= coupon.expireDate %></p>
                                 </div>
                                 <div class="card-footer bg-light text-center">
+                                    <button class="btn btn-outline-primary" onclick="editCoupon('<%= coupon._id %>')">Edit Coupon</button>
+
                                     <button class="btn btn-outline-primary" onclick="deleteCoupon('<%= coupon._id %>')">Delete Coupon</button>
                                 </div>
                             </div>
                         </div>
                     <% }); %>
                 </div>
+                
             </div>
         </body>
         
@@ -266,6 +269,12 @@
 }
 
 </script>
+<script>
+function editCoupon(couponId) {
+    window.location.href = `/admin/coupons/edit/${couponId}`;
+}
+</script>
+
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 </body>
 </html>

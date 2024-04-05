@@ -109,6 +109,16 @@ adminRoute.post('/addcoupon',requireLogin,setnocache.admin,couponController.addc
 // Assuming you have an Express app instance called 'app'
 adminRoute.delete('/deletecoupon/:id',requireLogin,setnocache.admin, couponController.deletecoupon);
 
+// In your routes file
+adminRoute.get("/coupons/edit/:id", requireLogin, couponController.editCouponPage);
+// In your routes file
+adminRoute.post("/coupons/edit/:id", requireLogin, couponController.updateCoupon);
+
+// Define a route for loading coupons
+
+
+
+
 adminRoute.get('/dashboard',requireLogin,setnocache.admin,ordercontroller.loadDashboard);
 
 adminRoute.get('/revenue',requireLogin,setnocache.admin,ordercontroller.calculateRevenue);
