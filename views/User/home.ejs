@@ -466,7 +466,7 @@
                         <div class="tabs-listing">
                             <ul class="tabs clearfix">
                                 <li rel="tab2">Men</li>
-                                <li class="active" rel="tab1">Women</li>
+                                <!-- <li class="active" rel="tab1">Women</li> -->
                                 
                                 <!-- <li rel="tab3">Sale</li> -->
                             </ul>
@@ -478,77 +478,76 @@
                                 </div>
                                 <div id="tab2" class="tab_content grid-products">
                                     <div class="productSlider">
-                                        <% products.forEach(product => { %>
-                                            <div class="col-12 item">
-                                                <!-- start product image -->
-                                                <div class="product-image">
+                                        <% if (products && products.length > 0) { %>
+                                            <% products.forEach(product => { %>
+                                                <div class="col-12 item">
                                                     <!-- start product image -->
-                                                    <a href="/products/<%= product._id %>">
-                                                       <!-- image -->
-                                                       <img class="primary blur-up lazyloaded" data-src="<%= product.images[0] %>" src="/productAssets/<%= product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
-<!-- End image -->
-<!-- Hover image -->
-                                                     <img class="hover blur-up lazyloaded" data-src="<%= product.images[1] %>" src="/productAssets/<%= product.images[1] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
-<!-- End hover image -->
-
-                                                        <!-- product label -->
-                                                        <div class="product-labels rectangular">
-                                                            <% if (product.discount > 0) { %>
-                                                                <span class="lbl on-sale">-<%= product.discount %>%</span>
-                                                            <% } %>
-                                                            <% if (product.isNew) { %>
-                                                                <span class="lbl pr-label1">new</span>
-                                                            <% } %>
+                                                    <div class="product-image">
+                                                        <!-- start product image -->
+                                                        <a href="/products/<%= product._id %>">
+                                                           <!-- image -->
+                                                           <img class="primary blur-up lazyloaded" data-src="<%= product.images[0] %>" src="/productAssets/<%= product.images[0] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
+                                                           <!-- End image -->
+                                                           <!-- Hover image -->
+                                                           <img class="hover blur-up lazyloaded" data-src="<%= product.images[1] %>" src="/productAssets/<%= product.images[1] %>" alt="<%= product.pname %>" title="<%= product.pname %>">
+                                                           <!-- End hover image -->
+                                
+                                                            <!-- product label -->
+                                                            <div class="product-labels rectangular">
+                                                                <% if (product.discount > 0) { %>
+                                                                    <span class="lbl on-sale">-<%= product.discount %>%</span>
+                                                                <% } %>
+                                                                <% if (product.isNew) { %>
+                                                                    <span class="lbl pr-label1">new</span>
+                                                                <% } %>
+                                                            </div>
+                                                            <!-- End product label -->
+                                                        </a>
+                                                        <!-- end product image -->
+                                
+                                                        <!-- Start product button -->
+                                                        <!-- <form class="variants add" action="#" onclick="window.location.href='cart.html'" method="post">
+                                                            <button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button>
+                                                        </form> -->
+                                                        <div class="button-set">
+                                                            <div class="wishlist-btn">
+                                                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist" onclick="addToWishlist('<%= product._id %>')">
+                                                                    <i class="icon anm anm-heart-l"></i>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                        <!-- End product label -->
-                                                    </a>
+                                                        <!-- end product button -->
+                                                    </div>
                                                     <!-- end product image -->
                                 
-                                                    <!-- Start product button -->
-                                                    <!-- <form class="variants add" action="#" onclick="window.location.href='cart.html'" method="post">
-                                                        <button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button>
-                                                    </form> -->
-                                                    <div class="button-set">
-                                                        <div class="wishlist-btn">
-                                                            <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist" onclick="addToWishlist('<%= product._id %>')">
-                                                                <i class="icon anm anm-heart-l"></i>
-                                                            </a>
+                                                    <!--start product details -->
+                                                    <div class="product-details text-center">
+                                                        <!-- product name -->
+                                                        <div class="product-name">
+                                                            <a href="short-description.html"><%= product.pname %></a>
                                                         </div>
-                                                        
-                                                      
-                                                    </div>
-                                                    <!-- end product button -->
-                                                </div>
-                                                <!-- end product image -->
-                                
-                                                <!--start product details -->
-                                                <div class="product-details text-center">
-                                                    <!-- product name -->
-                                                    <div class="product-name">
-                                                        <a href="short-description.html"><%= product.name %></a>
-                                                    </div>
-                                                    <!-- End product name -->
-                                                    <!-- product price -->
-                                                    <div class="product-price">
-                                                        <span class="price">$<%= product.price.toFixed(2) %></span>
-                                                    </div>
-                                                    <!-- End product price -->
-                                
-                                                    <div class="product-review">
-                                                        <% for (let i = 0; i < 5; i++) { %>
-                                                            <% if (i < product.rating) { %>
-                                                                <i class="font-13 fa fa-star"></i>
+                                                        <div class="product-brand">
+                                                            <a href="/products/<%= product._id %>"><%= product.brand %></a>
+                                                        </div>
+                                                        <!-- End product name -->
+                                                        <!-- product price -->
+                                                        <div class="product-price">
+                                                            <% if (product.offerPrice) { %>
+                                                                <span class="original-price" style="text-decoration: line-through; color: red;">&#8377;<%= product.price %></span>
+                                                                <span class="offer-price">&#8377;<%= product.offerPrice %></span>
                                                             <% } else { %>
-                                                                <i class="font-13 fa fa-star-o"></i>
+                                                                <span class="price">&#8377;<%= product.price %></span>
                                                             <% } %>
-                                                        <% } %>
+                                                        </div>
+                                                        <!-- End product price -->
                                                     </div>
+                                                    <!-- End product details -->
                                                 </div>
-                                                <!-- End product details -->
-                                            </div>
-                                        <% }); %>
+                                            <% }); %>
+                                        <% } %>
                                     </div>
                                 </div>
+                                
                                 
                                 
                             </div>

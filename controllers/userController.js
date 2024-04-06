@@ -311,7 +311,7 @@ const verifyLogin = async (req, res) => {
                     req.session.user = true;
                     req.session.save();
                     console.log(req.session.user);
-                    res.render('home');
+                    res.redirect('/');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
                     res.render('login', { message: "User is blocked" }); // Display alert message
                 }
@@ -328,16 +328,34 @@ const verifyLogin = async (req, res) => {
 
 
 
+const loadAllProducts = async (req, res) => {
+    try {
+        // Fetch all products from the database and populate the category field
+        const products = await Product.find().populate('category');
+
+        // Fetch all categories from the database
+        const categories = await Category.find();
+
+        // Pass the products data and categories to the view
+        res.render('products', { products, categories });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 
 
 
 const loadHome = async (req, res) => {
     try {
-        // Fetch 8 latest products
+       
         const products = await Product.find().sort({ createdAt: -1 }).limit(8).populate('category');
-        const categories = await Category.find();
-        res.render('home', { products, categories });
+       
+        if (!products) {
+            throw new Error('Failed to fetch products');
+        }
+        res.render('home', { products });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -366,21 +384,6 @@ try {
     }
 };
 
-const loadAllProducts = async (req, res) => {
-    try {
-        // Fetch all products from the database and populate the category field
-        const products = await Product.find().populate('category');
-
-        // Fetch all categories from the database
-        const categories = await Category.find();
-
-        // Pass the products data and categories to the view
-        res.render('products', { products, categories });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-};
 
 
 
