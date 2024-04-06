@@ -21,21 +21,23 @@ const securePassword = async(password)=>{
 
 
 const loadprofile = async (req, res) => {
-    try {
+  try {
       console.log(
-        req.session.userId,
-        "from the session in loginTTTTTTTTTTTTTTTTT"
+          req.session.userId,
+          "from the session in loginTTTTTTTTTTTTTTTTT"
       );
-  
+
       const userData = await user.findById(req.session.userId);
       const userAddress = await address.find({ user: req.session.userId });
-      const AllOrders=await Order.find().sort({ orderDate: -1 }).exec();
+      const userOrders = await Order.find({ userId: req.session.userId }).sort({ orderDate: -1 }).exec();
       const wallet = await Wallet.findOne({ user: req.session.userId });
-      res.render("profile", { user: userData, userAddress: userAddress,AllOrders,wallet: wallet  });
-    } catch (error) {
+      res.render("profile", { user: userData, userAddress: userAddress, AllOrders: userOrders, wallet: wallet });
+  } catch (error) {
       console.log(error.message);
-    }
-  };
+  }
+};
+
+
 
 const load_addAddress = async (req, res) => {
     try {
