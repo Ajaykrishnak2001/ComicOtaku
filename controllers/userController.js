@@ -332,16 +332,18 @@ const verifyLogin = async (req, res) => {
 
 
 
+const loadHome = async (req, res) => {
+    try {
+        // Fetch 8 latest products
+        const products = await Product.find().sort({ createdAt: -1 }).limit(8).populate('category');
+        const categories = await Category.find();
+        res.render('home', { products, categories });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
-
-const loadHome = async(req,res)=>{
-  try{
-
-      res.render('home');
-  }catch(error){
-      console.log(error.message);
-  }
-}
 
 const userLogout = async(req,res)=>{
   try{
