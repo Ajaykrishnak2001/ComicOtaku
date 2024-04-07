@@ -241,8 +241,9 @@
                                 <tr>
                                     <td><%= order.orderNumber %></td>
                                     <!-- <td><b><%= order.username %></b></td> -->
-                                    <td><%= order.orderDate.toDateString() %></td>
-                                    <td><%= order.totalAmount %></td>
+                                    <td><%= order.userId %></td>
+                                  
+                                    <td><%= order.totalAmount.toFixed(2)%></td>
                                     <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
                                     <td><%= order.orderDate.toDateString() %></td>
                                     <td class="text-end">

@@ -415,8 +415,8 @@
                                             <p><strong>Size:</strong> <%= selectedSize.size %> (<%= item.quantity %> units)</p>
                                         <% } %>
                                         <p><strong>Quantity:</strong> <%= item.quantity %></p>
-                                        <p><strong>Size:</strong> <%= item.quantity %></p>
-                                        <p><strong>Price:</strong> <%= item.price%></p>
+                                        <p><strong>Size:</strong> <%= item.size %></p>
+                                        <p><strong>Price:</strong> <%= item.price.toFixed(2)%></p>
                                     </div>
                                 </div>
                             </li>
@@ -430,7 +430,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Total Amount</h4>
                     <p class="card-text" style="font-weight: 600;text-decoration: underline;">
-                        Rs: <%= totalAmount %>/-
+                        Rs: <%= totalAmount.toFixed(2) %>/-
                     </p>
                 </div>
             </div>

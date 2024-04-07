@@ -326,7 +326,7 @@
                                             <td>
                                                 <span class="badge badge-pill badge-soft-<%= order.status === 'Paid' ? 'success' : 'danger' %>"><%= order.status %></span>
                                             </td>
-                                            <td>₹<%= order.totalAmount %></td>
+                                            <td>₹<%= order.totalAmount.toFixed(2)%></td>
                                             <td><%= order.coupondiscount > 0 ? 'Yes' : 'No' %></td>
                                             <td><%= order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0' %></td>
                                             <td>
@@ -346,9 +346,9 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>Total:₹<%= totalAmountSum %></td>
+                                    <td>Total:₹<%= totalAmountSum.toFixed(2) %></td>
                                     <td></td>
-                                    <td>Total:₹<%= couponDiscountSum %></td>
+                                    <td>Total:₹<%= couponDiscountSum.toFixed(2)%></td>
                                     <td></td>
                                     <td></td>
                                 </tr>

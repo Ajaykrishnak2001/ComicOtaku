@@ -220,6 +220,25 @@
                             <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                        <article class="icontext align-items-start">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-place"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Deliver to</h6>
+                                <p class="mb-1">
+                                    <%= orderDetails.shippingAddress.addressType %> Address,<br>
+                                    <%= orderDetails.shippingAddress.mobile %> ,  <%= orderDetails.shippingAddress.address %>, <%= orderDetails.shippingAddress.state %>, <%= orderDetails.shippingAddress.pinCode %>
+                                </p>
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                     <!-- col// -->
+                </div> <!-- row // -->
+
+
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <div class="row mb-50 mt-20 order-info-wrap">
@@ -232,7 +251,7 @@
                                     <div class="text">
                                         <h6 class="mb-1">Customer</h6>
                                         <p class="mb-1">
-                                            <%= orderDetails.user.name %> <br>
+                                            <%= orderDetails.userId.name %> <br>
                                             <%= orderDetails.user.email %> <br>
                                             <%= orderDetails.user.phone %>
                                         </p>
@@ -256,9 +275,12 @@
                                     <thead>
                                         <tr>
                                             <th width="30%">Product</th>
-                                            <th width="20%">Unit Price</th>
+                                            <th width="30%">Product Brand</th>
+                                            <th width="20%">size</th>
                                             <th width="20%">Quantity</th>
-                                            <th width="20%" class="text-end">Total</th>
+                                            <th width="20%">Total</th>
+                                          
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -276,9 +298,13 @@
                                                     
                                                 </div>
                                             </td>
-                                            <td> <%= item.product.price.toFixed(2) %> </td>
+                                            <td> <%= item.product.brand%> </td>
+                                            <td> <%= item.size%> </td>
                                             <td> <%= item.quantity %> </td>
-                                            <td class="text-end"> <%= (item.quantity * item.product.price).toFixed(2) %> </td>
+                                            <td> <%= item.price.toFixed(2) %> </td>
+
+                                            
+                                            
                                         </tr>
                                         <% }); %>
                                     </tbody>
@@ -287,15 +313,22 @@
                             <!-- table-responsive// -->
                         </div> <!-- col// -->
                         <div class="col-lg-1"></div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-2">
                             <div class="box shadow-sm bg-light">
                                 <h6 class="mb-15">Payment info</h6>
                                 <p>
-                                    <img src="assets/imgs/card-brands/2.png" class="border" height="20"> Master Card **** **** 4768 <br>
-                                    Business name: Grand Market LLC <br>
-                                    Phone: +1 (800) 555-154-52
+                                    <class="border" height="20"><%= orderDetails.payment %> <br>
+                                 
                                 </p>
                             </div> 
+                            <div>
+                                <br>
+                                <h6>Total Amount:₹ <%= orderDetails.totalAmount.toFixed(2) %> </h6><br>
+
+                     <h6>Coupon Applied Discount:₹ <%= orderDetails.coupondiscount ? orderDetails.coupondiscount : '0' %> </h6>
+
+                        
+                            </div>
                             <div class="h-25 pt-4">
                                 <% if (orderDetails.status === 'Canceled') { %>
                                     <div class="mb-3">
