@@ -421,7 +421,7 @@
 
     function refund(event, button) {
     event.preventDefault(); // Prevent the default behavior of the anchor tag
-    const totalAmount = parseFloat('<%= totalAmount %>');
+    const totalAmount = parseFloat(' <%= orderDetails.totalAmount.toFixed(2) %> ');
     console.log("Total Amount:", totalAmount);
 
     const xhr = new XMLHttpRequest();
