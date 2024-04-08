@@ -343,14 +343,18 @@
                                 <% } %>
                                 
                                 
-                                <!-- <button class="btn btn-primary">Save note</button> -->
-                                <div class="h-25 pt-4 mt-50" id="refundButtonContainer">
-                                    <!-- <div class="mb-3">
-                                        <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event)">Approve for Refund</a>
-                                    </div> -->
-                                    <div class="mb-3">
-                                        <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event)">Approve for Refund</a>
-                                    </div>
+                                        <% if(orderDetails.payment=="cod"&& (orderDetails.status=="Returned")) {%>
+                                            <div class="mb-3">
+                                                <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event, this)">Approve for Refund</a>
+                                            </div>
+
+                                            <% } else if(orderDetails.payment=="Razorpay"&& (orderDetails.status=="Returned" || orderDetails.status=="Canceled")) {%>
+                                                <div class="mb-3">
+                                                    <a class="btn btn-primary" type="button" id="refund" href="#" onclick="refund(event, this)">Approve for Refund</a>
+                                                </div>
+                                                <% } %>
+                                   
+                                    
                                     <div id="refundMessage" style="display: none; color: green;">
                                         Refund is successful
                                     </div>
@@ -410,43 +414,33 @@
         }
     }
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const orderStatus = '<%= orderDetails.status %>'; // Get the order status from the server-side variable
 
-        if (orderStatus === 'Returned' || orderStatus === 'Canceled') {
-            document.getElementById('refundButtonContainer').style.display = 'block';
-        } else {
-            document.getElementById('refundButtonContainer').style.display = 'none';
-        }
-    });
-</script>
-    
 <script>
     const userId = '<%= userId %>'; // Assuming userId is a string
     console.log('User ID:', userId);
 
-    function refund(event) {
-        event.preventDefault(); // Prevent the default behavior of the anchor tag
-        const totalAmount = parseFloat('<%= totalAmount %>');
-        console.log("Total Amount:", totalAmount);
+    function refund(event, button) {
+    event.preventDefault(); // Prevent the default behavior of the anchor tag
+    const totalAmount = parseFloat('<%= totalAmount %>');
+    console.log("Total Amount:", totalAmount);
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/refund', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    console.log('Refund successful');
-                    document.getElementById("refund").style.display = "none"; // Hide the button
-                    document.getElementById("refundMessage").style.display = "block"; // Show the success message
-                } else {
-                    console.error('Error:', xhr.responseText);
-                }
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/refund', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Refund successful');
+                button.style.display = "none"; // Hide the button
+                document.getElementById("refundMessage").style.display = "block"; // Show the success message
+            } else {
+                console.error('Error:', xhr.responseText);
             }
-        };
-        xhr.send(JSON.stringify({ totalAmount: totalAmount, userId: userId }));
-    }
+        }
+    };
+    xhr.send(JSON.stringify({ totalAmount: totalAmount, userId: userId }));
+}
+
 </script>
 
 

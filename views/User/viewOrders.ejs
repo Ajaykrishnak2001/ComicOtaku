@@ -453,8 +453,12 @@
             </div>
             
             <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+               <% if(orderDetails.status != "Canceled"){ %>
                 <button id="cancelButton" class="btn btn-danger" onclick="submitAction('<%= orderDetails._id %>', 'Canceled')">Cancel Order</button>
+                <% } %>
+                <% if(orderDetails.status != "Returned"){ %>
                 <button id="returnButton" class="btn btn-danger" style="display: none;" onclick="submitAction('<%= orderDetails._id %>', 'Returned')">Return Order</button>
+                <% } %>
             </div>
     
             <!-- Back button -->
