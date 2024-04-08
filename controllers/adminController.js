@@ -26,7 +26,7 @@ const securePassword = async (password) => {
 const adminlogout=async(req,res)=>{
   try{
 
-      req.session.destroy();
+      req.session.admin="";
       res.redirect('/admin/login');
 
   }catch(error){

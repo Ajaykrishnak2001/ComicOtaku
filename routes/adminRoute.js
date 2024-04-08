@@ -8,6 +8,16 @@ const path = require("path");
 const adminRoute = express();
 const setnocache=require("../middleware/setNoCache")
 
+const session= require("express-session")
+
+
+adminRoute.use(session({
+  secret: "your-secret-key",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 adminRoute.use(bodyParser.json());
 adminRoute.use(bodyParser.urlencoded({ extended: true }));
 
@@ -15,7 +25,7 @@ adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
 async function requireLogin(req, res, next) {
-  req.session.admin="66068f12364ef68d832a06f2"
+  // req.session.admin="66068f12364ef68d832a06f2"
    
   if (!req.session.admin) {
     console.log(req.session.admin);

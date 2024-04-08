@@ -366,7 +366,7 @@ const loadHome = async (req, res) => {
 const userLogout = async(req,res)=>{
   try{
 
-      req.session.destroy();
+      req.session.user="";
       res.redirect('/login');
 
   }catch(error){
