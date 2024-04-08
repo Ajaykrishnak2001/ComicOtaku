@@ -59,6 +59,6 @@ app.use(express.static("views"));
 app.use(express.static("lib"));
 
 app.listen(3000,function(){
-    console.log("server is Running.....http://localhost:3000/");
+    console.log("server is Running.....http://localhost:3000/landingpage");
 });
 

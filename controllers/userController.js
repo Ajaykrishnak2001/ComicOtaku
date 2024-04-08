@@ -463,7 +463,7 @@ const calculatePopularity = async (req, res) => {
         console.log('Action:', action);
         console.log('Reason:', reason);
 
-        const order = await Order.findOne({ _id: orderDetails });
+        const order = await Order.findOne({ _id: orderDetails }).populate('items.product');
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
@@ -473,6 +473,21 @@ const calculatePopularity = async (req, res) => {
         order.status = action;
         order.reasonForCancel = action === 'Canceled' ? reason : ''; // Save reason for canceling the order
         order.reasonForReturn = action === 'Returned' ? reason : ''; // Save reason for returning the order
+
+        // Update product quantities if the order is canceled or returned
+        if (action === 'Canceled' || action === 'Returned') {
+            for (const item of order.items) {
+                const product = await Product.findById(item.product._id);
+                if (product) {
+                    const sizeToUpdate = product.sizes.find((size) => size.size === item.size);
+                    if (sizeToUpdate) {
+                        sizeToUpdate.quantity += item.quantity;
+                        await product.save();
+                    }
+                }
+            }
+        }
+
         await order.save();
 
         // Check if the payment method is Razorpay and the status is Return or Canceled
@@ -491,6 +506,7 @@ const calculatePopularity = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 

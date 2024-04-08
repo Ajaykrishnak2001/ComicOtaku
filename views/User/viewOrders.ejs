@@ -661,47 +661,67 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 <script>
     async function submitAction(OrderId, action) {
-        try {
-            let reason = '';
-            if (action === 'Canceled') {
-                reason = prompt(`Enter reason for ${action.toLowerCase()} the order:`);
-                if (!reason) {
-                    return; // Cancel operation if no reason is provided
-                }
+    try {
+        let reason = '';
+        if (action === 'Canceled') {
+            reason = prompt(`Enter reason for ${action.toLowerCase()} the order:`);
+            if (!reason) {
+                return; // Cancel operation if no reason is provided
             }
-            if (action === 'Returned') {
-                const modal = document.getElementById('returnModal');
-                modal.style.display = 'block';
-
-                // Handle form submission
-                document.getElementById('returnForm').onsubmit = async function (event) {
-                    event.preventDefault();
-                    reason = document.querySelector('input[name="reason"]:checked').value;
-
-                    // Perform the return action
-                    const response = await fetch(`/changeStatus/${OrderId}`, {
-                        method: 'put',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ action: action, reason: reason })
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        const button = document.getElementById('returnButton');
-                        const successMessage = document.createElement('div');
-                        successMessage.classList.add('text-success');
-                        successMessage.innerText = `Order ${action.toLowerCase()} successful`;
-                        button.parentElement.insertBefore(successMessage, button.nextSibling);
-                        button.style.display = 'none';
-                        modal.style.display = 'none';
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Error:', error);
         }
+        if (action === 'Returned') {
+            const modal = document.getElementById('returnModal');
+            modal.style.display = 'block';
+
+            // Handle form submission
+            document.getElementById('returnForm').onsubmit = async function (event) {
+                event.preventDefault();
+                reason = document.querySelector('input[name="reason"]:checked').value;
+
+                // Perform the return action
+                const response = await fetch(`/changeStatus/${OrderId}`, {
+                    method: 'put',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: action, reason: reason })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const button = document.getElementById('returnButton');
+                    const successMessage = document.createElement('div');
+                    successMessage.classList.add('text-success');
+                    successMessage.innerText = `Order ${action.toLowerCase()} successful`;
+                    button.parentElement.insertBefore(successMessage, button.nextSibling);
+                    button.style.display = 'none';
+                    modal.style.display = 'none';
+                }
+            }
+        }
+        if (action === 'Canceled') {
+            // Perform the cancel action directly
+            const response = await fetch(`/changeStatus/${OrderId}`, {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: action, reason: reason })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                const button = document.getElementById('cancelButton');
+                const successMessage = document.createElement('div');
+                successMessage.classList.add('text-success');
+                successMessage.innerText = `Order ${action.toLowerCase()} successful`;
+                button.parentElement.insertBefore(successMessage, button.nextSibling);
+                button.style.display = 'none';
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
+}
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const status = '<%= orderDetails.status %>';
