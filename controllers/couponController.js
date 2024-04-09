@@ -25,9 +25,9 @@ const addcoupon =  async (req, res) => {
 
 const loadcoupon = async (req, res) => {
     try {
-        const coupons = await Coupon.find(); // Fetch all coupons from the database
+        const coupons = await Coupon.find(); 
 
-        res.render("coupons", { coupons }); // Render the coupon page with the coupons data
+        res.render("coupons", { coupons }); 
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: 'Failed to load coupons', error: error.message });
@@ -90,7 +90,7 @@ const updateCoupon = async (req, res) => {
             return res.status(404).send("Coupon not found");
         }
 
-        res.redirect("/admin/coupon"); // Redirect to the coupons page after updating
+        res.redirect("/admin/coupon");
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");

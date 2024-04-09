@@ -106,7 +106,7 @@ const razorpayInstance = new Razorpay({
 
 const addWallet = async (req, res) => {
   try {
-      const amount = req.body.amount * 100; // Amount in paisa
+      const amount = req.body.amount * 100; 
       const options = {
           amount,
           currency: 'INR',
@@ -142,7 +142,7 @@ const verfiypayment= async (req, res) => {
       if (wallet) {
           wallet.walletbalance = balance;
           wallet.transationHistory.push({
-              createdAt: Date.now(), // Use Date.now() for the createdAt value
+              createdAt: Date.now(), 
               paymentType: "Razorpay",
               transationMode: "Credit",
               transationamount: (req.body.data.amount)/100
@@ -153,7 +153,7 @@ const verfiypayment= async (req, res) => {
               user: userData._id,
               walletbalance: balance,
               transationHistory: [{
-                  createdAt: Date.now(), // Use Date.now() for the createdAt value
+                  createdAt: Date.now(), 
                   paymentType: "Razorpay",
                   transationMode: "Credit",
                   transationamount: (req.body.data.amount)/100
@@ -175,7 +175,7 @@ const verfiypayment= async (req, res) => {
 
 const refund = async (req, res) => {
     try {
-        const userId = req.body.userId; // Access userId from the request body
+        const userId = req.body.userId; 
         console.log('User ID:', userId);
 
         const wallet = await Wallet.findOne({ user: userId });

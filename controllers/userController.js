@@ -276,7 +276,7 @@ const getOtp = async (req, res) => {
 
 
             if (userData) {
-                req.session.destroy(); // Clean up session
+                req.session.destroy(); 
                 return res.render('login', { message: "Registered Successfully" });
             }
         } else {
@@ -304,7 +304,7 @@ const verifyLogin = async (req, res) => {
                 if (userData.is_verified === 0) {
                     res.render('login');
                 } else if (userData.is_verified === 1 && userData.is_active === "1") {
-                    // Save user session here
+                    
                     req.session.user = userData;
                     req.session.userId = userData._id;
                     req.session.email = email;
@@ -313,7 +313,7 @@ const verifyLogin = async (req, res) => {
                     console.log(req.session.user);
                     res.redirect('/');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
-                    res.render('login', { message: "User is blocked" }); // Display alert message
+                    res.render('login', { message: "User is blocked" }); 
                 }
             } else {
                 res.render('login', { message: "Email and password is incorrect" });
@@ -330,13 +330,13 @@ const verifyLogin = async (req, res) => {
 
 const loadAllProducts = async (req, res) => {
     try {
-        // Fetch all products from the database and populate the category field
+        
         const products = await Product.find().populate('category');
 
-        // Fetch all categories from the database
+       
         const categories = await Category.find();
 
-        // Pass the products data and categories to the view
+       
         res.render('products', { products, categories });
     } catch (error) {
         console.error(error);
@@ -423,7 +423,7 @@ const sortProducts = async (req, res) => {
             products = await Product.find();
         }
 
-        // Respond with the sorted products data
+        
         res.json(products);
     } catch (error) {
         console.error(error);
@@ -437,16 +437,16 @@ const calculatePopularity = async (req, res) => {
     try {
       let products = await Product.find();
   
-      // Calculate popularity for each product based on views and purchases
+      
       products = products.map(product => ({
         ...product.toObject(),
         popularity: product.views + product.purchases,
       }));
   
-      // Sort products by popularity
+      
       products.sort((a, b) => b.popularity - a.popularity);
         console.log(products);
-      // Respond with the sorted products data
+      
       res.json(products);
     } catch (error) {
       console.error(error);
@@ -457,7 +457,7 @@ const calculatePopularity = async (req, res) => {
 
   const ChangeStatus = async (req, res) => {
     const orderDetails = req.params.orderId;
-    const { action, reason } = req.body; // Extract the reason from the request body
+    const { action, reason } = req.body; 
     try {
         console.log('Received request to change status for order:', orderDetails);
         console.log('Action:', action);
@@ -471,8 +471,8 @@ const calculatePopularity = async (req, res) => {
             return res.status(400).json({ error: 'Reason is required for canceling or returning the order' });
         }
         order.status = action;
-        order.reasonForCancel = action === 'Canceled' ? reason : ''; // Save reason for canceling the order
-        order.reasonForReturn = action === 'Returned' ? reason : ''; // Save reason for returning the order
+        order.reasonForCancel = action === 'Canceled' ? reason : ''; 
+        order.reasonForReturn = action === 'Returned' ? reason : ''; 
 
         // Update product quantities if the order is canceled or returned
         if (action === 'Canceled' || action === 'Returned') {
@@ -522,13 +522,13 @@ const loadlandingpage=async(req,res)=>{
 
 const loadlandingpageproducts = async (req, res) => {
     try {
-        // Fetch all products from the database and populate the category field
+        
         const products = await Product.find().populate('category');
 
-        // Fetch all categories from the database
+        
         const categories = await Category.find();
 
-        // Pass the products data and categories to the view
+       
         res.render('landingpage', { products, categories });
     } catch (error) {
         console.error(error);
@@ -559,7 +559,7 @@ const categegoryfilter= async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (user) {
-            req.session.email = email; // Store email in session
+            req.session.email = email; 
             res.json({ exists: true });
         } else {
             res.json({ exists: false });
@@ -573,7 +573,7 @@ const categegoryfilter= async (req, res) => {
 
 const loadForgotOtpPage = async (req, res) => {
     try {
-        res.render('forgotpage'); // Render the forgotpage.ejs
+        res.render('forgotpage'); 
     } catch (error) {
         console.log(error.message);
     }
@@ -606,16 +606,16 @@ const forgotOtp = async (req, res) => {
 const otpForgotPage = async (req, res) => {
     const { userotp } = req.body;
 
-    // Retrieve the OTP from the session
+   
     const otp = req.session.otp;
     console.log(otp);
     console.log(userotp);
-    // Compare the OTP with the one entered by the user
+    
     if (userotp === otp) {
-        // If OTP is correct, redirect to the password changing page
-        res.json({ success: true }); // Send success response
+        
+        res.json({ success: true }); 
     } else {
-        // If OTP is incorrect, show an error message
+        
         res.status(400).json({ message: 'Invalid OTP' });
     }
 };
@@ -634,7 +634,7 @@ const changePassword = async (req, res) => {
     try {
         const { newPassword } = req.body;
         console.log("New Password:", newPassword);
-        const email = req.session.email; // Retrieve email from session
+        const email = req.session.email; 
         console.log(email);
         if (!email) {
             return res.status(400).json({ status: "Email not found in session" });

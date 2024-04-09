@@ -500,8 +500,8 @@
                                                     <p>
                                                         <%= userAddress[i].state %>
                                                     </p>
-                                                    <a href="/addressEdit?addressId=<%= userAddress[i]._id %>"
-                                                        class="btn-small">Edit</a>
+                                                    <!-- <a href="/addressEdit?addressId=<%= userAddress[i]._id %>"
+                                                        class="btn-small">Edit</a> -->
                                                     <!-- <button class="btn-small delete-button" data-id="<%= userAddress[i]._id %>">Delete</button> -->
                                                     <input type="radio" name="selectedAddress"
                                                         value="<%= userAddress[i]._id %>">
@@ -875,8 +875,8 @@
             cartId: cartId,
             addressId: selectedAddress.val(),
             amount: "<%= cartItems.total %>",
-            name: "Shoes",
-            description: "Shoes Buying",
+            name: "ComicOtaku",
+            description: "Tshirts Buying",
             receipt: "<%= cartItems._id %>"
         },
         success: function(res) {

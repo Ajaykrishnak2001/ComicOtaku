@@ -664,7 +664,7 @@
                     description: 'Adding money to wallet',
                     order_id: data.orderId,
                     handler: function (response) {
-                        // Payment success, make a request to your backend to update the wallet balance
+                        
                         verifyPayment(response, data);
                     },
                     prefill: {

@@ -14,9 +14,9 @@ const config = require("../config/config");
 
 
 function generateOrderNumber() {
-    let now = Date.now().toString(); // Get current Unix time in milliseconds
-    now += now + Math.floor(Math.random() * 10); // Add a random digit as padding
-    return [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-'); // Format the order number (4-6-4)
+    let now = Date.now().toString(); 
+    now += now + Math.floor(Math.random() * 10); 
+    return [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-'); 
   }
 
 
@@ -79,7 +79,7 @@ const razorpayInstance = new Razorpay({
     key_secret: config.RAZORPAY_SECRET_KEY
 });
 
-//place order
+
 const createOrder = async (req, res) => {
     try {
         const userId = req.session.userId;
@@ -101,11 +101,11 @@ const createOrder = async (req, res) => {
             return res.status(404).json({ message: 'Cart not found' });
         }
 
-        const amount = req.body.amount * 100; // Convert amount to smallest currency unit
+        const amount = req.body.amount * 100; 
         const options = {
             amount: amount,
             currency: 'INR',
-            receipt: req.body.receipt // Use a unique identifier for the receipt
+            receipt: req.body.receipt 
         };
 
         razorpayInstance.orders.create(options, async (err, order) => {
@@ -130,7 +130,7 @@ const createOrder = async (req, res) => {
                         alternatePhone: userAddress.alternatePhone,
                         district: userAddress.district,
                     },
-                    payment: 'Razorpay' // Assuming you're always using Razorpay for this example
+                    payment: 'Razorpay' 
                 });
 
                 await newOrder.save();
@@ -147,7 +147,7 @@ const createOrder = async (req, res) => {
                     }
                 }
 
-                // Empty the user's cart
+                
                 userCart.items = [];
                 userCart.total = 0;
                 await userCart.save();
@@ -313,7 +313,7 @@ const loadDashboard = async (req, res) => {
         const totalRevenue = await calculateRevenue();
         const totalDeliveredOrders = await calculateDeliveredOrders();
         res.render('dashboard', { AllOrders,totalRevenue,totalDeliveredOrders});
-        // Pass orders as an object
+        
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -330,7 +330,7 @@ const calculateRevenue = async () => {
             { $group: { _id: null, total: { $sum: "$totalAmount" } } }
         ]);
 
-        // If there are no orders with status "Delivered", set revenue to 0
+        
         const totalRevenue = revenue.length > 0 ? revenue[0].total : 0;
 
         return totalRevenue;

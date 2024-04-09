@@ -182,7 +182,7 @@ const updateCartTotalPrice = async (req, res) => {
 
 const discountamount=async (req, res) => {
     try {
-        const userId = req.session.userId; // Assuming you have the user's ID in the session
+        const userId = req.session.userId; 
         const cart = await Cart.findOne({ userId });
         res.json({ cart });
     } catch (error) {

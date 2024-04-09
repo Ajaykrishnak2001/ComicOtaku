@@ -16,6 +16,12 @@
     <link rel="shortcut icon" type="image/x-icon" href=" /productAssets/administration-vector-icon.svg">
     <!-- Template CSS -->
     <link href="admin-assets\css\main.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 
 <body class="">
@@ -23,7 +29,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-            <img src="assets\images\Logo1.png" alt="cOtaku" width="30">
+                <img src="assets/imgs/theme/logo.svg" class="logo" alt="cOtaku" width="30">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize">
@@ -151,7 +157,7 @@
             </ul>
         </div>
     </header>
-    <form action="/admin/products/edit-product?id=<%= product._id %>" method="post" enctype="multipart/form-data">
+    <form action="/admin/products/edit-product?id=<%= product._id %>" method="post" enctype="multipart/form-data" id="productForm">
 
         <section class="content-main">
             <div class="row">
@@ -170,13 +176,15 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Product title</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" maxlength="100" required value="<%=product.pname%>" required/>
+                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" maxlength="100" required value="<%= product.pname %>" />
+                                <p id="titleError" class="error-message"></p>
                             </div>
                             <div class="row gx-3"></div>
     
                             <div class="mb-4">
                                 <label for="product_brand" class="form-label">Brand</label>
-                                <input type="text" placeholder="Type here" class="form-control" maxlength="30" name="ProductBrand" value="<%=product.brand%>"  required />
+                                <input type="text" placeholder="Type here" class="form-control" maxlength="30" name="ProductBrand" value="<%= product.brand %>" required />
+                                <p id="brandError" class="error-message"></p>
                             </div>
                         </div>
                     </div>
@@ -185,7 +193,8 @@
                         <div class="card-body">
                             <div>
                                 <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" class="form-control" name="ProductDetails" maxlength="1000" required><%=product.description%></textarea>
+                                <textarea placeholder="Type here" class="form-control" name="ProductDetails" maxlength="1000" required><%= product.description %></textarea>
+                                <p id="descriptionError" class="error-message"></p>
                             </div>
                         </div>
                     </div>
@@ -196,18 +205,18 @@
                                 <label class="form-label">Images</label>
                                 <!-- Display current images -->
                                 <% product.images.forEach(image=> { %>
-                                    <div>
-                                        <img src="/productAssets/<%= image %>" alt="<%= image %>">
-                                        <label>Current Image: <%= image %></label>
-                                        <!-- Add a checkbox to mark images for removal -->
-                                        <input type="checkbox" name="removeImage" value="<%= image %>">
-
-                                        <label>Remove</label>
-                                    </div>
-                                    <% }); %>
-                    
-                                        <!-- Allow user to upload new images -->
-                                        <input class="form-control" type="file" multiple name="newImages" accept="image/*">
+                                <div>
+                                    <img src="/productAssets/<%= image %>" alt="<%= image %>">
+                                    <label>Current Image: <%= image %></label>
+                                    <!-- Add a checkbox to mark images for removal -->
+                                    <input type="checkbox" name="removeImage" value="<%= image %>">
+    
+                                    <label>Remove</label>
+                                </div>
+                                <% }); %>
+    
+                                <!-- Allow user to upload new images -->
+                                <input class="form-control" type="file" multiple name="newImages" accept="image/*">
                             </div>
                         </div>
                     </div>
@@ -219,27 +228,26 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label class="form-label">Price</label>
-                                <input type="text" placeholder="Type here" name="ProductPrice" maxlength="4" id="productPrice"  value="<%=product.price%>" class="form-control" required />
+                                <input type="text" placeholder="Type here" name="ProductPrice" maxlength="4" id="productPrice" value="<%= product.price %>" class="form-control" required />
                             </div>
     
                             <br>
                             <h5 class="mb-3">Categories</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="productCategory" id="category" value="none" <% if
-                                    (selectedCategory==='none' ) { %>checked<% } %>>
-                                    <label class="form-check-label" for="category">None</label>
+                                    (selectedCategory === 'none' ) { %>checked<% } %>>
+                                
                             </div>
-                            
+    
                             <% categories.forEach(category => { %>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="productCategory" value="<%= category._id %>" <% if (selectedCategory.equals(category._id)) { %>checked<% } %>>
-                                  <label class="form-check-label" for="category">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="productCategory" value="<%= category._id %>" <% if (selectedCategory.equals(category._id)) { %>checked<% } %>>
+                                <label class="form-check-label" for="category">
                                     <%= category.cName %>
-                                  </label>
-                                </div>
-                              <% }); %>
-                                </select>
+                                </label>
                             </div>
+                            <% }); %>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -250,32 +258,32 @@
                         <div class="row gx-3">
                             <div class="col-md-4 mb-2">
                                 <label for="size_xs" class="form-label">XS</label>
-                                <input type="number" placeholder="Stock" id="size_xs"  class="form-control" name="sizesXS"  value="<%= product.sizes[0].quantity %>" style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_xs" class="form-control" name="sizesXS" value="<%= product.sizes[0].quantity %>" style="width: 6rem;">
                             </div>
     
                             <div class="col-md-4 mb-2">
                                 <label for="size_s" class="form-label">S</label>
-                                <input type="number" placeholder="Stock" id="size_s"  class="form-control" name="sizesS" value="<%= product.sizes[1].quantity %>"  style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_s" class="form-control" name="sizesS" value="<%= product.sizes[1].quantity %>" style="width: 6rem;">
                             </div>
     
                             <div class="col-md-4 mb-2">
                                 <label for="size_m" class="form-label">M</label>
-                                <input type="number" placeholder="Stock" id="size_m"   class="form-control" name="sizesM"  value="<%= product.sizes[2].quantity %>"   style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_m" class="form-control" name="sizesM" value="<%= product.sizes[2].quantity %>" style="width: 6rem;">
                             </div>
     
                             <div class="col-md-4 mb-2">
                                 <label for="size_l" class="form-label">L</label>
-                                <input type="number" placeholder="Stock" id="size_l"  class="form-control" name="sizesL"  value="<%= product.sizes[3].quantity %>"   style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_l" class="form-control" name="sizesL" value="<%= product.sizes[3].quantity %>" style="width: 6rem;">
                             </div>
     
                             <div class="col-md-4 mb-2">
                                 <label for="size_xl" class="form-label">XL</label>
-                                <input type="number" placeholder="Stock" id="size_xl"   class="form-control" name="sizesXL"  value="<%= product.sizes[4].quantity %>"  style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_xl" class="form-control" name="sizesXL" value="<%= product.sizes[4].quantity %>" style="width: 6rem;">
                             </div>
     
                             <div class="col-md-4 mb-2">
                                 <label for="size_xxl" class="form-label">XXL</label>
-                                <input type="number" placeholder="Stock" id="size_xxl"  class="form-control" name="sizesXXL"  value="<%= product.sizes[5].quantity %>"   style="width: 6rem;">
+                                <input type="number" placeholder="Stock" id="size_xxl" class="form-control" name="sizesXXL" value="<%= product.sizes[5].quantity %>" style="width: 6rem;">
                             </div>
                             <!--Add more size fields as needed -->
                         </div>
@@ -369,6 +377,74 @@
     </script>
 
     
+<script>
+    function validateField(input, field) {
+        const value = input.value.trim();
+        const errorElement = document.getElementById(`${field}Error`);
+
+        if (field === 'ProductName' || field === 'ProductBrand') {
+            if (value.length === 0 || value.match(/^\s+/)) {
+                errorElement.textContent = 'Field cannot be empty or start with a space';
+                errorElement.classList.add('error-message');
+                input.classList.add('error-input');
+            } else if (value.match(/[^\w\s]/)) {
+                errorElement.textContent = 'Special characters are not allowed';
+                errorElement.classList.add('error-message');
+                input.classList.add('error-input');
+            } else {
+                errorElement.textContent = '';
+                errorElement.classList.remove('error-message');
+                input.classList.remove('error-input');
+            }
+        } else if (field === 'ProductDetails') {
+            if (value.length === 0 || value.match(/^\s+/)) {
+                errorElement.textContent = 'Field cannot be empty or start with a space';
+                errorElement.classList.add('error-message');
+                input.classList.add('error-input');
+            } else {
+                errorElement.textContent = '';
+                errorElement.classList.remove('error-message');
+                input.classList.remove('error-input');
+            }
+        }
+    }
+
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        const productName = document.getElementsByName('ProductName')[0];
+        const productBrand = document.getElementsByName('ProductBrand')[0];
+        const productDetails = document.getElementsByName('ProductDetails')[0];
+        const productNameError = document.getElementById('titleError');
+        const productBrandError = document.getElementById('brandError');
+        const productDetailsError = document.getElementById('descriptionError');
+        let isValid = true;
+
+        if (productName.value.trim().length === 0) {
+            productNameError.textContent = 'Product name cannot be empty';
+            productNameError.classList.add('error-message');
+            productName.classList.add('error-input');
+            isValid = false;
+        }
+
+        if (productBrand.value.trim().length === 0) {
+            productBrandError.textContent = 'Brand cannot be empty';
+            productBrandError.classList.add('error-message');
+            productBrand.classList.add('error-input');
+            isValid = false;
+        }
+
+        if (productDetails.value.trim().length === 0) {
+            productDetailsError.textContent = 'Description cannot be empty';
+            productDetailsError.classList.add('error-message');
+            productDetails.classList.add('error-input');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+</script>
+
 </body>
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
