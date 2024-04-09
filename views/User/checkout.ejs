@@ -568,7 +568,7 @@
                                                             </div>
                                                         </td>
                                                         <td class="text-right small--hide cart-price">
-                                                            <div><span class="money">$<%= item.subTotal %></span></div>
+                                                            <div><span class="money">$<%= item.subTotal.toFixed(2) %></span></div>
                                                         </td>
                                                     </tr>
                                                     <% }); %>
@@ -582,7 +582,7 @@
                                         <tfoot class="font-weight-600">
                                             <tr>
                                                 <td colspan="5" class="text-right">Total</td>
-                                                <td>$<%= cartItems.total %>
+                                                <td>$<%= cartItems.total.toFixed(2) %>
                                                 </td>
                                             </tr>
                                         </tfoot>

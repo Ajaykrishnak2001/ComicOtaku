@@ -489,7 +489,7 @@
                                     
                                     <div class="row border-bottom pb-2 pt-2">
                                         <span class="col-12 col-sm-6 cart__subtotal-title">Grand Total</span>
-                                        <span class="col-12 col-sm-6 text-right"><span class="money">$<%= cartItems.total %></span></span>
+                                        <span class="col-12 col-sm-6 text-right"><span class="money">$<%= cartItems.total.toFixed(2) %></span></span>
                                     </div>
                                     <%
                                     function calculateSubtotal(items) {
