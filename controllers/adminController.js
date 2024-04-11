@@ -770,6 +770,89 @@ const loadsalesreport=async(req,res)=>{
   }
 }
 
+const loaddashboard=async(req,res)=>{
+  try{
+    res.render("dashboard")
+  }catch(error){
+    console.log(error.message);
+  }
+}
+
+
+
+const dailyChart = async (req, res) => {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  // Construct the date range query
+  const orders = await Order.aggregate([
+      {
+          $match: {
+            orderDate: { $gte: thirtyDaysAgo } // Orders within the last 30 days
+          }
+          
+      },
+      {
+          $group: {
+              _id: { $dateToString: { format: "%d-%m-%Y", date: "$orderDate" } },
+              totalAmount: { $sum: "$totalAmount" } // Sum of total amount for each day
+          }
+      },
+      {
+          $sort: { "_id": 1 } // Sort by date in ascending order
+      }
+  ]);
+  console.log(orders)
+
+  // Convert string dates back to actual dates for proper sorting
+  const sortedOrders = orders.map(order => ({
+      ...order,
+      _id: new Date(order._id.split('-').reverse().join('-') + 'T00:00:00') // Convert string date to actual date with 00:00:00 time
+  })).sort((a, b) => a._id - b._id);
+
+  // Extracting x-axis (dates) and y-axis (total values)s data
+  const val = sortedOrders.map(order => order.totalAmount);
+  const xaxis = sortedOrders.map(order => order._id.toLocaleDateString('en-GB')); // Format date as dd-mm-yyyy
+
+  return res.status(200).json({ val, xaxis });
+};
+
+
+
+const monthlyChart = async (req, res) => {
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+
+  // Construct the date range query
+  const orders = await Order.aggregate([
+      {
+          $match: {
+            orderDate: { $gte: twelveMonthsAgo } // Orders within the last 12 months
+          }
+      },
+      {
+          $group: {
+              _id: { $dateToString: { format: "%m-%Y", date: "$orderDate" } },
+              totalAmount: { $sum: "$totalAmount" } // Sum of total amount for each month
+          }
+      },
+      {
+          $sort: { "_id": 1 } // Sort by date in ascending order
+      }
+  ]);
+
+  // Convert string months back to actual dates for proper sorting
+  const sortedOrders = orders.map(order => ({
+      ...order,
+      _id: new Date(order._id.split('-').reverse().join('-') + '-01T00:00:00') // Convert string month to actual date with first day of the month and 00:00:00 time
+  })).sort((a, b) => a._id - b._id);
+
+  // Extracting x-axis (months) and y-axis (total values) data
+  const val = sortedOrders.map(order => order.totalAmount);
+  const xaxis = sortedOrders.map(order => order._id.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })); // Format month as "January 2023"
+
+  return res.status(200).json({ val, xaxis });
+};
 
 
 
@@ -802,7 +885,10 @@ module.exports = {
   filterTotalRevenue,
   loadsalesreport,
   adminlogout,
-  removeImage
+  removeImage,
+  loaddashboard,
+  dailyChart,
+  monthlyChart
 
 
     

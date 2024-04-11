@@ -306,13 +306,13 @@ const placeOrder = async (req, res) => {
 
 //////////////////////////admin///////////////////////
 
-const loadDashboard = async (req, res) => {
+const loadsalesReport= async (req, res) => {
     try {
         console.log("hiiiiiiiiii");
         const AllOrders=await Order.find().populate('userId').sort({ orderDate: -1 }).exec();
         const totalRevenue = await calculateRevenue();
         const totalDeliveredOrders = await calculateDeliveredOrders();
-        res.render('dashboard', { AllOrders,totalRevenue,totalDeliveredOrders});
+        res.render('salesReport', { AllOrders,totalRevenue,totalDeliveredOrders});
         
     } catch (err) {
         console.error(err);
@@ -360,7 +360,7 @@ const calculateDeliveredOrders = async () => {
     load_orderSuccess,
     placeOrder,
     createOrder,
-    loadDashboard,
+    loadsalesReport,
     calculateRevenue,
     calculateDeliveredOrders
 
