@@ -52,7 +52,8 @@ userRoute.post('/resend-otp',isLoggedIn,setnocache.user,userController.resendOTP
 userRoute.post('/otp',isLoggedIn,setnocache.user,userController.insertUser);
 userRoute.post('/verify-otp',isLoggedIn,setnocache.user,userController.getOtp);
 userRoute.post('/home',isLoggedIn,setnocache.user,userController.verifyLogin);
-
+userRoute.get('/home',isLoggedIn,setnocache.user,userController.verifyLogin);
+userRoute.get("/googleSignUp", setnocache.user, userController.googleSignUp);
 
 userRoute.get('/profile',requireLogin,setnocache.user,userprofileController.loadprofile)
 

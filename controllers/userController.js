@@ -659,6 +659,49 @@ const changePassword = async (req, res) => {
 };
 
 
+const googleSignUp = async (req, res) => {
+    try {
+        const email = req.user._json.email;
+        console.log(req.user._json.email);
+        let userData;
+        userData = await User.findOne({ email: email });
+        console.log(userData,"usedata");
+        if (!userData) {
+            let couponId;
+            function UniqueId() {
+                const generateCustomCode = length => Array.from({ length }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('');
+                const generateCustomCodes = (length, count) => Array.from({ length: count }, () => generateCustomCode(length));
+
+                const length = 8;
+                const count = 1;
+
+                const customCodes = generateCustomCodes(length, count);
+                const customCode = customCodes[0];
+                couponId = customCode;
+
+            };
+            UniqueId();
+            const user = new User({
+                name: req.user.name,
+                phone: "1234566543",
+                email: req.user.email,
+                is_admin: 0,
+                is_verified: 1,
+                referralCode: couponId
+            })
+            userData = await user.save()
+
+        }
+
+        req.session.user = userData._id
+        req.session.email = email;
+        req.session.save();
+        res.redirect('/home');
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -687,6 +730,7 @@ module.exports = {
     forgotOtp,
     otpForgotPage,
     renderForgotPasswordPage,
-    changePassword 
+    changePassword ,
+    googleSignUp
     
 };

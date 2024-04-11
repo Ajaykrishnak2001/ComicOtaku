@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 mongoose.connect("mongodb://localhost:27017/ComicOtaku");
 const bodyParser = require('body-parser');
-
+const passport = require('passport');
 
 const express = require("express");
 const app=express();
-
+require('./auth');
 
 // Ensure session middleware is set up before any routes are defined
 const session = require("express-session");
@@ -15,6 +15,39 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+function isLoggedin(req, res, next) {
+    req.user ? next() : res.sendStatus(401);
+}
+
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/googleSignUp',
+        failureRedirect: '/auth/google/failure'
+    })
+);
+
+app.get('/auth/google/failure', isLoggedin, (req, res) => {
+    console.log(session.user);
+    res.redirect('/login');
+})
+// app.get('/auth/google',console.log("nnnn"),
+//   passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// app.get('/auth/google/callback',
+//   passport.authenticate('google', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect to the dashboard or homepage
+//     res.redirect('/');
+//   });
 
 
 // Your other routes and middleware
@@ -62,3 +95,4 @@ app.listen(3000,function(){
     console.log("server is Running.....http://localhost:3000/landingpage");
 });
 
+module.exports=app
