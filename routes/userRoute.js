@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const userRoute = express();
-const session= require("express-session")
 
 const setnocache=require("../middleware/setNoCache")
 const auth = require("../middleware/userAuth");
@@ -9,14 +8,7 @@ const auth = require("../middleware/userAuth");
 // Body parser middleware
 userRoute.use(bodyParser.json());
 userRoute.use(bodyParser.urlencoded({ extended: true }));
-  
 
-userRoute.use(session({
-  secret: "your-secret-key",
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}));
 // View engine setup (assuming you are using EJS)
 userRoute.set("view engine", "ejs");
 userRoute.set("views", "./views/User");

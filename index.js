@@ -8,13 +8,13 @@ const app=express();
 
 
 // Ensure session middleware is set up before any routes are defined
-// const session = require("express-session");
-// app.use(session({
-//     secret: "your-secret-key",
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: false }
-// }));
+const session = require("express-session");
+app.use(session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 
 // Your other routes and middleware
