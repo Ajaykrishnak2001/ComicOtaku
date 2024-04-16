@@ -241,6 +241,7 @@ const placeOrder = async (req, res) => {
         for (const orderedProduct of createdOrder.items) {
             const product = await Product.findById(orderedProduct.product);
             product.sizes.find(size => size.size === orderedProduct.size).quantity -= orderedProduct.quantity;
+            product.popularity += 1; // Increment popularity
             await product.save();
         }
 
@@ -253,6 +254,7 @@ const placeOrder = async (req, res) => {
         res.status(500).json({ message: 'Failed to place order', error: error.message });
     }
 };
+
 
 
 

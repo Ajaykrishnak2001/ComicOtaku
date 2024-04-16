@@ -663,9 +663,8 @@ const googleSignUp = async (req, res) => {
     try {
         const email = req.user._json.email;
         console.log(req.user._json.email);
-        let userData;
-        userData = await User.findOne({ email: email });
-        console.log(userData,"usedata");
+        let userData = await User.findOne({ email: email });
+        console.log(userData, "usedata");
         if (!userData) {
             let couponId;
             function UniqueId() {
@@ -688,19 +687,23 @@ const googleSignUp = async (req, res) => {
                 is_admin: 0,
                 is_verified: 1,
                 referralCode: couponId
-            })
-            userData = await user.save()
-
+            });
+            userData = await user.save();
         }
 
-        req.session.user = userData._id
+        req.session.user = userData;
+        req.session.userId = userData._id;
         req.session.email = email;
+        req.session.user = true;
         req.session.save();
-        res.redirect('/home');
+        console.log(req.session.user);
+
+        res.redirect('/');
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
 
 
 
