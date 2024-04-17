@@ -75,9 +75,10 @@ const editCouponPage = async (req, res) => {
 const updateCoupon = async (req, res) => {
     try {
         const id = req.params.id;
-        const { description, maximumDiscount, minimumAmount, maximumAmount, maximumUser, expireDate } = req.body;
+        const { couponId,description, maximumDiscount, minimumAmount, maximumAmount, maximumUser, expireDate } = req.body;
 
         const updatedCoupon = await Coupon.findByIdAndUpdate(id, {
+            couponId,
             description,
             maximumDiscount,
             minimumAmount,
