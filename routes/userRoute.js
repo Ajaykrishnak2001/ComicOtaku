@@ -91,6 +91,7 @@ userRoute.get('/orderSucess',requireLogin,setnocache.user,ordercontroller.load_o
  userRoute.post('/placeOrder', requireLogin, setnocache.user, ordercontroller.placeOrder);
 // Define the route for creating an order
 userRoute.post('/createOrder', ordercontroller.createOrder);
+userRoute.post('/retryOrder', ordercontroller.retryOrder);
 
 
 
@@ -144,6 +145,8 @@ userRoute.post('/verify-forotp', userController.otpForgotPage); // Route to veri
 // Define a route to render the forgotpassword.ejs page
 userRoute.get('/forgotpassword', userController.renderForgotPasswordPage);
 userRoute.post('/change-password',userController.changePassword);
+
+userRoute.post("/updateOrderStatus",ordercontroller.failedpayment);
 
 
 module.exports = userRoute;

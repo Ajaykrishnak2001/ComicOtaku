@@ -814,8 +814,8 @@
                 "image": "https://dummyimage.com/600x400/000/fff",
                 "order_id": ""+res.order_id+"",
                 "handler": function (response){
-                    alert("Payment Succeeded");
-                    window.location.href = "/orderSucess";
+                    console.log(response);
+                    window.location.href = `/orderSucess?razor=${response.razorpay_payment_id}`;
                 },
                 "prefill": {
                     "contact":""+res.contact+"",

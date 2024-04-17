@@ -49,11 +49,20 @@ const checkoutpage = async (req, res) => {
 
 const load_orderSuccess = async (req, res) => {
     try {
-      res.render("orderSucess");
+        const razor = req.query.razor||false;
+        const _id=req.session.order
+        if(razor){
+            const razUpdate=await Order.findByIdAndUpdate({_id:_id},{RazorpayId:razor, status:"Sucess"})
+
+        }
+       
+        console.log(razor,);
+       
+        res.render("orderSucess");
     } catch (error) {
-      console.log(error.message)
+        console.log(error.message);
     }
-  };
+};
 
 
 //   const placeorder = async (req, res) => {
@@ -80,6 +89,36 @@ const razorpayInstance = new Razorpay({
 });
 
 
+const retryOrder=async(req,res)=>{
+    const order=await Order.findOne({_id:req.session.order})
+    const amount = order.totalAmount * 100; 
+        const options = {
+            amount: amount,
+            currency: 'INR',
+            receipt: req.body.receipt 
+        };
+
+        razorpayInstance.orders.create(options, async (err, order) => {
+            if (!err) {
+                res.status(200).send({
+                    success: true,
+                    msg: 'Order Created',
+                    order_id: order.id,
+                    amount: options.amount,
+                    key_id: config.RAZORPAY_ID_KEY,
+                    product_name: "req.body.name",
+                    description: "req.body.description",
+                    contact: "8567345612",
+                    name: "Sandeep Sharma",
+                    email: "sandep@gmail.com",
+                    url: `http://localhost:3000/viewOrder?orderNumber=xxx`
+                })
+            }
+        });
+
+
+
+}
 const createOrder = async (req, res) => {
     try {
         const userId = req.session.userId;
@@ -147,6 +186,7 @@ const createOrder = async (req, res) => {
                     }
                 }
 
+                req.session.order=newOrder._id
                 
                 userCart.items = [];
                 userCart.total = 0;
@@ -175,7 +215,6 @@ const createOrder = async (req, res) => {
         res.status(500).send({ success: false, msg: 'Internal Server Error' });
     }
 };
-
 
 
 
@@ -217,6 +256,7 @@ const placeOrder = async (req, res) => {
         }
 
         const order = {
+            
             userId: userId,
             orderNumber: orderNumber,
             items: orderProducts,
@@ -354,6 +394,28 @@ const calculateDeliveredOrders = async () => {
 
 
 
+const failedpayment=async (req, res) => {
+    const { orderId, status } = req.body;
+
+    try {
+        const updatedOrder = await Order.findOneAndUpdate(
+            { orderNumber: orderId },
+            { status: status },
+            { new: true }
+        );
+        console.log("hh", updatedOrder);
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        res.status(200).json({ message: "Order status updated successfully", order: updatedOrder });
+    } catch (error) {
+        console.error("Error updating order status:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
   
     
 
@@ -364,6 +426,8 @@ const calculateDeliveredOrders = async () => {
     createOrder,
     loadsalesReport,
     calculateRevenue,
-    calculateDeliveredOrders
+    calculateDeliveredOrders,
+    failedpayment,
+    retryOrder
 
   }

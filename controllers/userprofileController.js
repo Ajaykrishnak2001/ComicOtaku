@@ -265,6 +265,7 @@ const load_addAddress = async (req, res) => {
         }
 
         const totalAmount = orderDetails.totalAmount;
+        req.session.order=orderDetails._id
         res.render("viewOrders", { orderDetails, totalAmount });
     } catch (error) {
         console.log(error.message);

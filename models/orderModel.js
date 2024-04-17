@@ -93,6 +93,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+ 
+  RazorpayId:{
+    type: String,
+    default:false,
+  },
   reasonForCancel: {
     type: String,
   },

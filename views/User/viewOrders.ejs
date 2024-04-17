@@ -513,7 +513,11 @@
                 <button id="returnButton" class="btn btn-danger" style="display: none;" onclick="submitAction('<%= orderDetails._id %>', 'Returned')">Return Order</button>
                 <% } %>
             </div>
-    
+            <% if (orderDetails.RazorpayId === 'false' && orderDetails.payment !== 'cod') { %>
+                <button onclick="razorpay('<%= orderDetails._id %>')">reverse</button>
+            <% } %>
+            
+            
             <!-- Back button -->
             <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
         </div>
@@ -685,10 +689,64 @@ function pdf() {
 </script>
 
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 
 <script>
+    async function razorpay(){
+        console.log("hiii");
+        {
+    // Handle Razorpay payment
+    $.ajax({
+        url: "/retryOrder",
+        method: "POST",
+        
+        success: function(res) {
+            var options = {
+                "amount": ""+res.amount+"",
+                "currency": "INR",
+                "image": "https://dummyimage.com/600x400/000/fff",
+                "order_id": ""+res.order_id+"",
+                "handler": function (response){
+                    console.log(response);
+                    window.location.href = `/orderSucess?razor=${response.razorpay_payment_id}`;
+                },
+                "prefill": {
+                    "contact":""+res.contact+"",
+                    "name": ""+res.name+"",
+                    "email": ""+res.email+""
+                },
+                "notes" : {
+                    "description":""+res.description+""
+                },
+                "theme": {
+                    "color": "#2300a3"
+                },
+                "modal":{
+                    "ondismiss":function(){
+                        window.location.href=res.url
+                    }
+                }
+
+            };
+            var razorpayObject = new Razorpay(options);
+            razorpayObject.on('payment.failed', function (response){
+                alert("Payment Failed");
+            });
+            razorpayObject.open();
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while creating the order',
+                icon: 'error',
+                timer: 2000
+            });
+        }
+    });
+}    }
     async function submitAction(OrderId, action) {
     try {
         let reason = '';

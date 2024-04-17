@@ -770,14 +770,19 @@ const loadsalesreport=async(req,res)=>{
   }
 }
 
-const loaddashboard=async(req,res)=>{
-  try{
-    res.render("dashboard")
-  }catch(error){
+const loaddashboard = async (req, res) => {
+  try {
+    const products = await Product.find({ is_listed: 1 })
+      .sort({ popularity: -1 }) // Sort by popularity in ascending order
+      .limit(5) // Limit the results to 5 products
+      .exec();
+
+    res.render('dashboard', { products });
+  } catch (error) {
     console.log(error.message);
+    res.status(500).send('Internal Server Error');
   }
 }
-
 
 
 const dailyChart = async (req, res) => {
