@@ -241,9 +241,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="expire-date" class="form-label">Expire Date</label>
-                                <input type="date" class="form-control" id="expire-date" name="expireDate" value="<%= coupon.expireDate %>" required>
+                                <% const formattedDate = coupon.expireDate.toISOString().split('T')[0]; %>
+                                <input type="date" class="form-control" id="expire-date" name="expireDate" value="<%= formattedDate %>" required>
                                 <div id="expire-date-error" class="error-text"></div>
                             </div>
+                            
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </form>
                     </div>
