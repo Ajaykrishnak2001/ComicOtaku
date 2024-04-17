@@ -449,24 +449,31 @@
     const orderStatus = "<%= orderDetails.status %>";
 
     function toggleElements() {
-        const orderStatusSelect = document.getElementById("orderStatusSelect");
-        const saveButton = document.getElementById("saveButton");
-        const statusDisplay = document.getElementById("statusDisplay");
+    const orderStatusSelect = document.getElementById("orderStatusSelect");
+    const saveButton = document.getElementById("saveButton");
+    const statusDisplay = document.getElementById("statusDisplay");
 
-        if (orderStatus === "Canceled") {
-            orderStatusSelect.disabled = true;
-            saveButton.style.display = "none";
-            statusDisplay.style.display = "inline";
-        } else {
-            orderStatusSelect.disabled = false;
-            saveButton.style.display = "inline-block";
-            statusDisplay.style.display = "none";
-        }
+    if (orderStatus === "Canceled") {
+        orderStatusSelect.disabled = true;
+        saveButton.style.display = "none";
+        statusDisplay.style.display = "inline";
+    } else if (orderStatus === "Delivered" || orderStatus === "Returned") {
+        orderStatusSelect.disabled = true;
+        saveButton.style.display = "none";
+        statusDisplay.style.display = "inline";
+        statusDisplay.textContent = orderStatus;
+    } else {
+        orderStatusSelect.disabled = false;
+        saveButton.style.display = "inline-block";
+        statusDisplay.style.display = "none";
     }
+}
+
 
     // Call toggleElements to set initial state
     toggleElements();
 </script>
+
 </body>
 
 
