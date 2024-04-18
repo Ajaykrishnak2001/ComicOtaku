@@ -246,7 +246,7 @@
                                 <tr>
                                     <td><%= order.orderNumber %></td>
                                     <!-- <td><b><%= order.username %></b></td> -->
-                                    <td><%= order.userId %></td>
+                                    <td><%= order.userId.email %></td>
                                   
                                     <td><%= order.totalAmount.toFixed(2)%></td>
                                     <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>

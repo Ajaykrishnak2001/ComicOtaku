@@ -558,7 +558,7 @@ const deleteCategory = async (req, res) => {
 
 const loadorders = async (req, res) => {
   try {
-    const AllOrders = await Order.find().sort({ orderDate: -1 }).exec();
+    const AllOrders = await Order.find().sort({ orderDate: -1 }).populate('userId').exec();
     const user = req.user;
     console.log('User ID:', user ? user._id : 'User not logged in'); // Log the user ID if user is logged in, otherwise log a message
     res.render('orders', { AllOrders, user });
@@ -772,12 +772,13 @@ const loadsalesreport=async(req,res)=>{
 
 const loaddashboard = async (req, res) => {
   try {
+    const categories = await Category.find();
     const products = await Product.find({ is_listed: 1 })
       .sort({ popularity: -1 }) // Sort by popularity in ascending order
       .limit(5) // Limit the results to 5 products
       .exec();
 
-    res.render('dashboard', { products });
+    res.render('dashboard', { products, categories });
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
