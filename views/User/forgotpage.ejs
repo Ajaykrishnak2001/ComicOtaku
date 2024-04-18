@@ -175,18 +175,18 @@
 <body>
     <h1 style="max-width: 400px; margin-left: 780px;">Enter OTP</h1>
 
-<form id="otpForm" style="max-width: 400px; margin-left: 650px;">
-    <input type="text" id="otpInput" name="userotp" placeholder="Enter OTP" required>
-    <button type="submit">Submit</button>
-</form>
-
-
-
-
-
-<p id="errorText" style="color: red; display: none;">Invalid OTP. Please try again.</p>
-
-
+    <form id="otpForm" style="max-width: 400px; margin-left: 650px;">
+        <input type="text" id="otpInput" name="userotp" placeholder="Enter OTP" required>
+        <br><br><br>
+        <button type="submit" id="submitOTP">Submit</button>
+        <button type="button" style="float: right;">Resend</button>
+    </form>
+    
+    <p id="errorText" style="max-width: 400px; margin-left: 650px; color: red; display: none;"></p>
+    <br><br>
+    <div id="timerDisplay" style="max-width: 400px; margin-left: 650px;"></div>
+    
+    
 
 <br><br><br><br><br><br><br><br>
 
@@ -301,8 +301,34 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-$(document).ready(function() {
+  $(document).ready(function() {
+    let countdownTime = 60; // Initial countdown time in seconds
+    let timerInterval; // Variable to store the timer interval
+    const timerDisplay = $('#timerDisplay');
+    const submitButton = $('#submitOTP');
+    const resendButton = $('#otpForm button[type="button"]');
+
+    // Function to update the timer display
+  // Function to update the timer display
+function updateTimer() {
+    if (countdownTime >= 0) {
+        const minutes = Math.floor(countdownTime / 60); // Calculate remaining minutes
+        const seconds = countdownTime % 60; // Calculate remaining seconds
+        timerDisplay.text(`Time left: ${minutes} min ${seconds} sec`);
+        countdownTime--;
+    } else {
+        clearInterval(timerInterval);
+        timerDisplay.text('OTP expired. Please resend OTP.');
+        submitButton.prop('disabled', true); // Disable the submit button
+    }
+}
+
+
+    // Start the timer interval
+    timerInterval = setInterval(updateTimer, 1000);
+
     $('#otpForm').submit(function(e) {
         e.preventDefault();
         var userotp = $('#otpInput').val();
@@ -313,21 +339,42 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     window.location.href = '/forgotpassword'; // Redirect to forgotpassword page
-                } else {
-                    $('#errorText').show();
-                    setTimeout(function() {
-                        $('#errorText').hide();
-                    }, 5000); // Hide error message after 5 seconds
-                }
+                } 
             },
             error: function() {
-                console.log('Error verifying OTP');
+                $('#errorText').text('Invalid OTP. Please try again.').show();
+                setTimeout(function() {
+                    $('#errorText').hide();
+                }, 5000); // Hide error message after 5 seconds
+            }
+        });
+    });
+
+    resendButton.click(function() {
+        // Send request to resend OTP
+        $.ajax({
+            type: 'POST',
+            url: '/for-resend-otp',
+            success: function() {
+                console.log('Resend OTP request successful');
+                countdownTime = 60; // Reset countdown time to 30 seconds
+                clearInterval(timerInterval); // Clear the existing timer interval
+                timerInterval = setInterval(updateTimer, 1000); // Restart the timer interval
+                timerDisplay.text(`Time left: ${countdownTime} sec`);
+                submitButton.prop('disabled', false); // Enable the submit button
+            },
+            error: function() {
+                console.error('Failed to resend OTP');
+                // Optionally show an error message
             }
         });
     });
 });
 
 </script>
+
+
+
 
 </body>
 </html>

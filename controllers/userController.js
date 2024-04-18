@@ -621,6 +621,37 @@ const otpForgotPage = async (req, res) => {
 };
 
 
+const forresendOTP=async (req, res) => {
+    try {
+        // Get the user's email from the session
+        const email = req.session.email;
+        if (!email) {
+            return res.status(400).json({ message: 'Email not found in session' });
+        }
+
+        // Generate a new OTP
+        const otp = generateOTP();
+
+        // Send the new OTP to the user's email
+        await transporter.sendMail({
+            from: config.emailUser,
+            to: email,
+            subject: 'New OTP for Password Reset',
+            text: `Your new OTP is: ${otp}`
+        });
+
+        // Update the session with the new OTP
+        req.session.otp = otp;
+
+        console.log(`New OTP for ${email}: ${otp}`);
+        res.sendStatus(200); // Send success response
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to resend OTP' });
+    }
+};
+
+
 const  renderForgotPasswordPage= async (req, res) => {
     try {
         res.render('forgotpassword');
@@ -734,6 +765,7 @@ module.exports = {
     otpForgotPage,
     renderForgotPasswordPage,
     changePassword ,
-    googleSignUp
+    googleSignUp,
+    forresendOTP
     
 };

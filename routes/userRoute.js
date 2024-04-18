@@ -142,6 +142,9 @@ userRoute.get('/forgotpage', userController.loadForgotOtpPage); // Route to load
 userRoute.post('/verify-forotp', userController.otpForgotPage); // Route to verify OTP
 // userRoute.post('/applyCoupon',cartController.maximumdiscount);
 
+
+userRoute.post('/for-resend-otp', userController.forresendOTP);
+
 // Define a route to render the forgotpassword.ejs page
 userRoute.get('/forgotpassword', userController.renderForgotPasswordPage);
 userRoute.post('/change-password',userController.changePassword);
