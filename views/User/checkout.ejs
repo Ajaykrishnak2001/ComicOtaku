@@ -518,13 +518,24 @@
                             <div class="your-payment">
                                 <h2 class="payment-title mb-3">Payment Method</h2>
                                 <div class="custome-radio">
-                                    <div class="custome-radio">
-                                        <input class="form-check-input payment" type="radio" value="cod"
-                                            name="selectedPayment" id="CashOnDelivery">
-                                        <label class="form-check-label" for="CashOnDelivery" data-bs-toggle="collapse"
-                                            data-target="#CashOnDelivery" aria-controls="CashOnDelivery">Cash on
-                                            Delivery</label>
-                                    </div>
+                                    <% if (cartItems.total > 1000) { %>
+                                        <div class="custome-radio">
+                                            <input class="form-check-input payment" type="radio" value="cod"
+                                                name="selectedPayment" id="CashOnDelivery" disabled>
+                                            <label class="form-check-label" for="CashOnDelivery" data-bs-toggle="collapse"
+                                                data-target="#CashOnDelivery" aria-controls="CashOnDelivery">Cash on
+                                                Delivery</label>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="custome-radio">
+                                            <input class="form-check-input payment" type="radio" value="cod"
+                                                name="selectedPayment" id="CashOnDelivery">
+                                            <label class="form-check-label" for="CashOnDelivery" data-bs-toggle="collapse"
+                                                data-target="#CashOnDelivery" aria-controls="CashOnDelivery">Cash on
+                                                Delivery</label>
+                                        </div>
+                                    <% } %>
+                                    
                                 </div>
                                 <br>
                                 <div class="custome-radioo">
