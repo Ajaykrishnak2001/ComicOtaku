@@ -16,7 +16,7 @@ const cartpage = async (req, res) => {
         const cartItems = await Cart.findOne({ userId: req.session.userId }).populate('items.product');
         let coupons = await Coupon.find();
 
-        // Filter coupons based on cart total price
+        
         const totalPrice = calculateTotalPrice(cartItems.items);
         coupons = coupons.filter(coupon => totalPrice >= coupon.minimumAmount && totalPrice <= coupon.maximumAmount);
 

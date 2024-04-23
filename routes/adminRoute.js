@@ -18,7 +18,7 @@ adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
 async function requireLogin(req, res, next) {
-   req.session.admin="66068f12364ef68d832a06f2"
+  //  req.session.admin="66068f12364ef68d832a06f2"
    
   if (!req.session.admin) {
     console.log(req.session.admin);
@@ -60,7 +60,7 @@ adminRoute.get("/logout",setnocache.admin,adminController.adminlogout);
 adminRoute.get("/login",isLoggedIn,setnocache.admin,adminController.loadAdminLog);
 adminRoute.post("/login",isLoggedIn,setnocache.admin, setnocache.admin, adminController.adminLogin);
 
-adminRoute.get("/dashboard",adminController.loaddashboard);
+adminRoute.get("/dashboard",requireLogin, setnocache.admin,adminController.loaddashboard);
 
 adminRoute.get("/products",requireLogin, setnocache.admin, adminController.loadProducts);
 adminRoute.get("/users",requireLogin,setnocache.admin, adminController.loadUsers);

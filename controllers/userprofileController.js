@@ -19,24 +19,36 @@ const securePassword = async(password)=>{
 
 }
 
-
 const loadprofile = async (req, res) => {
   try {
-      console.log(
-          req.session.userId,
-          "from the session in loginTTTTTTTTTTTTTTTTT"
-      );
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 10; 
+    const skip = (page - 1) * limit;
 
-      const userData = await user.findById(req.session.userId);
-      const userAddress = await address.find({ user: req.session.userId });
-      const userOrders = await Order.find({ userId: req.session.userId }).sort({ orderDate: -1 }).exec();
-      const wallet = await Wallet.findOne({ user: req.session.userId });
-      res.render("profile", { user: userData, userAddress: userAddress, AllOrders: userOrders, wallet: wallet });
+    const userData = await user.findById(req.session.userId);
+    const userAddress = await address.find({ user: req.session.userId });
+    const totalOrders = await Order.countDocuments({ userId: req.session.userId });
+    const totalPages = Math.ceil(totalOrders / limit);
+    const userOrders = await Order.find({ userId: req.session.userId })
+      .sort({ orderDate: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const wallet = await Wallet.findOne({ user: req.session.userId });
+
+    res.render("profile", { 
+      user: userData, 
+      userAddress: userAddress, 
+      AllOrders: userOrders, 
+      wallet: wallet,
+      currentPage: page,
+      totalPages: totalPages
+    });
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
   }
 };
-
 
 
 const load_addAddress = async (req, res) => {
@@ -63,7 +75,7 @@ const load_addAddress = async (req, res) => {
       } = req.body;
   
       console.log(req.session.userId, "it form session id");
-      // Check if the mobile number already exists in the database
+      
       const existingUser = await user.findOne({ mobile: mobile });
       console.log(existingUser, "existing user.................");
       if (existingUser) {
@@ -177,13 +189,13 @@ const load_addAddress = async (req, res) => {
     try {
       const result = await address.deleteOne({ _id: addressId });
       if (result.deletedCount === 1) {
-        res.sendStatus(204); // No content, successful deletion
+        res.sendStatus(204); 
       } else {
-        res.sendStatus(404); // Address not found
+        res.sendStatus(404); 
       }
     } catch (error) {
       console.error('Error deleting address:', error);
-      res.sendStatus(500); // Internal server error
+      res.sendStatus(500); 
     }
   };
 

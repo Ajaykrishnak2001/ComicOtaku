@@ -328,16 +328,25 @@ const verifyLogin = async (req, res) => {
 
 
 
+const PAGE_SIZE = 9;
+
 const loadAllProducts = async (req, res) => {
     try {
-        
-        const products = await Product.find().populate('category');
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * PAGE_SIZE;
 
-       
+        // Fetch products with pagination
+        const products = await Product.find().populate('category').skip(skip).limit(PAGE_SIZE);
+
+        // Fetch all categories
         const categories = await Category.find();
 
-       
-        res.render('products', { products, categories });
+        // Calculate total number of pages
+        const totalCount = await Product.countDocuments();
+        const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+        // Render the products page with the paginated products and categories
+        res.render('products', { products, categories, currentPage: page, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -407,24 +416,32 @@ const loadProduct = async (req, res) => {
 
 const sortProducts = async (req, res) => {
     try {
+        const sortBy = req.query.sortBy || 'default';
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * PAGE_SIZE;
+
         let products;
 
-        if (req.query.sortBy === 'name-asc') {
-            products = await Product.find().sort({ pname: 1 });
-        } else if (req.query.sortBy === 'name-desc') {
-            products = await Product.find().sort({ pname: -1 });
-        } else if (req.query.sortBy === 'price-low-to-high') {
-            products = await Product.find().sort({ offerPrice: 1, price: 1 });
-        } else if (req.query.sortBy === 'price-high-to-low') {
-            products = await Product.find().sort({ offerPrice: -1, price: -1 });
-        } else if (req.query.sortBy === 'popularity') {
-            products = await Product.find().sort({ popularity: -1 });
+        if (sortBy === 'name-asc') {
+            products = await Product.find().sort({ pname: 1 }).skip(skip).limit(PAGE_SIZE);
+        } else if (sortBy === 'name-desc') {
+            products = await Product.find().sort({ pname: -1 }).skip(skip).limit(PAGE_SIZE);
+        } else if (sortBy === 'price-low-to-high') {
+            products = await Product.find().sort({ offerPrice: 1, price: 1 }).skip(skip).limit(PAGE_SIZE);
+        } else if (sortBy === 'price-high-to-low') {
+            products = await Product.find().sort({ offerPrice: -1, price: -1 }).skip(skip).limit(PAGE_SIZE);
+        } else if (sortBy === 'popularity') {
+            products = await Product.find().sort({ popularity: -1 }).skip(skip).limit(PAGE_SIZE);
         } else {
-            products = await Product.find();
+            products = await Product.find().skip(skip).limit(PAGE_SIZE);
         }
 
-        
-        res.json(products);
+        // Calculate total number of pages
+        const totalCount = await Product.countDocuments();
+        const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+        // Render the products page with the paginated products
+        res.render('products', { products, currentPage: page, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -695,6 +712,7 @@ const googleSignUp = async (req, res) => {
         const email = req.user._json.email;
         console.log(req.user._json.email);
         let userData = await User.findOne({ email: email });
+        
         console.log(userData, "usedata");
         if (!userData) {
             let couponId;

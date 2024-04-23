@@ -1,8 +1,10 @@
 const mongoose = require("mongoose")
-mongoose.connect("mongodb://localhost:27017/ComicOtaku");
+
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const config=require("./config/config")
 
+mongoose.connect(config.mongourl);
 const express = require("express");
 const app=express();
 require('./auth');

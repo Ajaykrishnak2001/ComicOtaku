@@ -147,11 +147,34 @@
                                                             </tr>
                                                         <% }); %>
                                                     </tbody>
+                                                    
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <% if (currentPage > 1) { %>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                                                </li>
+                                            <% } %>
+                                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                                </li>
+                                            <% } %>
+                                            <% if (currentPage < totalPages) { %>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                                </li>
+                                            <% } %>
+                                        </ul>
+                                    </nav>
                                 </div>
+
+                                
+                                
                                 
                                 <!-- Address Tab -->
                                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
