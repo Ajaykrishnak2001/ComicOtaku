@@ -15,7 +15,7 @@ adminRoute.use(bodyParser.json());
 adminRoute.use(bodyParser.urlencoded({ extended: true }));
 
 adminRoute.set("view engine", "ejs");
-adminRoute.set("views", "./views/admin");
+adminRoute.set("views", "./views/Admin");
 
 async function requireLogin(req, res, next) {
   //  req.session.admin="66068f12364ef68d832a06f2"
