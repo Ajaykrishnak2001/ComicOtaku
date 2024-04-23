@@ -79,10 +79,10 @@ app.set('view engine', 'ejs');
 
 app.use("/static", express.static(path.join(__dirname, "public"))); 
 app.use("/products", express.static(path.join(__dirname, "public"))); 
-app.use("/admin/static", express.static(path.join(__dirname, "public")));
-app.use("/admin/users", express.static(path.join(__dirname, "public"))); 
-app.use("/admin/products", express.static(path.join(__dirname, "public"))); 
-app.use("/admin", express.static(path.join(__dirname, "public")));
+app.use("/Admin/static", express.static(path.join(__dirname, "public")));
+app.use("/Admin/users", express.static(path.join(__dirname, "public"))); 
+app.use("/Admin/products", express.static(path.join(__dirname, "public"))); 
+app.use("/Admin", express.static(path.join(__dirname, "public")));
 
 app.use(express.static(path.join(__dirname, "public")));
 
