@@ -277,21 +277,24 @@
                     });
             
                     maxDiscount.addEventListener("blur", function() {
-                        const value = maxDiscount.value.trim();
-                        if (isNaN(value) || value === "" || parseFloat(value) <= 0 || parseFloat(value) > 5000) {
-                            showError(maxDiscount, "Maximum Discount must be a positive number less than or equal to 5000.");
-                        } else {
-                            hideError(maxDiscount);
-                        }
-                    });
+    const maxValue = parseFloat(maxDiscount.value.trim());
+    const minValue = parseFloat(minAmount.value.trim());
+    if (isNaN(maxValue) || maxValue === "" || maxValue <= 0 || maxValue > 5000) {
+        showError(maxDiscount, "Maximum Discount must be a positive number less than 5000.");
+    } else if (maxValue >= minValue) {
+        showError(maxDiscount, "Maximum Discount must be less than Minimum Amount.");
+    } else {
+        hideError(maxDiscount);
+    }
+});
 
-                    minAmount.addEventListener("blur", function() {
-    const minAmountValue = parseFloat(minAmount.value.trim());
-    const maxDiscountValue = parseFloat(maxDiscount.value.trim());
-    if (isNaN(minAmountValue) || minAmountValue <= 0 || /[^\d\s]/.test(minAmount.value.trim())) {
+minAmount.addEventListener("blur", function() {
+    const minValue = parseFloat(minAmount.value.trim());
+    const maxValue = parseFloat(maxDiscount.value.trim());
+    if (isNaN(minValue) || minValue <= 0 || /[^\d\s]/.test(minAmount.value.trim())) {
         showError(minAmount, "Minimum Amount must be a positive number.");
-    } else if (maxDiscountValue > minAmountValue) {
-        showError(minAmount, "Minimum Amount must be greater than Discount.");
+    } else if (maxValue >= minValue) {
+        showError(minAmount, "Minimum Amount must be greater than  Discount.");
     } else {
         hideError(minAmount);
     }

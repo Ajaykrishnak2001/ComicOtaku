@@ -347,6 +347,7 @@ const loadAllProducts = async (req, res) => {
 
         // Render the products page with the paginated products and categories
         res.render('products', { products, categories, currentPage: page, totalPages });
+
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
