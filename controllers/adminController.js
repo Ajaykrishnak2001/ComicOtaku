@@ -558,15 +558,22 @@ const deleteCategory = async (req, res) => {
 
 const loadorders = async (req, res) => {
   try {
-    const AllOrders = await Order.find().sort({ orderDate: -1 }).populate('userId').exec();
+    const page = parseInt(req.query.page) || 1; // Current page number, default is 1
+    const perPage = 10; // Number of orders per page
+    const skip = (page - 1) * perPage; // Calculate the number of orders to skip
+    const AllOrders = await Order.find().sort({ orderDate: -1 }).skip(skip).limit(perPage).populate('userId').exec();
+    const totalOrdersCount = await Order.countDocuments();
+    const totalPages = Math.ceil(totalOrdersCount / perPage);
     const user = req.user;
     console.log('User ID:', user ? user._id : 'User not logged in'); // Log the user ID if user is logged in, otherwise log a message
-    res.render('orders', { AllOrders, user });
+    res.render('orders', { AllOrders, user, currentPage: page, totalPages });
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 const detailedOrder = async (req, res) => {
   try {
