@@ -277,8 +277,9 @@ const load_addAddress = async (req, res) => {
         }
 
         const totalAmount = orderDetails.totalAmount;
+        const coupondiscount = orderDetails.coupondiscount;
         req.session.order=orderDetails._id
-        res.render("viewOrders", { orderDetails, totalAmount });
+        res.render("viewOrders", { orderDetails, totalAmount,coupondiscount  });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
