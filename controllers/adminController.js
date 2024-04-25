@@ -566,7 +566,7 @@ const loadorders = async (req, res) => {
     const totalPages = Math.ceil(totalOrdersCount / perPage);
     const user = req.user;
     console.log('User ID:', user ? user._id : 'User not logged in'); // Log the user ID if user is logged in, otherwise log a message
-    res.render('orders', { AllOrders, user, currentPage: page, totalPages });
+    res.render('orders', { AllOrders, user, currentordersPage: page, totalPages });
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
