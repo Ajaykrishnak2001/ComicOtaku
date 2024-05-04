@@ -188,7 +188,9 @@
                                     <td><%= coupon.minimumAmount %></td>
                                     <td><%= coupon.maximumAmount %></td>
                                     <td><%= coupon.maximumUser %></td>
-                                    <td><%= coupon.expireDate %></td>
+                                   <td><%= new Date(coupon.expireDate).toLocaleDateString() %></td>
+
+
                                     <td>
                                         <button class="btn btn-outline-primary" onclick="editCoupon('<%= coupon._id %>')">Edit Coupon</button>
                                         <button class="btn btn-outline-danger" onclick="deleteCoupon('<%= coupon._id %>')">Delete Coupon</button>

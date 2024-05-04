@@ -469,34 +469,52 @@
     </script>
 
 <script>
-    document.getElementById('generateReportBtn').addEventListener('click', function() {
-        const tbody = document.querySelector('#salesReportModal tbody');
-        tbody.innerHTML = "";
+  document.getElementById('generateReportBtn').addEventListener('click', function() {
+    const tbody = document.querySelector('#salesReportModal tbody');
+    tbody.innerHTML = "";
 
-        if (filteredOrders.length > 0) {
-            let slNo = 1;
-            filteredOrders.forEach(order => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${new Date(order.orderDate).toLocaleDateString()}</td>
-                    <td>${order.orderNumber}</td>
-                    <td>${order.userId}</td>
-                  
-                    <td>${order.status}</td>
-                    <td>${order.payment}</td>
-                    <td>${order.coupondiscount > 0 ? 'Yes' : 'No' }</td> 
-                    <td>${order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0'}</td>
-                    <td>₹${order.totalAmount}</td>
-                `;
-                tbody.appendChild(tr);
-                slNo++;
-            });
-        } else {
+    if (filteredOrders.length > 0) {
+        let slNo = 1;
+        filteredOrders.forEach(order => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td colspan="9">No sales data available</td>`;
+            tr.innerHTML = `
+                <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                <td>${order.orderNumber}</td>
+                <td>${order.userId}</td>
+                <td>${order.status}</td>
+                <td>${order.payment}</td>
+                <td>${order.coupondiscount > 0 ? 'Yes' : 'No' }</td> 
+                <td>${order.coupondiscount > 0 ? '₹' + order.coupondiscount : '0'}</td>
+                <td>₹${order.totalAmount}</td>
+            `;
             tbody.appendChild(tr);
-        }
-    });
+            slNo++;
+        });
+
+        // Calculate total revenue
+        const totalRevenue = filteredOrders.reduce((total, order) => total + order.totalAmount, 0);
+
+        // Add total revenue and total orders to the report
+        const totalRevenueRow = document.createElement('tr');
+        totalRevenueRow.innerHTML = `
+            <td colspan="7"><strong>Total Revenue:</strong></td>
+            <td colspan="2">₹${totalRevenue}</td>
+        `;
+        tbody.appendChild(totalRevenueRow);
+
+        const totalOrdersRow = document.createElement('tr');
+        totalOrdersRow.innerHTML = `
+            <td colspan="7"><strong>Total Orders:</strong></td>
+            <td colspan="2">${filteredOrders.length} Orders</td>
+        `;
+        tbody.appendChild(totalOrdersRow);
+    } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="9">No sales data available</td>`;
+        tbody.appendChild(tr);
+    }
+});
+
 </script>
 
 

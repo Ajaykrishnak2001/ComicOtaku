@@ -237,6 +237,22 @@
                         </table>
 
                         
+                       <!-- Assuming currentPage is passed from the backend -->
+<ul class="pagination">
+    <% if (currentordersPage > 1) { %>
+      <li class="page-item"><a class="page-link" href="?page=<%= currentordersPage - 1 %>">Previous</a></li>
+    <% } %>
+    
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= i === currentordersPage ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+    <% } %>
+  
+    <% if (currentordersPage < totalPages) { %>
+      <li class="page-item"><a class="page-link" href="?page=<%= currentordersPage + 1 %>">Next</a></li>
+    <% } %>
+  </ul>
+
+                        
                     </div> <!-- table-responsive //end -->
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
