@@ -21,16 +21,16 @@ async function requireLogin(req, res, next) {
   //  req.session.admin="66068f12364ef68d832a06f2"
    
   if (!req.session.admin) {
-    console.log(req.session.admin);
+   
     return res.redirect('/admin/login');
   }
   next();
 }
 
 async function isLoggedIn(req, res, next) {
-  console.log(req.session);
+  
   if (req.session.admin) {
-    console.log(req.session.admin);
+    
     return res.redirect('/admin/dashboard');
   }
   next();

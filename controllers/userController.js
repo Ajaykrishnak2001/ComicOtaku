@@ -310,7 +310,7 @@ const verifyLogin = async (req, res) => {
                     req.session.email = email;
                     req.session.user = true;
                     req.session.save();
-                    console.log(req.session.user);
+                    
                     res.redirect('/');
                 } else if (userData.is_verified === 1 && userData.is_active === "0") {
                     res.render('login', { message: "User is blocked" }); 
